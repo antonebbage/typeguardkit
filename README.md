@@ -61,3 +61,30 @@ export const _string = type(
 
 Prefixing `Asserter` names with an underscore `_` helps to avoid name conflicts
 and shadowing.
+
+### Assertion signature wrapper
+
+The `assertIs` function wraps an `Asserter<Type>` with an assertion signature so
+the value passed in can be narrowed to `Type`. If the `Asserter` throws an
+error, it will bubble up. Otherwise, `assertIs` will not return a value, but
+after calling it, the value passed in will be narrowed to `Type`, as in this
+example:
+
+```ts
+import { _string, assertIs } from './mod.ts';
+
+function handleUnknown(x: unknown) {
+  try {
+    assertIs(_string, x, 'x');
+  } catch {
+    return;
+  }
+
+  // `x` has now been narrowed to type `string`, so can be passed to
+  // `handleString`.
+
+  handleString(x);
+}
+
+function handleString(x: string) {}
+```
