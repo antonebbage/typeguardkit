@@ -67,8 +67,9 @@ and shadowing.
 The `assertIs` function wraps an `Asserter<Type>` with an assertion signature so
 the value passed in can be narrowed to `Type`. If the `Asserter` throws an
 error, it will bubble up. Otherwise, `assertIs` will not return a value, but
-after calling it, the value passed in will be narrowed to `Type`, as in this
-example:
+after calling it, the value passed in will be narrowed to `Type`.
+
+You can use `assertIs` like this:
 
 ```ts
 import { _string, assertIs } from './mod.ts';
@@ -84,6 +85,29 @@ function handleUnknown(x: unknown) {
   // `handleString`.
 
   handleString(x);
+}
+
+function handleString(x: string) {}
+```
+
+### Predicate signature wrapper
+
+The `is` function wraps an `Asserter<Type>` with a predicate signature, creating
+a type guard, so the value passed in can be narrowed to `Type`. If the
+`Asserter` throws an error, `is` will catch it and return `false`. Otherwise,
+`is` will return `true`.
+
+You can use `is` like this:
+
+```ts
+import { _string, is } from './mod.ts';
+
+function handleUnknown(x: unknown) {
+  if (is(_string, x)) {
+    // `x` has now been narrowed to type `string`, so can be passed to
+    // `handleString`.
+    handleString(x);
+  }
 }
 
 function handleString(x: string) {}
