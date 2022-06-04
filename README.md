@@ -1,4 +1,4 @@
-# Type Guard Kit
+# Type Guard Kit [![ci](https://github.com/antonebbage/typeguardkit/actions/workflows/ci.yml/badge.svg)](https://github.com/antonebbage/typeguardkit/actions/workflows/ci.yml)
 
 A TypeScript module to help create a type and its guards from a single source
 definition.
