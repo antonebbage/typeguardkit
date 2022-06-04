@@ -139,3 +139,10 @@ function handleUnknown(x: unknown) {
 
 function handleStringOrUndefined(x?: string) {}
 ```
+
+#### `nullOr`
+
+The `nullOr` function returns an `Asserter<Type | null>`, created using the
+provided `Asserter<Type>`.
+
+You can use `nullOr` like [`undefinedOr`](#undefinedor).
