@@ -1,10 +1,13 @@
 import {
+  assertInstanceOf,
+  assertNotStrictEquals,
   assertStrictEquals,
   assertStringIncludes,
+  assertThrows,
   describe,
   it,
 } from '/dev_deps.ts';
-import { errorMessage } from './asserter.ts';
+import { errorMessage, type } from './asserter.ts';
 
 describe('errorMessage', () => {
   it('should return correctly formatted message', () => {
@@ -38,6 +41,98 @@ describe('errorMessage', () => {
     assertStringIncludes(
       errorMessage('', 'expectedTypeName2'),
       'expected type of `expectedTypeName2`',
+    );
+  });
+});
+
+describe('type', () => {
+  const _string = type(
+    'string',
+    (value): value is string => typeof value === 'string',
+  );
+
+  const _object = type(
+    'Record<string, unknown>',
+    (value): value is Record<string, unknown> =>
+      typeof value === 'object' && !Array.isArray(value) && value !== null,
+  );
+
+  it('should return a `Function` with `typeName` set to `name`', () => {
+    assertInstanceOf(_string, Function);
+    assertInstanceOf(_object, Function);
+
+    assertStrictEquals(_string.typeName, 'string');
+    assertStrictEquals(_object.typeName, 'Record<string, unknown>');
+  });
+
+  it(
+    'should return a `Function` that returns `value` when `guard` returns `true` for `value`',
+    () => {
+      assertStrictEquals(_string(''), '');
+      assertStrictEquals(_string('a'), 'a');
+
+      const object = {};
+      assertStrictEquals(_object(object), object);
+
+      assertNotStrictEquals(_object({}), {});
+    },
+  );
+
+  it('should return a `Function` that throws a `TypeError` with correct message when `guard` returns `false` for `value`', () => {
+    assertThrows(
+      () => _string(undefined, 'name'),
+      TypeError,
+      errorMessage(undefined, 'string', 'name'),
+    );
+
+    assertThrows(
+      () => _string(undefined),
+      TypeError,
+      errorMessage(undefined, 'string'),
+    );
+    assertThrows(
+      () => _string(null),
+      TypeError,
+      errorMessage(null, 'string'),
+    );
+    assertThrows(
+      () => _string(false),
+      TypeError,
+      errorMessage(false, 'string'),
+    );
+    assertThrows(() => _string(0), TypeError, errorMessage(0, 'string'));
+    assertThrows(() => _string([]), TypeError, errorMessage([], 'string'));
+    assertThrows(() => _string({}), TypeError, errorMessage({}, 'string'));
+
+    assertThrows(
+      () => _object(undefined),
+      TypeError,
+      errorMessage(undefined, 'Record<string, unknown>'),
+    );
+    assertThrows(
+      () => _object(null),
+      TypeError,
+      errorMessage(null, 'Record<string, unknown>'),
+    );
+    assertThrows(
+      () => _object(false),
+      TypeError,
+      errorMessage(false, 'Record<string, unknown>'),
+    );
+    assertThrows(
+      () => _object(0),
+      TypeError,
+      errorMessage(0, 'Record<string, unknown>'),
+    );
+    assertThrows(
+      () => _object(''),
+      TypeError,
+      errorMessage('', 'Record<string, unknown>'),
+    );
+    assertThrows(
+      () => _object([]),
+      TypeError,
+      errorMessage([], 'Record<string, unknown>'),
     );
   });
 });
