@@ -1,5 +1,5 @@
 import { assertStrictEquals, assertThrows, describe, it } from '/dev_deps.ts';
-import { errorMessage } from '../mod.ts';
+import { TypeAssertionError } from '../mod.ts';
 import { _number } from './number.ts';
 
 describe('_number', () => {
@@ -8,30 +8,43 @@ describe('_number', () => {
     assertStrictEquals(_number(1), 1);
   });
 
-  it('should throw a `TypeError` with correct message if `value` not of type `number`', () => {
+  it('should throw a `TypeAssertionError` with correct `message` if `value` not of type `number`', () => {
     assertThrows(
       () => _number(undefined, 'name'),
-      TypeError,
-      errorMessage(undefined, 'number', 'name'),
+      TypeAssertionError,
+      new TypeAssertionError(_number.typeName, undefined, { valueName: 'name' })
+        .message,
     );
 
     assertThrows(
       () => _number(undefined),
-      TypeError,
-      errorMessage(undefined, 'number'),
+      TypeAssertionError,
+      new TypeAssertionError(_number.typeName, undefined).message,
     );
     assertThrows(
       () => _number(null),
-      TypeError,
-      errorMessage(null, 'number'),
+      TypeAssertionError,
+      new TypeAssertionError(_number.typeName, null).message,
     );
     assertThrows(
       () => _number(false),
-      TypeError,
-      errorMessage(false, 'number'),
+      TypeAssertionError,
+      new TypeAssertionError(_number.typeName, false).message,
     );
-    assertThrows(() => _number(''), TypeError, errorMessage('', 'number'));
-    assertThrows(() => _number([]), TypeError, errorMessage([], 'number'));
-    assertThrows(() => _number({}), TypeError, errorMessage({}, 'number'));
+    assertThrows(
+      () => _number(''),
+      TypeAssertionError,
+      new TypeAssertionError(_number.typeName, '').message,
+    );
+    assertThrows(
+      () => _number([]),
+      TypeAssertionError,
+      new TypeAssertionError(_number.typeName, []).message,
+    );
+    assertThrows(
+      () => _number({}),
+      TypeAssertionError,
+      new TypeAssertionError(_number.typeName, {}).message,
+    );
   });
 });

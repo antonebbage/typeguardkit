@@ -1,5 +1,5 @@
 import { assertStrictEquals, assertThrows, describe, it } from '/dev_deps.ts';
-import { errorMessage } from '../mod.ts';
+import { TypeAssertionError } from '../mod.ts';
 import { _string } from './string.ts';
 
 describe('_string', () => {
@@ -8,30 +8,43 @@ describe('_string', () => {
     assertStrictEquals(_string('a'), 'a');
   });
 
-  it('should throw a `TypeError` with correct message if `value` not of type `string`', () => {
+  it('should throw a `TypeAssertionError` with correct `message` if `value` not of type `string`', () => {
     assertThrows(
       () => _string(undefined, 'name'),
-      TypeError,
-      errorMessage(undefined, 'string', 'name'),
+      TypeAssertionError,
+      new TypeAssertionError(_string.typeName, undefined, { valueName: 'name' })
+        .message,
     );
 
     assertThrows(
       () => _string(undefined),
-      TypeError,
-      errorMessage(undefined, 'string'),
+      TypeAssertionError,
+      new TypeAssertionError(_string.typeName, undefined).message,
     );
     assertThrows(
       () => _string(null),
-      TypeError,
-      errorMessage(null, 'string'),
+      TypeAssertionError,
+      new TypeAssertionError(_string.typeName, null).message,
     );
     assertThrows(
       () => _string(false),
-      TypeError,
-      errorMessage(false, 'string'),
+      TypeAssertionError,
+      new TypeAssertionError(_string.typeName, false).message,
     );
-    assertThrows(() => _string(0), TypeError, errorMessage(0, 'string'));
-    assertThrows(() => _string([]), TypeError, errorMessage([], 'string'));
-    assertThrows(() => _string({}), TypeError, errorMessage({}, 'string'));
+    assertThrows(
+      () => _string(0),
+      TypeAssertionError,
+      new TypeAssertionError(_string.typeName, 0).message,
+    );
+    assertThrows(
+      () => _string([]),
+      TypeAssertionError,
+      new TypeAssertionError(_string.typeName, []).message,
+    );
+    assertThrows(
+      () => _string({}),
+      TypeAssertionError,
+      new TypeAssertionError(_string.typeName, {}).message,
+    );
   });
 });

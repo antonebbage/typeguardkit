@@ -7,40 +7,49 @@ import {
   describe,
   it,
 } from '/dev_deps.ts';
-import { errorMessage, type } from './asserter.ts';
+import { type, TypeAssertionError } from './asserter.ts';
 
-describe('errorMessage', () => {
-  it('should return correctly formatted message', () => {
+describe('TypeAssertionError', () => {
+  it('should set correctly formatted `message`', () => {
     assertStrictEquals(
-      errorMessage('', 'expectedTypeName1', 'valueName1'),
-      '`valueName1` is of type `string`; expected type of `expectedTypeName1`',
+      new TypeAssertionError('expectedTypeName', '').message,
+      '`value` is of type `string`; expected type of `expectedTypeName`',
+    );
+
+    assertStrictEquals(
+      new TypeAssertionError('expectedOuterTypeName', {}, {
+        innerError: new TypeAssertionError('expectedInnerTypeName', '', {
+          valueName: 'innerValueName',
+        }),
+      }).message,
+      '`value` is of type `Object`; expected type of `expectedOuterTypeName`:\n  - `innerValueName` is of type `string`; expected type of `expectedInnerTypeName`',
     );
   });
 
-  it('should return message including defined `valueName`', () => {
+  it('should set `message` including type of `value`', () => {
     assertStringIncludes(
-      errorMessage('', '', 'valueName2'),
-      '`valueName2` is of type',
+      new TypeAssertionError('', undefined).message,
+      'is of type `undefined`',
     );
-  });
-
-  it('should return message including default `valueName` if `undefined`', () => {
-    assertStringIncludes(errorMessage('', ''), '`value` is of type');
-  });
-
-  it('should return message including type of `value`', () => {
-    assertStringIncludes(errorMessage(undefined, ''), 'is of type `undefined`');
-    assertStringIncludes(errorMessage(null, ''), 'is of type `null`');
-    assertStringIncludes(errorMessage(false, ''), 'is of type `boolean`');
-    assertStringIncludes(errorMessage(0, ''), 'is of type `number`');
-    assertStringIncludes(errorMessage([], ''), 'is of type `Array`');
-    assertStringIncludes(errorMessage({}, ''), 'is of type `Object`');
-  });
-
-  it('should return message including `expectedTypeName`', () => {
     assertStringIncludes(
-      errorMessage('', 'expectedTypeName2'),
-      'expected type of `expectedTypeName2`',
+      new TypeAssertionError('', null).message,
+      'is of type `null`',
+    );
+    assertStringIncludes(
+      new TypeAssertionError('', false).message,
+      'is of type `boolean`',
+    );
+    assertStringIncludes(
+      new TypeAssertionError('', 0).message,
+      'is of type `number`',
+    );
+    assertStringIncludes(
+      new TypeAssertionError('', []).message,
+      'is of type `Array`',
+    );
+    assertStringIncludes(
+      new TypeAssertionError('', {}).message,
+      'is of type `Object`',
     );
   });
 });
@@ -78,61 +87,74 @@ describe('type', () => {
     },
   );
 
-  it('should return a `Function` that throws a `TypeError` with correct message when `guard` returns `false` for `value`', () => {
+  it('should return a `Function` that throws a `TypeAssertionError` with correct `message` when `guard` returns `false` for `value`', () => {
     assertThrows(
       () => _string(undefined, 'name'),
-      TypeError,
-      errorMessage(undefined, 'string', 'name'),
+      TypeAssertionError,
+      new TypeAssertionError(_string.typeName, undefined, { valueName: 'name' })
+        .message,
     );
 
     assertThrows(
       () => _string(undefined),
-      TypeError,
-      errorMessage(undefined, 'string'),
+      TypeAssertionError,
+      new TypeAssertionError(_string.typeName, undefined).message,
     );
     assertThrows(
       () => _string(null),
-      TypeError,
-      errorMessage(null, 'string'),
+      TypeAssertionError,
+      new TypeAssertionError(_string.typeName, null).message,
     );
     assertThrows(
       () => _string(false),
-      TypeError,
-      errorMessage(false, 'string'),
+      TypeAssertionError,
+      new TypeAssertionError(_string.typeName, false).message,
     );
-    assertThrows(() => _string(0), TypeError, errorMessage(0, 'string'));
-    assertThrows(() => _string([]), TypeError, errorMessage([], 'string'));
-    assertThrows(() => _string({}), TypeError, errorMessage({}, 'string'));
+    assertThrows(
+      () => _string(0),
+      TypeAssertionError,
+      new TypeAssertionError(_string.typeName, 0).message,
+    );
+    assertThrows(
+      () => _string([]),
+      TypeAssertionError,
+      new TypeAssertionError(_string.typeName, []).message,
+    );
+    assertThrows(
+      () => _string({}),
+      TypeAssertionError,
+      new TypeAssertionError(_string.typeName, {}).message,
+    );
 
     assertThrows(
       () => _object(undefined),
-      TypeError,
-      errorMessage(undefined, 'Record<string, unknown>'),
+      TypeAssertionError,
+      new TypeAssertionError(_object.typeName, undefined).message,
     );
     assertThrows(
       () => _object(null),
-      TypeError,
-      errorMessage(null, 'Record<string, unknown>'),
+      TypeAssertionError,
+      new TypeAssertionError(_object.typeName, null).message,
     );
     assertThrows(
       () => _object(false),
-      TypeError,
-      errorMessage(false, 'Record<string, unknown>'),
+      TypeAssertionError,
+      new TypeAssertionError(_object.typeName, false).message,
     );
     assertThrows(
       () => _object(0),
-      TypeError,
-      errorMessage(0, 'Record<string, unknown>'),
+      TypeAssertionError,
+      new TypeAssertionError(_object.typeName, 0).message,
     );
     assertThrows(
       () => _object(''),
-      TypeError,
-      errorMessage('', 'Record<string, unknown>'),
+      TypeAssertionError,
+      new TypeAssertionError(_object.typeName, '').message,
     );
     assertThrows(
       () => _object([]),
-      TypeError,
-      errorMessage([], 'Record<string, unknown>'),
+      TypeAssertionError,
+      new TypeAssertionError(_object.typeName, []).message,
     );
   });
 });

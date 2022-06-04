@@ -1,5 +1,5 @@
 import { assertStrictEquals, assertThrows, describe, it } from '/dev_deps.ts';
-import { errorMessage } from '../mod.ts';
+import { TypeAssertionError } from '../mod.ts';
 import { _boolean } from './boolean.ts';
 
 describe('_boolean', () => {
@@ -8,26 +8,44 @@ describe('_boolean', () => {
     assertStrictEquals(_boolean(true), true);
   });
 
-  it('should throw a `TypeError` with correct message if `value` not of type `boolean`', () => {
+  it('should throw a `TypeAssertionError` with correct `message` if `value` not of type `boolean`', () => {
     assertThrows(
       () => _boolean(undefined, 'name'),
-      TypeError,
-      errorMessage(undefined, 'boolean', 'name'),
+      TypeAssertionError,
+      new TypeAssertionError(_boolean.typeName, undefined, {
+        valueName: 'name',
+      }).message,
     );
 
     assertThrows(
       () => _boolean(undefined),
-      TypeError,
-      errorMessage(undefined, 'boolean'),
+      TypeAssertionError,
+      new TypeAssertionError(_boolean.typeName, undefined).message,
     );
     assertThrows(
       () => _boolean(null),
-      TypeError,
-      errorMessage(null, 'boolean'),
+      TypeAssertionError,
+      new TypeAssertionError(_boolean.typeName, null).message,
     );
-    assertThrows(() => _boolean(0), TypeError, errorMessage(0, 'boolean'));
-    assertThrows(() => _boolean(''), TypeError, errorMessage('', 'boolean'));
-    assertThrows(() => _boolean([]), TypeError, errorMessage([], 'boolean'));
-    assertThrows(() => _boolean({}), TypeError, errorMessage({}, 'boolean'));
+    assertThrows(
+      () => _boolean(0),
+      TypeAssertionError,
+      new TypeAssertionError(_boolean.typeName, 0).message,
+    );
+    assertThrows(
+      () => _boolean(''),
+      TypeAssertionError,
+      new TypeAssertionError(_boolean.typeName, '').message,
+    );
+    assertThrows(
+      () => _boolean([]),
+      TypeAssertionError,
+      new TypeAssertionError(_boolean.typeName, []).message,
+    );
+    assertThrows(
+      () => _boolean({}),
+      TypeAssertionError,
+      new TypeAssertionError(_boolean.typeName, {}).message,
+    );
   });
 });
