@@ -68,3 +68,27 @@ export function type<Type>(
 
   return asserter;
 }
+
+/** `undefinedOr` returns an `Asserter<Type | undefined>`, created using the
+ * provided `Asserter<Type>`. */
+export function undefinedOr<Type>(
+  asserter: Asserter<Type>,
+): Asserter<Type | undefined> {
+  const newTypeName = `${asserter.typeName} | undefined`;
+
+  const newAsserter = (value: unknown, valueName?: string) => {
+    if (value === undefined) {
+      return value;
+    }
+
+    try {
+      return asserter(value, valueName);
+    } catch {
+      throw new TypeAssertionError(newTypeName, value, { valueName });
+    }
+  };
+
+  newAsserter.typeName = newTypeName;
+
+  return newAsserter;
+}

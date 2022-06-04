@@ -111,3 +111,31 @@ function handleUnknown(x: unknown) {
 
 function handleString(x: string) {}
 ```
+
+### Modifier functions
+
+The following functions allow you to use an existing `Asserter<Type>` to create
+a new one with modified `Type`.
+
+#### `undefinedOr`
+
+The `undefinedOr` function returns an `Asserter<Type | undefined>`, created
+using the provided `Asserter<Type>`.
+
+You can use `undefinedOr` like this:
+
+```ts
+import { _string, is, undefinedOr } from './mod.ts';
+
+function handleUnknown(x: unknown) {
+  const _stringOrUndefined = undefinedOr(_string);
+
+  if (is(_stringOrUndefined, x)) {
+    // `x` has now been narrowed to type `string | undefined`, so can be passed
+    // to `handleStringOrUndefined`.
+    handleStringOrUndefined(x);
+  }
+}
+
+function handleStringOrUndefined(x?: string) {}
+```

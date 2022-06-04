@@ -7,7 +7,8 @@ import {
   describe,
   it,
 } from '/dev_deps.ts';
-import { type, TypeAssertionError } from './asserter.ts';
+import { _number, _string } from '../mod.ts';
+import { type, TypeAssertionError, undefinedOr } from './asserter.ts';
 
 describe('TypeAssertionError', () => {
   it('should set correctly formatted `message`', () => {
@@ -155,6 +156,101 @@ describe('type', () => {
       () => _object([]),
       TypeAssertionError,
       new TypeAssertionError(_object.typeName, []).message,
+    );
+  });
+});
+
+describe('undefinedOr', () => {
+  const _stringOrUndefined = undefinedOr(_string);
+  const _numberOrUndefined = undefinedOr(_number);
+
+  it('should return a `Function` with correct `typeName`', () => {
+    assertInstanceOf(_stringOrUndefined, Function);
+    assertInstanceOf(_numberOrUndefined, Function);
+
+    assertStrictEquals(
+      _stringOrUndefined.typeName,
+      `${_string.typeName} | undefined`,
+    );
+    assertStrictEquals(
+      _numberOrUndefined.typeName,
+      `${_number.typeName} | undefined`,
+    );
+  });
+
+  it(
+    'should return a `Function` that returns `value` when it is `undefined` or `asserter` does not throw an error for it',
+    () => {
+      assertStrictEquals(_stringOrUndefined(''), '');
+      assertStrictEquals(_stringOrUndefined('a'), 'a');
+      assertStrictEquals(_stringOrUndefined(undefined), undefined);
+
+      assertStrictEquals(_numberOrUndefined(0), 0);
+      assertStrictEquals(_numberOrUndefined(1), 1);
+      assertStrictEquals(_numberOrUndefined(undefined), undefined);
+    },
+  );
+
+  it('should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not `undefined` and `asserter` does throw an error for it', () => {
+    assertThrows(
+      () => _stringOrUndefined(null, 'name'),
+      TypeAssertionError,
+      new TypeAssertionError(_stringOrUndefined.typeName, null, {
+        valueName: 'name',
+      })
+        .message,
+    );
+
+    assertThrows(
+      () => _stringOrUndefined(null),
+      TypeAssertionError,
+      new TypeAssertionError(_stringOrUndefined.typeName, null).message,
+    );
+    assertThrows(
+      () => _stringOrUndefined(false),
+      TypeAssertionError,
+      new TypeAssertionError(_stringOrUndefined.typeName, false).message,
+    );
+    assertThrows(
+      () => _stringOrUndefined(0),
+      TypeAssertionError,
+      new TypeAssertionError(_stringOrUndefined.typeName, 0).message,
+    );
+    assertThrows(
+      () => _stringOrUndefined([]),
+      TypeAssertionError,
+      new TypeAssertionError(_stringOrUndefined.typeName, []).message,
+    );
+    assertThrows(
+      () => _stringOrUndefined({}),
+      TypeAssertionError,
+      new TypeAssertionError(_stringOrUndefined.typeName, {}).message,
+    );
+
+    assertThrows(
+      () => _numberOrUndefined(null),
+      TypeAssertionError,
+      new TypeAssertionError(_numberOrUndefined.typeName, null).message,
+    );
+    assertThrows(
+      () => _numberOrUndefined(false),
+      TypeAssertionError,
+      new TypeAssertionError(_numberOrUndefined.typeName, false).message,
+    );
+    assertThrows(
+      () => _numberOrUndefined(''),
+      TypeAssertionError,
+      new TypeAssertionError(_numberOrUndefined.typeName, '').message,
+    );
+    assertThrows(
+      () => _numberOrUndefined({}),
+      TypeAssertionError,
+      new TypeAssertionError(_numberOrUndefined.typeName, {}).message,
+    );
+    assertThrows(
+      () => _numberOrUndefined([]),
+      TypeAssertionError,
+      new TypeAssertionError(_numberOrUndefined.typeName, []).message,
     );
   });
 });
