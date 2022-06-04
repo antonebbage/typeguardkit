@@ -1,7 +1,6 @@
 import { assertStrictEquals, assertThrows, describe, it } from '/dev_deps.ts';
-import { _string } from '../mod.ts';
+import { _string, TypeAssertionError } from '../mod.ts';
 import { assertIs } from './assert_is.ts';
-import { TypeAssertionError } from './asserter.ts';
 
 describe('assertIs', () => {
   it('should return `undefined` if `asserter` does not throw an error for `value`', () => {
