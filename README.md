@@ -145,7 +145,23 @@ function handleStringOrUndefined(x?: string) {}
 The `nullOr` function returns an `Asserter<Type | null>`, created using the
 provided `Asserter<Type>`.
 
-You can use `nullOr` like [`undefinedOr`](#undefinedor).
+You can use `nullOr` like this:
+
+```ts
+import { _string, is, nullOr } from './mod.ts';
+
+function handleUnknown(x: unknown) {
+  const _stringOrNull = nullOr(_string);
+
+  if (is(_stringOrNull, x)) {
+    // `x` has now been narrowed to type `string | null`, so can be passed to
+    // `handleStringOrNull`.
+    handleStringOrNull(x);
+  }
+}
+
+function handleStringOrNull(x: string | null) {}
+```
 
 #### `arrayOf`
 
