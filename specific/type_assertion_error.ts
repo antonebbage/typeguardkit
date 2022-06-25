@@ -1,14 +1,18 @@
 // This module is browser-compatible.
 
-/** `TypeAssertionErrorOptions` can be passed to the `TypeAssertionError`
- * constructor. */
+/**
+ * `TypeAssertionErrorOptions` can be passed to the `TypeAssertionError`
+ * constructor.
+ */
 export interface TypeAssertionErrorOptions {
   valueName?: string;
   innerError?: TypeAssertionError;
 }
 
-/** A `TypeAssertionError` should be thrown from an `Asserter<Type>` when
- * `value` is not of `Type`. */
+/**
+ * A `TypeAssertionError` should be thrown from an `Asserter<Type>` when `value`
+ * is not of `Type`.
+ */
 export class TypeAssertionError extends Error {
   constructor(
     expectedTypeName: string,

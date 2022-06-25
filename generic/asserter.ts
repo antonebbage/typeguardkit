@@ -2,16 +2,20 @@
 
 import { TypeAssertionError } from '../specific/type_assertion_error.ts';
 
-/** An `Asserter` is a type assertion function. If `value` is of `Type`, the
+/**
+ * An `Asserter` is a type assertion function. If `value` is of `Type`, the
  * `Asserter` should return `value` as `Type`. Otherwise, the `Asserter` should
- * throw a `TypeAssertionError`. */
+ * throw a `TypeAssertionError`.
+ */
 export interface Asserter<Type> {
   (value: unknown, name?: string): Type;
   readonly typeName: string;
 }
 
-/** `type` returns an `Asserter<Type>` that uses `guard` to assert whether
- * `value` is of `Type`. */
+/**
+ * `type` returns an `Asserter<Type>` that uses `guard` to assert whether
+ * `value` is of `Type`.
+ */
 export function type<Type>(
   name: string,
   guard: (value: unknown) => value is Type,
@@ -30,8 +34,10 @@ export function type<Type>(
   return asserter;
 }
 
-/** `undefinedOr` returns an `Asserter<Type | undefined>`, created using the
- * provided `Asserter<Type>`. */
+/**
+ * `undefinedOr` returns an `Asserter<Type | undefined>`, created using the
+ * provided `Asserter<Type>`.
+ */
 export function undefinedOr<Type>(
   asserter: Asserter<Type>,
 ): Asserter<Type | undefined> {
@@ -54,8 +60,10 @@ export function undefinedOr<Type>(
   return newAsserter;
 }
 
-/** `nullOr` returns an `Asserter<Type | null>`, created using the provided
- * `Asserter<Type>`. */
+/**
+ * `nullOr` returns an `Asserter<Type | null>`, created using the provided
+ * `Asserter<Type>`.
+ */
 export function nullOr<Type>(asserter: Asserter<Type>): Asserter<Type | null> {
   const newTypeName = `${asserter.typeName} | null`;
 

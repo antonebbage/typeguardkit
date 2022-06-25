@@ -2,7 +2,8 @@
 
 import { Asserter } from './asserter.ts';
 
-/** `is` wraps `asserter` with a predicate signature, creating a type guard, so
+/**
+ * `is` wraps `asserter` with a predicate signature, creating a type guard, so
  * that `value` can be narrowed to `Type`. If `asserter` throws an error, `is`
  * will catch it and return `false`. Otherwise, `is` will return `true`.
  *
@@ -17,7 +18,8 @@ import { Asserter } from './asserter.ts';
  * }
  *
  * function handleString(x: string) {}
- * ``` */
+ * ```
+ */
 export function is<Type>(
   asserter: Asserter<Type>,
   value: unknown,
