@@ -105,6 +105,7 @@ function handleUnknown(x: unknown) {
   if (is(_string, x)) {
     // `x` has now been narrowed to type `string`, so can be passed to
     // `handleString`.
+
     handleString(x);
   }
 }
@@ -133,6 +134,7 @@ function handleUnknown(x: unknown) {
   if (is(_stringOrUndefined, x)) {
     // `x` has now been narrowed to type `string | undefined`, so can be passed
     // to `handleStringOrUndefined`.
+
     handleStringOrUndefined(x);
   }
 }
@@ -156,6 +158,7 @@ function handleUnknown(x: unknown) {
   if (is(_stringOrNull, x)) {
     // `x` has now been narrowed to type `string | null`, so can be passed to
     // `handleStringOrNull`.
+
     handleStringOrNull(x);
   }
 }
@@ -179,6 +182,7 @@ function handleUnknown(x: unknown) {
   if (is(_arrayOfString, x)) {
     // `x` has now been narrowed to type `Array<string>`, so can be passed to
     // `handleArrayOfString`.
+
     handleArrayOfString(x);
   }
 }
