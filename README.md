@@ -146,3 +146,26 @@ The `nullOr` function returns an `Asserter<Type | null>`, created using the
 provided `Asserter<Type>`.
 
 You can use `nullOr` like [`undefinedOr`](#undefinedor).
+
+#### `arrayOf`
+
+The `arrayOf` function returns an `Asserter<Array<Type>>`, created using the
+provided `Asserter<Type>`.
+
+You can use `arrayOf` like this:
+
+```ts
+import { _string, arrayOf, is } from './mod.ts';
+
+function handleUnknown(x: unknown) {
+  const _arrayOfString = arrayOf(_string);
+
+  if (is(_arrayOfString, x)) {
+    // `x` has now been narrowed to type `Array<string>`, so can be passed to
+    // `handleArrayOfString`.
+    handleArrayOfString(x);
+  }
+}
+
+function handleArrayOfString(x: string[]) {}
+```

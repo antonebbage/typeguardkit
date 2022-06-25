@@ -296,3 +296,150 @@ describe('nullOr', () => {
     );
   });
 });
+
+describe('arrayOf', () => {
+  const _arrayOfString = arrayOf(_string);
+  const _arrayOfNumber = arrayOf(_number);
+
+  it('should return a `Function` with correct `typeName`', () => {
+    assertInstanceOf(_arrayOfString, Function);
+    assertInstanceOf(_arrayOfNumber, Function);
+
+    assertStrictEquals(_arrayOfString.typeName, `Array<${_string.typeName}>`);
+    assertStrictEquals(_arrayOfNumber.typeName, `Array<${_number.typeName}>`);
+  });
+
+  it(
+    'should return a `Function` that returns `value` when it is an array where `asserter` does not throw an error for any element',
+    () => {
+      assertNotStrictEquals(_arrayOfString([]), []);
+
+      let arrayOfString: string[] = [];
+      assertStrictEquals(_arrayOfString(arrayOfString), arrayOfString);
+
+      arrayOfString = [''];
+      assertStrictEquals(_arrayOfString(arrayOfString), arrayOfString);
+
+      arrayOfString = ['a', 'b', 'c'];
+      assertStrictEquals(_arrayOfString(arrayOfString), arrayOfString);
+
+      let arrayOfNumber: number[] = [];
+      assertStrictEquals(_arrayOfNumber(arrayOfNumber), arrayOfNumber);
+
+      arrayOfNumber = [0];
+      assertStrictEquals(_arrayOfNumber(arrayOfNumber), arrayOfNumber);
+
+      arrayOfNumber = [1, 2, 3];
+      assertStrictEquals(_arrayOfNumber(arrayOfNumber), arrayOfNumber);
+    },
+  );
+
+  it('should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not an array where `asserter` does not throw an error for any element', () => {
+    assertThrows(
+      () => _arrayOfString(undefined, 'name'),
+      TypeAssertionError,
+      new TypeAssertionError(_arrayOfString.typeName, undefined, {
+        valueName: 'name',
+      }).message,
+    );
+
+    assertThrows(
+      () => _arrayOfString(undefined),
+      TypeAssertionError,
+      new TypeAssertionError(_arrayOfString.typeName, undefined).message,
+    );
+    assertThrows(
+      () => _arrayOfString(null),
+      TypeAssertionError,
+      new TypeAssertionError(_arrayOfString.typeName, null).message,
+    );
+    assertThrows(
+      () => _arrayOfString(false),
+      TypeAssertionError,
+      new TypeAssertionError(_arrayOfString.typeName, false).message,
+    );
+    assertThrows(
+      () => _arrayOfString(0),
+      TypeAssertionError,
+      new TypeAssertionError(_arrayOfString.typeName, 0).message,
+    );
+    assertThrows(
+      () => _arrayOfString(''),
+      TypeAssertionError,
+      new TypeAssertionError(_arrayOfString.typeName, '').message,
+    );
+    assertThrows(
+      () => _arrayOfString({}),
+      TypeAssertionError,
+      new TypeAssertionError(_arrayOfString.typeName, {}).message,
+    );
+
+    assertThrows(
+      () => _arrayOfString([undefined]),
+      TypeAssertionError,
+      new TypeAssertionError(_arrayOfString.typeName, [undefined]).message,
+    );
+    assertThrows(
+      () => _arrayOfString([null]),
+      TypeAssertionError,
+      new TypeAssertionError(_arrayOfString.typeName, [null]).message,
+    );
+    assertThrows(
+      () => _arrayOfString([false]),
+      TypeAssertionError,
+      new TypeAssertionError(_arrayOfString.typeName, [false]).message,
+    );
+    assertThrows(
+      () => _arrayOfString([0]),
+      TypeAssertionError,
+      new TypeAssertionError(_arrayOfString.typeName, [0]).message,
+    );
+    assertThrows(
+      () => _arrayOfString([[]]),
+      TypeAssertionError,
+      new TypeAssertionError(_arrayOfString.typeName, [[]]).message,
+    );
+    assertThrows(
+      () => _arrayOfString([{}]),
+      TypeAssertionError,
+      new TypeAssertionError(_arrayOfString.typeName, [{}]).message,
+    );
+
+    assertThrows(
+      () => _arrayOfString(['', undefined]),
+      TypeAssertionError,
+      new TypeAssertionError(_arrayOfString.typeName, ['', undefined]).message,
+    );
+
+    assertThrows(
+      () => _arrayOfNumber([undefined]),
+      TypeAssertionError,
+      new TypeAssertionError(_arrayOfNumber.typeName, [undefined]).message,
+    );
+    assertThrows(
+      () => _arrayOfNumber([null]),
+      TypeAssertionError,
+      new TypeAssertionError(_arrayOfNumber.typeName, [null]).message,
+    );
+    assertThrows(
+      () => _arrayOfNumber([false]),
+      TypeAssertionError,
+      new TypeAssertionError(_arrayOfNumber.typeName, [false]).message,
+    );
+    assertThrows(
+      () => _arrayOfNumber(['']),
+      TypeAssertionError,
+      new TypeAssertionError(_arrayOfNumber.typeName, ['']).message,
+    );
+    assertThrows(
+      () => _arrayOfNumber([[]]),
+      TypeAssertionError,
+      new TypeAssertionError(_arrayOfNumber.typeName, [[]]).message,
+    );
+    assertThrows(
+      () => _arrayOfNumber([{}]),
+      TypeAssertionError,
+      new TypeAssertionError(_arrayOfNumber.typeName, [{}]).message,
+    );
+  });
+});

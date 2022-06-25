@@ -83,3 +83,34 @@ export function nullOr<Type>(asserter: Asserter<Type>): Asserter<Type | null> {
 
   return newAsserter;
 }
+
+/**
+ * `arrayOf` returns an `Asserter<Array<Type>>`, created using the provided
+ * `Asserter<Type>`.
+ */
+export function arrayOf<Type>(asserter: Asserter<Type>): Asserter<Array<Type>> {
+  const newTypeName = `Array<${asserter.typeName}>`;
+
+  const newAsserter = (value: unknown, valueName?: string) => {
+    if (!Array.isArray(value)) {
+      throw new TypeAssertionError(newTypeName, value, { valueName });
+    }
+
+    for (let i = 0; i < value.length; i++) {
+      try {
+        asserter(value[i], `valueName[${i}]`);
+      } catch (innerError) {
+        throw new TypeAssertionError(newTypeName, value, {
+          valueName,
+          innerError,
+        });
+      }
+    }
+
+    return value;
+  };
+
+  newAsserter.typeName = newTypeName;
+
+  return newAsserter;
+}
