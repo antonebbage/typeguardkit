@@ -6,21 +6,21 @@ import {
   describe,
   it,
 } from '/dev_deps.ts';
-import { _number, _string, TypeAssertionError } from '../mod.ts';
-import { arrayOf, nullOr, type, undefinedOr } from './asserter.ts';
+import { _number, TypeAssertionError } from '../mod.ts';
+import { arrayOf, nullOr, type, undefinedOr, unionOf } from './asserter.ts';
+
+const _string = type(
+  'string',
+  (value): value is string => typeof value === 'string',
+);
+
+const _object = type(
+  'Record<string, unknown>',
+  (value): value is Record<string, unknown> =>
+    typeof value === 'object' && !Array.isArray(value) && value !== null,
+);
 
 describe('type', () => {
-  const _string = type(
-    'string',
-    (value): value is string => typeof value === 'string',
-  );
-
-  const _object = type(
-    'Record<string, unknown>',
-    (value): value is Record<string, unknown> =>
-      typeof value === 'object' && !Array.isArray(value) && value !== null,
-  );
-
   it('should return a `Function` with `typeName` set to `name`', () => {
     assertInstanceOf(_string, Function);
     assertInstanceOf(_object, Function);
@@ -110,6 +110,67 @@ describe('type', () => {
       () => _object([]),
       TypeAssertionError,
       new TypeAssertionError(_object.typeName, []).message,
+    );
+  });
+});
+
+describe('unionOf', () => {
+  const _stringOrNumberOrObject = unionOf(_string, _number, _object);
+
+  it('should return a `Function` with correct `typeName`', () => {
+    assertInstanceOf(_stringOrNumberOrObject, Function);
+
+    assertStrictEquals(
+      _stringOrNumberOrObject.typeName,
+      `${_string.typeName} | ${_number.typeName} | ${_object.typeName}`,
+    );
+  });
+
+  it(
+    'should return a `Function` that returns `value` when any of the `asserters` do not throw an error for it',
+    () => {
+      assertStrictEquals(_stringOrNumberOrObject(''), '');
+      assertStrictEquals(_stringOrNumberOrObject('a'), 'a');
+
+      assertStrictEquals(_stringOrNumberOrObject(0), 0);
+      assertStrictEquals(_stringOrNumberOrObject(1), 1);
+
+      assertNotStrictEquals(_stringOrNumberOrObject({}), {});
+
+      const object = {};
+      assertStrictEquals(_stringOrNumberOrObject(object), object);
+    },
+  );
+
+  it('should return a `Function` that throws a `TypeAssertionError` with correct `message` when all of the `asserters` throw an error for `value`', () => {
+    assertThrows(
+      () => _stringOrNumberOrObject(undefined, 'name'),
+      TypeAssertionError,
+      new TypeAssertionError(_stringOrNumberOrObject.typeName, undefined, {
+        valueName: 'name',
+      }).message,
+    );
+
+    assertThrows(
+      () => _stringOrNumberOrObject(undefined),
+      TypeAssertionError,
+      new TypeAssertionError(_stringOrNumberOrObject.typeName, undefined)
+        .message,
+    );
+    assertThrows(
+      () => _stringOrNumberOrObject(null),
+      TypeAssertionError,
+      new TypeAssertionError(_stringOrNumberOrObject.typeName, null).message,
+    );
+    assertThrows(
+      () => _stringOrNumberOrObject(false),
+      TypeAssertionError,
+      new TypeAssertionError(_stringOrNumberOrObject.typeName, false).message,
+    );
+    assertThrows(
+      () => _stringOrNumberOrObject([]),
+      TypeAssertionError,
+      new TypeAssertionError(_stringOrNumberOrObject.typeName, []).message,
     );
   });
 });

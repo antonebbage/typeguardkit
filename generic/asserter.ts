@@ -35,6 +35,34 @@ export function type<Type>(
 }
 
 /**
+ * `unionOf` returns an `Asserter` for the union of the `Type`s of the provided
+ * `Asserter<Type>`s.
+ */
+export function unionOf<Asserters extends Array<Asserter<unknown>>>(
+  ...asserters: Asserters
+): Asserter<ReturnType<Asserters[number]>> {
+  const newTypeName = asserters.map(({ typeName }) => typeName).join(' | ');
+
+  const newAsserter = (value: unknown, valueName?: string) => {
+    for (let i = 0; i < asserters.length; i++) {
+      try {
+        asserters[i](value);
+      } catch {
+        continue;
+      }
+
+      return value;
+    }
+
+    throw new TypeAssertionError(newTypeName, value, { valueName });
+  };
+
+  newAsserter.typeName = newTypeName;
+
+  return newAsserter as Asserter<ReturnType<Asserters[number]>>;
+}
+
+/**
  * `undefinedOr` returns an `Asserter<Type | undefined>`, created using the
  * provided `Asserter<Type>`.
  */

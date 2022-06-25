@@ -113,10 +113,33 @@ function handleUnknown(x: unknown) {
 function handleString(x: string) {}
 ```
 
-### Modifier functions
+### Other `Asserter` factory functions
 
-The following functions allow you to use an existing `Asserter<Type>` to create
-a new one with modified `Type`.
+The following functions help to create new `Asserter`s from existing ones.
+
+#### `unionOf`
+
+The `unionOf` function returns an `Asserter` for the union of the `Type`s of the
+provided `Asserter<Type>`s.
+
+You can use `unionOf` like this:
+
+```ts
+import { _number, _string, is, unionOf } from './mod.ts';
+
+function handleUnknown(x: unknown) {
+  const _stringOrNumber = unionOf(_string, _number);
+
+  if (is(_stringOrNumber, x)) {
+    // `x` has now been narrowed to type `string | number`, so can be passed
+    // to `handleStringOrNumber`.
+
+    handleStringOrNumber(x);
+  }
+}
+
+function handleStringOrNumber(x: string | number) {}
+```
 
 #### `undefinedOr`
 
