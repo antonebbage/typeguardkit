@@ -43,7 +43,7 @@ export function undefinedOr<Type>(
     }
 
     try {
-      return asserter(value, valueName);
+      return asserter(value);
     } catch {
       throw new TypeAssertionError(newTypeName, value, { valueName });
     }
@@ -65,7 +65,7 @@ export function nullOr<Type>(asserter: Asserter<Type>): Asserter<Type | null> {
     }
 
     try {
-      return asserter(value, valueName);
+      return asserter(value);
     } catch {
       throw new TypeAssertionError(newTypeName, value, { valueName });
     }
