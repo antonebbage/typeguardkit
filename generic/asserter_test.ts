@@ -7,7 +7,7 @@ import {
   it,
 } from '/dev_deps.ts';
 import { _number, _string, TypeAssertionError } from '../mod.ts';
-import { nullOr, type, undefinedOr } from './asserter.ts';
+import { arrayOf, nullOr, type, undefinedOr } from './asserter.ts';
 
 describe('type', () => {
   const _string = type(
@@ -35,10 +35,10 @@ describe('type', () => {
       assertStrictEquals(_string(''), '');
       assertStrictEquals(_string('a'), 'a');
 
+      assertNotStrictEquals(_object({}), {});
+
       const object = {};
       assertStrictEquals(_object(object), object);
-
-      assertNotStrictEquals(_object({}), {});
     },
   );
 
@@ -197,14 +197,14 @@ describe('undefinedOr', () => {
       new TypeAssertionError(_numberOrUndefined.typeName, '').message,
     );
     assertThrows(
-      () => _numberOrUndefined({}),
-      TypeAssertionError,
-      new TypeAssertionError(_numberOrUndefined.typeName, {}).message,
-    );
-    assertThrows(
       () => _numberOrUndefined([]),
       TypeAssertionError,
       new TypeAssertionError(_numberOrUndefined.typeName, []).message,
+    );
+    assertThrows(
+      () => _numberOrUndefined({}),
+      TypeAssertionError,
+      new TypeAssertionError(_numberOrUndefined.typeName, {}).message,
     );
   });
 });
@@ -285,14 +285,14 @@ describe('nullOr', () => {
       new TypeAssertionError(_numberOrNull.typeName, '').message,
     );
     assertThrows(
-      () => _numberOrNull({}),
-      TypeAssertionError,
-      new TypeAssertionError(_numberOrNull.typeName, {}).message,
-    );
-    assertThrows(
       () => _numberOrNull([]),
       TypeAssertionError,
       new TypeAssertionError(_numberOrNull.typeName, []).message,
+    );
+    assertThrows(
+      () => _numberOrNull({}),
+      TypeAssertionError,
+      new TypeAssertionError(_numberOrNull.typeName, {}).message,
     );
   });
 });
