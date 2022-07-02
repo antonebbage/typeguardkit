@@ -4,6 +4,7 @@ await emptyDir("./npm");
 
 await build({
   entryPoints: ["./mod.ts"],
+  importMap: "./import_map.json",
   outDir: "./npm",
 
   shims: {
