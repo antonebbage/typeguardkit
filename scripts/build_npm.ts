@@ -1,4 +1,4 @@
-import { build, emptyDir } from "/dev_deps.ts";
+import { build, emptyDir } from "https://deno.land/x/dnt@0.27.0/mod.ts";
 
 await emptyDir("./npm");
 
