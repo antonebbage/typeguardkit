@@ -375,7 +375,9 @@ describe('arrayOf', () => {
     () => {
       assertNotStrictEquals(_arrayOfString([]), []);
 
-      let arrayOfString: string[] = [];
+      let arrayOfString: string[];
+
+      arrayOfString = [];
       assertStrictEquals(_arrayOfString(arrayOfString), arrayOfString);
 
       arrayOfString = [''];
@@ -384,7 +386,9 @@ describe('arrayOf', () => {
       arrayOfString = ['a', 'b', 'c'];
       assertStrictEquals(_arrayOfString(arrayOfString), arrayOfString);
 
-      let arrayOfNumber: number[] = [];
+      let arrayOfNumber: number[];
+
+      arrayOfNumber = [];
       assertStrictEquals(_arrayOfNumber(arrayOfNumber), arrayOfNumber);
 
       arrayOfNumber = [0];
