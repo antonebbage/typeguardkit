@@ -1,6 +1,6 @@
 // This module is browser-compatible.
 
-import { type } from '../generic/mod.ts';
+import { type } from "../generic/mod.ts";
 
 /**
  * `_boolean` is a `boolean` type assertion function. If `value` is a `boolean`,
@@ -8,8 +8,8 @@ import { type } from '../generic/mod.ts';
  * `TypeAssertionError`, including `name` in its `message`.
  */
 export const _boolean = type(
-  'boolean',
-  (value): value is boolean => typeof value === 'boolean',
+  "boolean",
+  (value): value is boolean => typeof value === "boolean",
 );
 
 /**
@@ -18,8 +18,8 @@ export const _boolean = type(
  * `TypeAssertionError`, including `name` in its `message`.
  */
 export const _number = type(
-  'number',
-  (value): value is number => typeof value === 'number',
+  "number",
+  (value): value is number => typeof value === "number",
 );
 
 /**
@@ -28,6 +28,6 @@ export const _number = type(
  * `TypeAssertionError`, including `name` in its `message`.
  */
 export const _string = type(
-  'string',
-  (value): value is string => typeof value === 'string',
+  "string",
+  (value): value is string => typeof value === "string",
 );

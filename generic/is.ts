@@ -1,6 +1,6 @@
 // This module is browser-compatible.
 
-import { Asserter } from './asserter.ts';
+import { Asserter } from "./asserter.ts";
 
 /**
  * `is` wraps `asserter` with a predicate signature, creating a type guard, so
@@ -8,8 +8,8 @@ import { Asserter } from './asserter.ts';
  * will catch it and return `false`. Otherwise, `is` will return `true`.
  *
  * ```ts
- * import { _string } from '../mod.ts';
- * import { is } from './is.ts';
+ * import { _string } from "../mod.ts";
+ * import { is } from "./is.ts";
  *
  * function handleUnknown(x: unknown) {
  *   if (is(_string, x)) {

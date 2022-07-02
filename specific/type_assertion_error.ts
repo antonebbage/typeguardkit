@@ -19,11 +19,11 @@ export class TypeAssertionError extends Error {
     value: unknown,
     options: TypeAssertionErrorOptions = {},
   ) {
-    const actualTypeName = typeof value === 'object'
-      ? value === null ? 'null' : value.constructor.name
+    const actualTypeName = typeof value === "object"
+      ? value === null ? "null" : value.constructor.name
       : typeof value;
 
-    const valueName = options.valueName ? options.valueName : 'value';
+    const valueName = options.valueName ? options.valueName : "value";
 
     let message =
       `\`${valueName}\` is of type \`${actualTypeName}\`; expected type of \`${expectedTypeName}\``;
@@ -41,6 +41,6 @@ export class TypeAssertionError extends Error {
       Error.captureStackTrace(this, TypeAssertionError);
     }
 
-    this.name = 'TypeAssertionError';
+    this.name = "TypeAssertionError";
   }
 }

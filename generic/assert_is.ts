@@ -1,6 +1,6 @@
 // This module is browser-compatible.
 
-import { Asserter } from './asserter.ts';
+import { Asserter } from "./asserter.ts";
 
 /**
  * `assertIs` wraps `asserter` with an assertion signature so `value` can be
@@ -9,12 +9,12 @@ import { Asserter } from './asserter.ts';
  * will be narrowed to `Type`.
  *
  * ```ts
- * import { _string } from '../mod.ts';
- * import { assertIs } from './assert_is.ts';
+ * import { _string } from "../mod.ts";
+ * import { assertIs } from "./assert_is.ts";
  *
  * function handleUnknown(x: unknown) {
  *   try {
- *     assertIs(_string, x, 'x');
+ *     assertIs(_string, x, "x");
  *   } catch {
  *     return;
  *   }

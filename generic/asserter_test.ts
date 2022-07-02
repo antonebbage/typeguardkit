@@ -5,35 +5,35 @@ import {
   assertThrows,
   describe,
   it,
-} from '/dev_deps.ts';
-import { _number, TypeAssertionError } from '../mod.ts';
-import { arrayOf, nullOr, type, undefinedOr, unionOf } from './asserter.ts';
+} from "/dev_deps.ts";
+import { _number, TypeAssertionError } from "../mod.ts";
+import { arrayOf, nullOr, type, undefinedOr, unionOf } from "./asserter.ts";
 
 const _string = type(
-  'string',
-  (value): value is string => typeof value === 'string',
+  "string",
+  (value): value is string => typeof value === "string",
 );
 
 const _object = type(
-  'Record<string, unknown>',
+  "Record<string, unknown>",
   (value): value is Record<string, unknown> =>
-    typeof value === 'object' && !Array.isArray(value) && value !== null,
+    typeof value === "object" && !Array.isArray(value) && value !== null,
 );
 
-describe('type', () => {
-  it('should return a `Function` with `typeName` set to `name`', () => {
+describe("type", () => {
+  it("should return a `Function` with `typeName` set to `name`", () => {
     assertInstanceOf(_string, Function);
     assertInstanceOf(_object, Function);
 
-    assertStrictEquals(_string.typeName, 'string');
-    assertStrictEquals(_object.typeName, 'Record<string, unknown>');
+    assertStrictEquals(_string.typeName, "string");
+    assertStrictEquals(_object.typeName, "Record<string, unknown>");
   });
 
   it(
-    'should return a `Function` that returns `value` when `guard` returns `true` for `value`',
+    "should return a `Function` that returns `value` when `guard` returns `true` for `value`",
     () => {
-      assertStrictEquals(_string(''), '');
-      assertStrictEquals(_string('a'), 'a');
+      assertStrictEquals(_string(""), "");
+      assertStrictEquals(_string("a"), "a");
 
       assertNotStrictEquals(_object({}), {});
 
@@ -42,11 +42,11 @@ describe('type', () => {
     },
   );
 
-  it('should return a `Function` that throws a `TypeAssertionError` with correct `message` when `guard` returns `false` for `value`', () => {
+  it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `guard` returns `false` for `value`", () => {
     assertThrows(
-      () => _string(undefined, 'name'),
+      () => _string(undefined, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_string.typeName, undefined, { valueName: 'name' })
+      new TypeAssertionError(_string.typeName, undefined, { valueName: "name" })
         .message,
     );
 
@@ -102,9 +102,9 @@ describe('type', () => {
       new TypeAssertionError(_object.typeName, 0).message,
     );
     assertThrows(
-      () => _object(''),
+      () => _object(""),
       TypeAssertionError,
-      new TypeAssertionError(_object.typeName, '').message,
+      new TypeAssertionError(_object.typeName, "").message,
     );
     assertThrows(
       () => _object([]),
@@ -114,10 +114,10 @@ describe('type', () => {
   });
 });
 
-describe('unionOf', () => {
+describe("unionOf", () => {
   const _stringOrNumberOrObject = unionOf(_string, _number, _object);
 
-  it('should return a `Function` with correct `typeName`', () => {
+  it("should return a `Function` with correct `typeName`", () => {
     assertInstanceOf(_stringOrNumberOrObject, Function);
 
     assertStrictEquals(
@@ -127,10 +127,10 @@ describe('unionOf', () => {
   });
 
   it(
-    'should return a `Function` that returns `value` when any of the `asserters` do not throw an error for it',
+    "should return a `Function` that returns `value` when any of the `asserters` do not throw an error for it",
     () => {
-      assertStrictEquals(_stringOrNumberOrObject(''), '');
-      assertStrictEquals(_stringOrNumberOrObject('a'), 'a');
+      assertStrictEquals(_stringOrNumberOrObject(""), "");
+      assertStrictEquals(_stringOrNumberOrObject("a"), "a");
 
       assertStrictEquals(_stringOrNumberOrObject(0), 0);
       assertStrictEquals(_stringOrNumberOrObject(1), 1);
@@ -142,12 +142,12 @@ describe('unionOf', () => {
     },
   );
 
-  it('should return a `Function` that throws a `TypeAssertionError` with correct `message` when all of the `asserters` throw an error for `value`', () => {
+  it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when all of the `asserters` throw an error for `value`", () => {
     assertThrows(
-      () => _stringOrNumberOrObject(undefined, 'name'),
+      () => _stringOrNumberOrObject(undefined, "name"),
       TypeAssertionError,
       new TypeAssertionError(_stringOrNumberOrObject.typeName, undefined, {
-        valueName: 'name',
+        valueName: "name",
       }).message,
     );
 
@@ -175,11 +175,11 @@ describe('unionOf', () => {
   });
 });
 
-describe('undefinedOr', () => {
+describe("undefinedOr", () => {
   const _stringOrUndefined = undefinedOr(_string);
   const _numberOrUndefined = undefinedOr(_number);
 
-  it('should return a `Function` with correct `typeName`', () => {
+  it("should return a `Function` with correct `typeName`", () => {
     assertInstanceOf(_stringOrUndefined, Function);
     assertInstanceOf(_numberOrUndefined, Function);
 
@@ -194,10 +194,10 @@ describe('undefinedOr', () => {
   });
 
   it(
-    'should return a `Function` that returns `value` when it is `undefined` or `asserter` does not throw an error for it',
+    "should return a `Function` that returns `value` when it is `undefined` or `asserter` does not throw an error for it",
     () => {
-      assertStrictEquals(_stringOrUndefined(''), '');
-      assertStrictEquals(_stringOrUndefined('a'), 'a');
+      assertStrictEquals(_stringOrUndefined(""), "");
+      assertStrictEquals(_stringOrUndefined("a"), "a");
       assertStrictEquals(_stringOrUndefined(undefined), undefined);
 
       assertStrictEquals(_numberOrUndefined(0), 0);
@@ -206,12 +206,12 @@ describe('undefinedOr', () => {
     },
   );
 
-  it('should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not `undefined` and `asserter` does throw an error for it', () => {
+  it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not `undefined` and `asserter` does throw an error for it", () => {
     assertThrows(
-      () => _stringOrUndefined(null, 'name'),
+      () => _stringOrUndefined(null, "name"),
       TypeAssertionError,
       new TypeAssertionError(_stringOrUndefined.typeName, null, {
-        valueName: 'name',
+        valueName: "name",
       })
         .message,
     );
@@ -253,9 +253,9 @@ describe('undefinedOr', () => {
       new TypeAssertionError(_numberOrUndefined.typeName, false).message,
     );
     assertThrows(
-      () => _numberOrUndefined(''),
+      () => _numberOrUndefined(""),
       TypeAssertionError,
-      new TypeAssertionError(_numberOrUndefined.typeName, '').message,
+      new TypeAssertionError(_numberOrUndefined.typeName, "").message,
     );
     assertThrows(
       () => _numberOrUndefined([]),
@@ -270,11 +270,11 @@ describe('undefinedOr', () => {
   });
 });
 
-describe('nullOr', () => {
+describe("nullOr", () => {
   const _stringOrNull = nullOr(_string);
   const _numberOrNull = nullOr(_number);
 
-  it('should return a `Function` with correct `typeName`', () => {
+  it("should return a `Function` with correct `typeName`", () => {
     assertInstanceOf(_stringOrNull, Function);
     assertInstanceOf(_numberOrNull, Function);
 
@@ -283,10 +283,10 @@ describe('nullOr', () => {
   });
 
   it(
-    'should return a `Function` that returns `value` when it is `null` or `asserter` does not throw an error for it',
+    "should return a `Function` that returns `value` when it is `null` or `asserter` does not throw an error for it",
     () => {
-      assertStrictEquals(_stringOrNull(''), '');
-      assertStrictEquals(_stringOrNull('a'), 'a');
+      assertStrictEquals(_stringOrNull(""), "");
+      assertStrictEquals(_stringOrNull("a"), "a");
       assertStrictEquals(_stringOrNull(null), null);
 
       assertStrictEquals(_numberOrNull(0), 0);
@@ -295,12 +295,12 @@ describe('nullOr', () => {
     },
   );
 
-  it('should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not `null` and `asserter` does throw an error for it', () => {
+  it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not `null` and `asserter` does throw an error for it", () => {
     assertThrows(
-      () => _stringOrNull(undefined, 'name'),
+      () => _stringOrNull(undefined, "name"),
       TypeAssertionError,
       new TypeAssertionError(_stringOrNull.typeName, undefined, {
-        valueName: 'name',
+        valueName: "name",
       }).message,
     );
 
@@ -341,9 +341,9 @@ describe('nullOr', () => {
       new TypeAssertionError(_numberOrNull.typeName, false).message,
     );
     assertThrows(
-      () => _numberOrNull(''),
+      () => _numberOrNull(""),
       TypeAssertionError,
-      new TypeAssertionError(_numberOrNull.typeName, '').message,
+      new TypeAssertionError(_numberOrNull.typeName, "").message,
     );
     assertThrows(
       () => _numberOrNull([]),
@@ -358,11 +358,11 @@ describe('nullOr', () => {
   });
 });
 
-describe('arrayOf', () => {
+describe("arrayOf", () => {
   const _arrayOfString = arrayOf(_string);
   const _arrayOfNumber = arrayOf(_number);
 
-  it('should return a `Function` with correct `typeName`', () => {
+  it("should return a `Function` with correct `typeName`", () => {
     assertInstanceOf(_arrayOfString, Function);
     assertInstanceOf(_arrayOfNumber, Function);
 
@@ -371,7 +371,7 @@ describe('arrayOf', () => {
   });
 
   it(
-    'should return a `Function` that returns `value` when it is an array where `asserter` does not throw an error for any element',
+    "should return a `Function` that returns `value` when it is an array where `asserter` does not throw an error for any element",
     () => {
       assertNotStrictEquals(_arrayOfString([]), []);
 
@@ -380,10 +380,10 @@ describe('arrayOf', () => {
       arrayOfString = [];
       assertStrictEquals(_arrayOfString(arrayOfString), arrayOfString);
 
-      arrayOfString = [''];
+      arrayOfString = [""];
       assertStrictEquals(_arrayOfString(arrayOfString), arrayOfString);
 
-      arrayOfString = ['a', 'b', 'c'];
+      arrayOfString = ["a", "b", "c"];
       assertStrictEquals(_arrayOfString(arrayOfString), arrayOfString);
 
       let arrayOfNumber: number[];
@@ -399,12 +399,12 @@ describe('arrayOf', () => {
     },
   );
 
-  it('should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not an array where `asserter` does not throw an error for any element', () => {
+  it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not an array where `asserter` does not throw an error for any element", () => {
     assertThrows(
-      () => _arrayOfString(undefined, 'name'),
+      () => _arrayOfString(undefined, "name"),
       TypeAssertionError,
       new TypeAssertionError(_arrayOfString.typeName, undefined, {
-        valueName: 'name',
+        valueName: "name",
       }).message,
     );
 
@@ -429,9 +429,9 @@ describe('arrayOf', () => {
       new TypeAssertionError(_arrayOfString.typeName, 0).message,
     );
     assertThrows(
-      () => _arrayOfString(''),
+      () => _arrayOfString(""),
       TypeAssertionError,
-      new TypeAssertionError(_arrayOfString.typeName, '').message,
+      new TypeAssertionError(_arrayOfString.typeName, "").message,
     );
     assertThrows(
       () => _arrayOfString({}),
@@ -471,9 +471,9 @@ describe('arrayOf', () => {
     );
 
     assertThrows(
-      () => _arrayOfString(['', undefined]),
+      () => _arrayOfString(["", undefined]),
       TypeAssertionError,
-      new TypeAssertionError(_arrayOfString.typeName, ['', undefined]).message,
+      new TypeAssertionError(_arrayOfString.typeName, ["", undefined]).message,
     );
 
     assertThrows(
@@ -492,9 +492,9 @@ describe('arrayOf', () => {
       new TypeAssertionError(_arrayOfNumber.typeName, [false]).message,
     );
     assertThrows(
-      () => _arrayOfNumber(['']),
+      () => _arrayOfNumber([""]),
       TypeAssertionError,
-      new TypeAssertionError(_arrayOfNumber.typeName, ['']).message,
+      new TypeAssertionError(_arrayOfNumber.typeName, [""]).message,
     );
     assertThrows(
       () => _arrayOfNumber([[]]),

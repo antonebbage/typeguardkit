@@ -1,7 +1,7 @@
 // This module is browser-compatible.
 
-import { TypeAssertionError } from '../specific/type_assertion_error.ts';
-import { Asserter } from './asserter.ts';
+import { TypeAssertionError } from "../specific/type_assertion_error.ts";
+import { Asserter } from "./asserter.ts";
 
 /**
  * An `ObjectAsserter` is an `Asserter` for the object type defined by its
@@ -27,7 +27,7 @@ export function objectAsserter<
   { [Key in keyof PropertyAsserters]: ReturnType<PropertyAsserters[Key]> }
 > {
   const asserter = (value: unknown, valueName?: string) => {
-    if (typeof value !== 'object' || value === null) {
+    if (typeof value !== "object" || value === null) {
       throw new TypeAssertionError(typeName, value, { valueName });
     }
 

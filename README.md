@@ -26,13 +26,13 @@ The module includes the `_boolean`, `_number`, and `_string` `Asserter`s.
 You can use an `Asserter` like this:
 
 ```ts
-import { _string } from './mod.ts';
+import { _string } from "./mod.ts";
 
 function handleUnknown(x: unknown) {
   let y;
 
   try {
-    y = _string(x, 'x');
+    y = _string(x, "x");
   } catch {
     return;
   }
@@ -50,11 +50,11 @@ You can create your own `Asserter` with the `type` function. For example, the
 `_string` `Asserter` was created like this:
 
 ```ts
-import { type } from './mod.ts';
+import { type } from "./mod.ts";
 
 export const _string = type(
-  'string',
-  (value): value is string => typeof value === 'string',
+  "string",
+  (value): value is string => typeof value === "string",
 );
 ```
 
@@ -71,11 +71,11 @@ after calling it, the value passed in will be narrowed to `Type`.
 You can use `assertIs` like this:
 
 ```ts
-import { _string, assertIs } from './mod.ts';
+import { _string, assertIs } from "./mod.ts";
 
 function handleUnknown(x: unknown) {
   try {
-    assertIs(_string, x, 'x');
+    assertIs(_string, x, "x");
   } catch {
     return;
   }
@@ -99,7 +99,7 @@ a type guard, so the value passed in can be narrowed to `Type`. If the
 You can use `is` like this:
 
 ```ts
-import { _string, is } from './mod.ts';
+import { _string, is } from "./mod.ts";
 
 function handleUnknown(x: unknown) {
   if (is(_string, x)) {
@@ -125,7 +125,7 @@ provided `Asserter<Type>`s.
 You can use `unionOf` like this:
 
 ```ts
-import { _number, _string, is, unionOf } from './mod.ts';
+import { _number, _string, is, unionOf } from "./mod.ts";
 
 const _stringOrNumber = unionOf(_string, _number);
 
@@ -149,7 +149,7 @@ using the provided `Asserter<Type>`.
 You can use `undefinedOr` like this:
 
 ```ts
-import { _string, is, undefinedOr } from './mod.ts';
+import { _string, is, undefinedOr } from "./mod.ts";
 
 const _stringOrUndefined = undefinedOr(_string);
 
@@ -173,7 +173,7 @@ provided `Asserter<Type>`.
 You can use `nullOr` like this:
 
 ```ts
-import { _string, is, nullOr } from './mod.ts';
+import { _string, is, nullOr } from "./mod.ts";
 
 const _stringOrNull = nullOr(_string);
 
@@ -197,7 +197,7 @@ provided `Asserter<Type>`.
 You can use `arrayOf` like this:
 
 ```ts
-import { _string, arrayOf, is } from './mod.ts';
+import { _string, arrayOf, is } from "./mod.ts";
 
 const _arrayOfString = arrayOf(_string);
 
@@ -219,7 +219,7 @@ An `ObjectAsserter` is an `Asserter` for the object type defined by its
 `propertyAsserters`.
 
 ```ts
-import { Asserter } from './mod.ts';
+import { Asserter } from "./mod.ts";
 
 interface ObjectAsserter<Type extends Record<string, unknown>>
   extends Asserter<Type> {
@@ -233,9 +233,9 @@ You can create an `ObjectAsserter` with the `objectAsserter` function and use it
 like this:
 
 ```ts
-import { _number, _string, Asserter, is, objectAsserter } from './mod.ts';
+import { _number, _string, Asserter, is, objectAsserter } from "./mod.ts";
 
-const asserter = objectAsserter('User', {
+const asserter = objectAsserter("User", {
   name: _string,
   age: _number,
 });

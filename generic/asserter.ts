@@ -1,6 +1,6 @@
 // This module is browser-compatible.
 
-import { TypeAssertionError } from '../specific/type_assertion_error.ts';
+import { TypeAssertionError } from "../specific/type_assertion_error.ts";
 
 /**
  * An `Asserter` is a type assertion function. If `value` is of `Type`, the
@@ -41,7 +41,7 @@ export function type<Type>(
 export function unionOf<Asserters extends Array<Asserter<unknown>>>(
   ...asserters: Asserters
 ): Asserter<ReturnType<Asserters[number]>> {
-  const newTypeName = asserters.map(({ typeName }) => typeName).join(' | ');
+  const newTypeName = asserters.map(({ typeName }) => typeName).join(" | ");
 
   const newAsserter = (value: unknown, valueName?: string) => {
     for (let i = 0; i < asserters.length; i++) {

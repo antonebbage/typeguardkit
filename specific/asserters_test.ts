@@ -1,19 +1,19 @@
-import { assertStrictEquals, assertThrows, describe, it } from '/dev_deps.ts';
-import { _boolean, _number, _string } from './asserters.ts';
-import { TypeAssertionError } from './type_assertion_error.ts';
+import { assertStrictEquals, assertThrows, describe, it } from "/dev_deps.ts";
+import { _boolean, _number, _string } from "./asserters.ts";
+import { TypeAssertionError } from "./type_assertion_error.ts";
 
-describe('_boolean', () => {
-  it('should return `value` if of type `boolean`', () => {
+describe("_boolean", () => {
+  it("should return `value` if of type `boolean`", () => {
     assertStrictEquals(_boolean(false), false);
     assertStrictEquals(_boolean(true), true);
   });
 
-  it('should throw a `TypeAssertionError` with correct `message` if `value` not of type `boolean`', () => {
+  it("should throw a `TypeAssertionError` with correct `message` if `value` not of type `boolean`", () => {
     assertThrows(
-      () => _boolean(undefined, 'name'),
+      () => _boolean(undefined, "name"),
       TypeAssertionError,
       new TypeAssertionError(_boolean.typeName, undefined, {
-        valueName: 'name',
+        valueName: "name",
       }).message,
     );
 
@@ -33,9 +33,9 @@ describe('_boolean', () => {
       new TypeAssertionError(_boolean.typeName, 0).message,
     );
     assertThrows(
-      () => _boolean(''),
+      () => _boolean(""),
       TypeAssertionError,
-      new TypeAssertionError(_boolean.typeName, '').message,
+      new TypeAssertionError(_boolean.typeName, "").message,
     );
     assertThrows(
       () => _boolean([]),
@@ -50,17 +50,17 @@ describe('_boolean', () => {
   });
 });
 
-describe('_number', () => {
-  it('should return `value` if of type `number`', () => {
+describe("_number", () => {
+  it("should return `value` if of type `number`", () => {
     assertStrictEquals(_number(0), 0);
     assertStrictEquals(_number(1), 1);
   });
 
-  it('should throw a `TypeAssertionError` with correct `message` if `value` not of type `number`', () => {
+  it("should throw a `TypeAssertionError` with correct `message` if `value` not of type `number`", () => {
     assertThrows(
-      () => _number(undefined, 'name'),
+      () => _number(undefined, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_number.typeName, undefined, { valueName: 'name' })
+      new TypeAssertionError(_number.typeName, undefined, { valueName: "name" })
         .message,
     );
 
@@ -80,9 +80,9 @@ describe('_number', () => {
       new TypeAssertionError(_number.typeName, false).message,
     );
     assertThrows(
-      () => _number(''),
+      () => _number(""),
       TypeAssertionError,
-      new TypeAssertionError(_number.typeName, '').message,
+      new TypeAssertionError(_number.typeName, "").message,
     );
     assertThrows(
       () => _number([]),
@@ -97,17 +97,17 @@ describe('_number', () => {
   });
 });
 
-describe('_string', () => {
-  it('should return `value` if of type `string`', () => {
-    assertStrictEquals(_string(''), '');
-    assertStrictEquals(_string('a'), 'a');
+describe("_string", () => {
+  it("should return `value` if of type `string`", () => {
+    assertStrictEquals(_string(""), "");
+    assertStrictEquals(_string("a"), "a");
   });
 
-  it('should throw a `TypeAssertionError` with correct `message` if `value` not of type `string`', () => {
+  it("should throw a `TypeAssertionError` with correct `message` if `value` not of type `string`", () => {
     assertThrows(
-      () => _string(undefined, 'name'),
+      () => _string(undefined, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_string.typeName, undefined, { valueName: 'name' })
+      new TypeAssertionError(_string.typeName, undefined, { valueName: "name" })
         .message,
     );
 
