@@ -7,6 +7,48 @@ definition.
 
 ## Usage
 
+### Example
+
+```ts
+import {
+  _boolean,
+  _number,
+  _string,
+  arrayOf,
+  Asserter,
+  objectAsserter,
+  undefinedOr,
+  unionOf,
+} from "./mod.ts";
+
+// entity_types/book.ts
+
+const asserter = objectAsserter("Book", {
+  title: _string,
+  authors: arrayOf(_string),
+  pageCount: _number,
+  isRecommended: _boolean,
+  websiteUrl: undefinedOr(_string),
+});
+
+export interface Book extends ReturnType<typeof asserter> {}
+
+export const _Book: Asserter<Book> = asserter;
+
+// api/get_book.ts
+
+export async function getBook(id: string): Promise<Book> {
+  const response = await fetch(`/api/books/${id}`);
+  const responseBody = await response.json();
+
+  // If `responseBody` is a `Book`, `_Book` returns `responseBody` as `Book`.
+  // Otherwise, `_Book` throws a `TypeAssertionError`, including
+  // `"responseBody"` in its message.
+
+  return _Book(responseBody, "responseBody");
+}
+```
+
 ### `Asserter`s
 
 An `Asserter` is a type assertion function.
