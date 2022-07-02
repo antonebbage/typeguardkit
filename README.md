@@ -47,7 +47,7 @@ export async function getBook(id: string): Promise<Book> {
 
   // If `responseBody` is a `Book`, `_Book` returns `responseBody` as `Book`.
   // Otherwise, `_Book` throws a `TypeAssertionError`, including
-  // `"responseBody"` in its message.
+  // `"responseBody"` in its `message`.
 
   return _Book(responseBody, "responseBody");
 }
