@@ -34,7 +34,7 @@ export class TypeAssertionError extends Error {
 
     super(message);
 
-    // Maintains proper stack trace for where our error was thrown (only
+    // Maintains proper stack trace for where the error was thrown (only
     // available on V8)
     // Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error#custom_error_types
     if (Error.captureStackTrace) {
