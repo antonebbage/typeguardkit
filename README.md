@@ -127,9 +127,9 @@ You can use `unionOf` like this:
 ```ts
 import { _number, _string, is, unionOf } from './mod.ts';
 
-function handleUnknown(x: unknown) {
-  const _stringOrNumber = unionOf(_string, _number);
+const _stringOrNumber = unionOf(_string, _number);
 
+function handleUnknown(x: unknown) {
   if (is(_stringOrNumber, x)) {
     // `x` has now been narrowed to type `string | number`, so can be passed
     // to `handleStringOrNumber`.
@@ -151,9 +151,9 @@ You can use `undefinedOr` like this:
 ```ts
 import { _string, is, undefinedOr } from './mod.ts';
 
-function handleUnknown(x: unknown) {
-  const _stringOrUndefined = undefinedOr(_string);
+const _stringOrUndefined = undefinedOr(_string);
 
+function handleUnknown(x: unknown) {
   if (is(_stringOrUndefined, x)) {
     // `x` has now been narrowed to type `string | undefined`, so can be passed
     // to `handleStringOrUndefined`.
@@ -175,9 +175,9 @@ You can use `nullOr` like this:
 ```ts
 import { _string, is, nullOr } from './mod.ts';
 
-function handleUnknown(x: unknown) {
-  const _stringOrNull = nullOr(_string);
+const _stringOrNull = nullOr(_string);
 
+function handleUnknown(x: unknown) {
   if (is(_stringOrNull, x)) {
     // `x` has now been narrowed to type `string | null`, so can be passed to
     // `handleStringOrNull`.
@@ -199,9 +199,9 @@ You can use `arrayOf` like this:
 ```ts
 import { _string, arrayOf, is } from './mod.ts';
 
-function handleUnknown(x: unknown) {
-  const _arrayOfString = arrayOf(_string);
+const _arrayOfString = arrayOf(_string);
 
+function handleUnknown(x: unknown) {
   if (is(_arrayOfString, x)) {
     // `x` has now been narrowed to type `Array<string>`, so can be passed to
     // `handleArrayOfString`.
