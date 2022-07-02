@@ -51,7 +51,7 @@ export function unionOf<Asserters extends Array<Asserter<unknown>>>(
         continue;
       }
 
-      return value;
+      return value as ReturnType<Asserters[number]>;
     }
 
     throw new TypeAssertionError(newTypeName, value, { valueName });
@@ -59,7 +59,7 @@ export function unionOf<Asserters extends Array<Asserter<unknown>>>(
 
   newAsserter.typeName = newTypeName;
 
-  return newAsserter as Asserter<ReturnType<Asserters[number]>>;
+  return newAsserter;
 }
 
 /**
