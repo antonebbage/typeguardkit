@@ -42,6 +42,10 @@ describe("TypeAssertionError", () => {
       "is of type `number`",
     );
     assertStringIncludes(
+      new TypeAssertionError("", "").message,
+      "is of type `string`",
+    );
+    assertStringIncludes(
       new TypeAssertionError("", []).message,
       "is of type `Array`",
     );
