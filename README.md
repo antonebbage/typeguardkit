@@ -141,6 +141,30 @@ function handleUnknown(x: unknown) {
 function handleStringOrNumber(x: string | number) {}
 ```
 
+#### `arrayOf`
+
+The `arrayOf` function returns an `Asserter<Array<Type>>`, created using the
+provided `Asserter<Type>`.
+
+You can use `arrayOf` like this:
+
+```ts
+import { _string, arrayOf, is } from "./mod.ts";
+
+const _arrayOfString = arrayOf(_string);
+
+function handleUnknown(x: unknown) {
+  if (is(_arrayOfString, x)) {
+    // `x` has now been narrowed to type `Array<string>`, so can be passed to
+    // `handleArrayOfString`.
+
+    handleArrayOfString(x);
+  }
+}
+
+function handleArrayOfString(x: string[]) {}
+```
+
 #### `undefinedOr`
 
 The `undefinedOr` function returns an `Asserter<Type | undefined>`, created
@@ -187,30 +211,6 @@ function handleUnknown(x: unknown) {
 }
 
 function handleStringOrNull(x: string | null) {}
-```
-
-#### `arrayOf`
-
-The `arrayOf` function returns an `Asserter<Array<Type>>`, created using the
-provided `Asserter<Type>`.
-
-You can use `arrayOf` like this:
-
-```ts
-import { _string, arrayOf, is } from "./mod.ts";
-
-const _arrayOfString = arrayOf(_string);
-
-function handleUnknown(x: unknown) {
-  if (is(_arrayOfString, x)) {
-    // `x` has now been narrowed to type `Array<string>`, so can be passed to
-    // `handleArrayOfString`.
-
-    handleArrayOfString(x);
-  }
-}
-
-function handleArrayOfString(x: string[]) {}
 ```
 
 ### `ObjectAsserter`s
