@@ -5,6 +5,10 @@
 A TypeScript module to help create a type and its guards from a single source
 definition.
 
+The module can be used to type APIs and catch unexpected incompatible types due
+to interface definitions being outdated without versioning protection from
+breaking changes, interfaces not being adhered to, or data being corrupted.
+
 ## Usage
 
 ### Example
