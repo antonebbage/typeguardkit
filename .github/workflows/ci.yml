@@ -37,7 +37,7 @@ jobs:
       - name: Run linter
         run: deno lint
 
-      - name: Run tests
+      - name: Run tests and collect coverage profile
         run: deno test --doc --coverage=cov_profile
 
       - name: Generate lcov report
