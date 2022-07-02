@@ -38,7 +38,7 @@ jobs:
         run: deno lint
 
       - name: Run tests
-        run: deno test --doc
+        run: deno test --doc --coverage=cov_profile
 
       - name: Generate lcov report
         run: deno coverage cov_profile --lcov --output=cov_profile.lcov
