@@ -18,6 +18,12 @@ breaking changes, interfaces not being adhered to, or data being corrupted.
 https://deno.land/x/typeguardkit/mod.ts
 ```
 
+### npm installation
+
+```sh
+npm install typeguardkit
+```
+
 ## Usage
 
 ### Example
@@ -33,6 +39,7 @@ import {
   undefinedOr,
   unionOf,
 } from "./mod.ts";
+// import from "typeguardkit" if using npm
 
 // entity_types/book.ts
 
@@ -82,6 +89,7 @@ You can use an `Asserter` like this:
 
 ```ts
 import { _string } from "./mod.ts";
+// import from "typeguardkit" if using npm
 
 function handleUnknown(x: unknown) {
   let y;
@@ -106,6 +114,7 @@ You can create your own `Asserter` with the `type` function. For example, the
 
 ```ts
 import { type } from "./mod.ts";
+// import from "typeguardkit" if using npm
 
 export const _string = type(
   "string",
@@ -127,6 +136,7 @@ You can use `assertIs` like this:
 
 ```ts
 import { _string, assertIs } from "./mod.ts";
+// import from "typeguardkit" if using npm
 
 function handleUnknown(x: unknown) {
   try {
@@ -155,6 +165,7 @@ You can use `is` like this:
 
 ```ts
 import { _string, is } from "./mod.ts";
+// import from "typeguardkit" if using npm
 
 function handleUnknown(x: unknown) {
   if (is(_string, x)) {
@@ -181,6 +192,7 @@ You can use `unionOf` like this:
 
 ```ts
 import { _number, _string, is, unionOf } from "./mod.ts";
+// import from "typeguardkit" if using npm
 
 const _stringOrNumber = unionOf(_string, _number);
 
@@ -205,6 +217,7 @@ You can use `arrayOf` like this:
 
 ```ts
 import { _string, arrayOf, is } from "./mod.ts";
+// import from "typeguardkit" if using npm
 
 const _arrayOfString = arrayOf(_string);
 
@@ -229,6 +242,7 @@ You can use `undefinedOr` like this:
 
 ```ts
 import { _string, is, undefinedOr } from "./mod.ts";
+// import from "typeguardkit" if using npm
 
 const _stringOrUndefined = undefinedOr(_string);
 
@@ -253,6 +267,7 @@ You can use `nullOr` like this:
 
 ```ts
 import { _string, is, nullOr } from "./mod.ts";
+// import from "typeguardkit" if using npm
 
 const _stringOrNull = nullOr(_string);
 
@@ -275,6 +290,7 @@ An `ObjectAsserter` is an `Asserter` for the object type defined by its
 
 ```ts
 import { Asserter } from "./mod.ts";
+// import from "typeguardkit" if using npm
 
 interface ObjectAsserter<Type extends Record<string, unknown>>
   extends Asserter<Type> {
@@ -289,6 +305,7 @@ like this:
 
 ```ts
 import { _number, _string, Asserter, is, objectAsserter } from "./mod.ts";
+// import from "typeguardkit" if using npm
 
 const asserter = objectAsserter("User", {
   name: _string,
