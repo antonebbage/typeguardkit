@@ -1,6 +1,5 @@
 import {
   assertInstanceOf,
-  assertNotStrictEquals,
   assertStrictEquals,
   assertThrows,
   describe,
@@ -25,11 +24,6 @@ describe("objectAsserter", () => {
   it(
     "should return a `Function` that returns `value` when it is an object and none of the `propertyAsserters` throw an error for the corresponding properties of `value`",
     () => {
-      assertNotStrictEquals(
-        _object({ string: "", number: 0 }),
-        { string: "", number: 0 },
-      );
-
       let object: ReturnType<typeof _object>;
 
       object = { string: "", number: 0 };

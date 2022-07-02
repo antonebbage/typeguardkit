@@ -1,6 +1,5 @@
 import {
   assertInstanceOf,
-  assertNotStrictEquals,
   assertStrictEquals,
   assertThrows,
   describe,
@@ -34,8 +33,6 @@ describe("type", () => {
     () => {
       assertStrictEquals(_string(""), "");
       assertStrictEquals(_string("a"), "a");
-
-      assertNotStrictEquals(_object({}), {});
 
       const object = {};
       assertStrictEquals(_object(object), object);
@@ -135,8 +132,6 @@ describe("unionOf", () => {
       assertStrictEquals(_stringOrNumberOrObject(0), 0);
       assertStrictEquals(_stringOrNumberOrObject(1), 1);
 
-      assertNotStrictEquals(_stringOrNumberOrObject({}), {});
-
       const object = {};
       assertStrictEquals(_stringOrNumberOrObject(object), object);
     },
@@ -190,8 +185,6 @@ describe("arrayOf", () => {
   it(
     "should return a `Function` that returns `value` when it is an array where `asserter` does not throw an error for any element",
     () => {
-      assertNotStrictEquals(_arrayOfString([]), []);
-
       let arrayOfString: string[];
 
       arrayOfString = [];

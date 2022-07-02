@@ -1,6 +1,5 @@
 export {
   assertInstanceOf,
-  assertNotStrictEquals,
   assertStrictEquals,
   assertStringIncludes,
   assertThrows,
