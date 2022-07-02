@@ -10,6 +10,14 @@ The module can be used to type APIs and catch unexpected incompatible types due
 to interface definitions being outdated without versioning protection from
 breaking changes, interfaces not being adhered to, or data being corrupted.
 
+## Setup
+
+### Deno module URL
+
+```
+https://deno.land/x/typeguardkit/mod.ts
+```
+
 ## Usage
 
 ### Example
