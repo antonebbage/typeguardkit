@@ -212,3 +212,46 @@ function handleUnknown(x: unknown) {
 
 function handleArrayOfString(x: string[]) {}
 ```
+
+### `ObjectAsserter`s
+
+An `ObjectAsserter` is an `Asserter` for the object type defined by its
+`propertyAsserters`.
+
+```ts
+import { Asserter } from './mod.ts';
+
+interface ObjectAsserter<Type extends Record<string, unknown>>
+  extends Asserter<Type> {
+  readonly propertyAsserters: Readonly<
+    { [Key in keyof Type]: Asserter<Type[Key]> }
+  >;
+}
+```
+
+You can create an `ObjectAsserter` with the `objectAsserter` function and use it
+like this:
+
+```ts
+import { _number, _string, Asserter, is, objectAsserter } from './mod.ts';
+
+const asserter = objectAsserter('User', {
+  name: _string,
+  age: _number,
+});
+
+export interface User extends ReturnType<typeof asserter> {}
+
+export const _User: Asserter<User> = asserter;
+
+function handleUnknown(x: unknown) {
+  if (is(_User, x)) {
+    // `x` has now been narrowed to type `User`, so can be passed to
+    // `handleUser`.
+
+    handleUser(x);
+  }
+}
+
+function handleUser(x: User) {}
+```
