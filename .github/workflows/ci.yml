@@ -38,3 +38,12 @@ jobs:
 
       - name: Run tests
         run: deno test --doc
+
+      - name: Generate lcov report
+        run: deno coverage cov_profile --lcov --output=cov_profile.lcov
+
+      - name: Upload lcov report
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./cov_profile.lcov
+          fail_ci_if_error: true
