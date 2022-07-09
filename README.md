@@ -4,11 +4,13 @@
 [![codecov](https://codecov.io/gh/antonebbage/typeguardkit/branch/main/graph/badge.svg?token=SL3A2OQ4W6)](https://codecov.io/gh/antonebbage/typeguardkit)
 
 A TypeScript module to help create a type and its guards from a single source
-definition.
+definition, to catch unexpected, incompatible types entering your application
+due to:
 
-The module can be used to type APIs and catch unexpected incompatible types due
-to interface definitions being outdated without versioning protection from
-breaking changes, interfaces not being adhered to, or data being corrupted.
+- interface definitions being outdated without versioning protection from
+  breaking changes.
+- interfaces not being adhered to.
+- data being corrupted.
 
 ## Setup
 
@@ -62,8 +64,8 @@ export async function getBook(id: string): Promise<Book> {
   const responseBody = await response.json();
 
   // If `responseBody` is a `Book`, `_Book` returns `responseBody` as `Book`.
-  // Otherwise, `_Book` throws a `TypeAssertionError`, including
-  // `"responseBody"` in its `message`.
+  // Otherwise, `_Book` throws a `TypeAssertionError`, including the optional
+  // value name `"responseBody"` in its `message`.
 
   return _Book(responseBody, "responseBody");
 }
@@ -88,7 +90,9 @@ The module includes the `_boolean`, `_number`, and `_string` `Asserter`s.
 It also includes the `_null` and `_undefined` `Asserter`s, which can be used to
 create union type `Asserter`s with the [`unionOf`](#unionof) function.
 
-You can use an `Asserter` like this:
+As well as wrapping `Asserter`s in the
+[`assertIs`](#assertion-signature-wrapper) or
+[`is`](#predicate-signature-wrapper) functions, you can use tbem like this:
 
 ```ts
 import { _string } from "./mod.ts";
@@ -213,12 +217,12 @@ function handleDirection(x: Direction) {}
 
 ### Other `Asserter` factory functions
 
-The following functions help to create new `Asserter`s from existing ones.
+The following functions create new `Asserter`s from existing ones.
 
 #### `unionOf`
 
-The `unionOf` function returns an `Asserter` for the union of the `Type`s of the
-provided `Asserter`s.
+`unionOf` returns an `Asserter` for the union of the `Type`s of the provided
+`Asserter`s.
 
 You can use `unionOf` like this:
 
@@ -242,8 +246,8 @@ function handleStringOrNull(x: string | null) {}
 
 #### `arrayOf`
 
-The `arrayOf` function returns an `Asserter<Array<Type>>`, created using the
-provided `Asserter<Type>`.
+`arrayOf` returns an `Asserter<Array<Type>>`, created using the provided
+`Asserter<Type>`.
 
 You can use `arrayOf` like this:
 
