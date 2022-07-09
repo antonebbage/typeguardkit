@@ -214,8 +214,8 @@ The following functions help to create new `Asserter`s from existing ones.
 
 #### `unionOf`
 
-The `unionOf` function returns an `Asserter` for the union of the provided
-`Asserter`s' `Type`s.
+The `unionOf` function returns an `Asserter` for the union of the `Type`s of the
+provided `Asserter`s.
 
 You can use `unionOf` like this:
 

@@ -53,8 +53,8 @@ export function literalUnionAsserter<
 }
 
 /**
- * `unionOf` returns an `Asserter` for the union of the provided `Asserter`s'
- * `Type`s.
+ * `unionOf` returns an `Asserter` for the union of the `Type`s of the provided
+ * `Asserter`s.
  */
 export function unionOf<Asserters extends Array<Asserter<unknown>>>(
   ...asserters: Asserters
