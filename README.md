@@ -92,7 +92,7 @@ create union type `Asserter`s with the [`unionOf`](#unionof) function.
 
 As well as wrapping `Asserter`s in the
 [`assertIs`](#assertion-signature-wrapper) or
-[`is`](#predicate-signature-wrapper) functions, you can use tbem like this:
+[`is`](#predicate-signature-wrapper) functions, you can use them like this:
 
 ```ts
 import { _string } from "./mod.ts";
