@@ -260,7 +260,7 @@ describe("arrayOf", () => {
   });
 
   it(
-    "should return a `Function` that returns `value` when it is an array where `asserter` does not throw an error for any element",
+    "should return a `Function` that returns `value` when it is an `Array` where `asserter` does not throw an error for any element",
     () => {
       let arrayOfString: string[];
 
@@ -286,7 +286,7 @@ describe("arrayOf", () => {
     },
   );
 
-  it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not an array where `asserter` does not throw an error for any element", () => {
+  it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not an `Array` where `asserter` does not throw an error for any element", () => {
     assertThrows(
       () => _arrayOfString(undefined, "name"),
       TypeAssertionError,
