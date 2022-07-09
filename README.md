@@ -46,6 +46,7 @@ import {
 // entity_types/book.ts
 
 const asserter = objectAsserter("Book", {
+  isbn: _string,
   title: _string,
   authors: arrayOf(_string),
   pageCount: _number,
@@ -59,8 +60,8 @@ export const _Book: Asserter<Book> = asserter;
 
 // api/get_book.ts
 
-export async function getBook(id: string): Promise<Book> {
-  const response = await fetch(`/api/books/${id}`);
+export async function getBook(isbn: string): Promise<Book> {
+  const response = await fetch(`/api/books/${isbn}`);
   const responseBody = await response.json();
 
   // If `responseBody` is a `Book`, `_Book` returns `responseBody` as `Book`.
@@ -68,6 +69,19 @@ export async function getBook(id: string): Promise<Book> {
   // value name `"responseBody"` in its `message`.
 
   return _Book(responseBody, "responseBody");
+}
+
+// local_storage/reading_list_isbns.ts
+
+export const readingListIsbnsKey = "reading-list-isbns";
+
+export function getReadingListIsbns(): string[] {
+  const json = localStorage.getItem(readingListIsbnsKey);
+  return json ? arrayOf(_string)(JSON.parse(json)) : [];
+}
+
+export function setReadingListIsbns(isbns: readonly string[]): void {
+  localStorage.setItem(readingListIsbnsKey, JSON.stringify(isbns));
 }
 ```
 
