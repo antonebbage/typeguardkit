@@ -33,6 +33,26 @@ export function typeAsserter<Type>(
 }
 
 /**
+ * `literalUnionAsserter` returns an `Asserter` for the union of the provided
+ * `literals`.
+ */
+export function literalUnionAsserter<
+  Literals extends ReadonlyArray<number | string>,
+>(
+  typeName: string,
+  literals: Literals,
+): Asserter<Literals[number]> {
+  return typeAsserter(typeName, (value): value is Literals[number] => {
+    for (let i = 0; i < literals.length; i++) {
+      if (literals[i] === value) {
+        return true;
+      }
+    }
+    return false;
+  });
+}
+
+/**
  * `unionOf` returns an `Asserter` for the union of the provided `Asserter`s'
  * `Type`s.
  */

@@ -179,6 +179,35 @@ function handleUnknown(x: unknown) {
 function handleString(x: string) {}
 ```
 
+### Literal union `Asserter`s
+
+You can create an `Asserter` for a literal union type using the
+`literalUnionAsserter` function like this:
+
+```ts
+import { Asserter, is, literalUnionAsserter } from "./mod.ts";
+// import from "typeguardkit" if using npm
+
+export const directions = ["up", "right", "down", "left"] as const;
+
+const asserter = literalUnionAsserter("Direction", directions);
+
+export type Direction = typeof directions[number];
+
+export const _Direction: Asserter<Direction> = asserter;
+
+function handleUnknown(x: unknown) {
+  if (is(_Direction, x)) {
+    // `x` has now been narrowed to type `Direction`, so can be passed to
+    // `handleDirection`.
+
+    handleDirection(x);
+  }
+}
+
+function handleDirection(x: Direction) {}
+```
+
 ### Other `Asserter` factory functions
 
 The following functions help to create new `Asserter`s from existing ones.

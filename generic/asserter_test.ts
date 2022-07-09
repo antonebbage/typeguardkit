@@ -8,6 +8,7 @@ import {
 import { _number, TypeAssertionError } from "../mod.ts";
 import {
   arrayOf,
+  literalUnionAsserter,
   nullOr,
   typeAsserter,
   undefinedOr,
@@ -113,6 +114,78 @@ describe("typeAsserter", () => {
       () => _object([]),
       TypeAssertionError,
       new TypeAssertionError(_object.typeName, []).message,
+    );
+  });
+});
+
+describe("literalUnionAsserter", () => {
+  const typeName = "LiteralUnion";
+
+  const _LiteralUnion = literalUnionAsserter(
+    typeName,
+    [0, 1, "", "a"] as const,
+  );
+
+  it("should return a `Function` with `typeName` set to `name`", () => {
+    assertInstanceOf(_LiteralUnion, Function);
+    assertStrictEquals(_LiteralUnion.typeName, typeName);
+  });
+
+  it(
+    "should return a `Function` that returns `value` when it is equal to one of the `literals`",
+    () => {
+      assertStrictEquals(_LiteralUnion(0), 0);
+      assertStrictEquals(_LiteralUnion(1), 1);
+      assertStrictEquals(_LiteralUnion(""), "");
+      assertStrictEquals(_LiteralUnion("a"), "a");
+    },
+  );
+
+  it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not equal to any of the `literals`", () => {
+    assertThrows(
+      () => _LiteralUnion(undefined, "name"),
+      TypeAssertionError,
+      new TypeAssertionError(_LiteralUnion.typeName, undefined, {
+        valueName: "name",
+      })
+        .message,
+    );
+
+    assertThrows(
+      () => _LiteralUnion(undefined),
+      TypeAssertionError,
+      new TypeAssertionError(_LiteralUnion.typeName, undefined).message,
+    );
+    assertThrows(
+      () => _LiteralUnion(null),
+      TypeAssertionError,
+      new TypeAssertionError(_LiteralUnion.typeName, null).message,
+    );
+    assertThrows(
+      () => _LiteralUnion(false),
+      TypeAssertionError,
+      new TypeAssertionError(_LiteralUnion.typeName, false).message,
+    );
+    assertThrows(
+      () => _LiteralUnion([]),
+      TypeAssertionError,
+      new TypeAssertionError(_LiteralUnion.typeName, []).message,
+    );
+    assertThrows(
+      () => _LiteralUnion({}),
+      TypeAssertionError,
+      new TypeAssertionError(_LiteralUnion.typeName, {}).message,
+    );
+
+    assertThrows(
+      () => _LiteralUnion(2),
+      TypeAssertionError,
+      new TypeAssertionError(_LiteralUnion.typeName, 2).message,
+    );
+    assertThrows(
+      () => _LiteralUnion("b"),
+      TypeAssertionError,
+      new TypeAssertionError(_LiteralUnion.typeName, "b").message,
     );
   });
 });
