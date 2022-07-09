@@ -147,8 +147,9 @@ and shadowing.
 
 ### Assertion signature wrapper
 
-The `assertIs` function wraps an `Asserter<Type>` with an assertion signature so
-the value passed in can be narrowed to `Type`. If the `Asserter` throws an
+The `assertIs` function wraps an `Asserter<Type>` with an
+[assertion signature](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#assertion-functions)
+so the value passed in can be narrowed to `Type`. If the `Asserter` throws an
 error, it will bubble up. Otherwise, `assertIs` will not return a value, but
 after calling it, the value passed in will be narrowed to `Type`.
 
@@ -176,8 +177,9 @@ function handleString(x: string) {}
 
 ### Predicate signature wrapper
 
-The `is` function wraps an `Asserter<Type>` with a predicate signature, creating
-a type guard, so the value passed in can be narrowed to `Type`. If the
+The `is` function wraps an `Asserter<Type>` with a
+[predicate signature](https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates),
+creating a type guard, so the value passed in can be narrowed to `Type`. If the
 `Asserter` throws an error, `is` will catch it and return `false`. Otherwise,
 `is` will return `true`.
 
