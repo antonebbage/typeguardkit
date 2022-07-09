@@ -265,56 +265,6 @@ function handleUnknown(x: unknown) {
 function handleArrayOfString(x: string[]) {}
 ```
 
-#### `undefinedOr`
-
-The `undefinedOr` function returns an `Asserter<Type | undefined>`, created
-using the provided `Asserter<Type>`.
-
-You can use `undefinedOr` like this:
-
-```ts
-import { _string, is, undefinedOr } from "./mod.ts";
-// import from "typeguardkit" if using npm
-
-const _stringOrUndefined = undefinedOr(_string);
-
-function handleUnknown(x: unknown) {
-  if (is(_stringOrUndefined, x)) {
-    // `x` has now been narrowed to type `string | undefined`, so can be passed
-    // to `handleStringOrUndefined`.
-
-    handleStringOrUndefined(x);
-  }
-}
-
-function handleStringOrUndefined(x?: string) {}
-```
-
-#### `nullOr`
-
-The `nullOr` function returns an `Asserter<Type | null>`, created using the
-provided `Asserter<Type>`.
-
-You can use `nullOr` like this:
-
-```ts
-import { _string, is, nullOr } from "./mod.ts";
-// import from "typeguardkit" if using npm
-
-const _stringOrNull = nullOr(_string);
-
-function handleUnknown(x: unknown) {
-  if (is(_stringOrNull, x)) {
-    // `x` has now been narrowed to type `string | null`, so can be passed to
-    // `handleStringOrNull`.
-
-    handleStringOrNull(x);
-  }
-}
-
-function handleStringOrNull(x: string | null) {}
-```
-
 ### `ObjectAsserter`s
 
 An `ObjectAsserter` is an `Asserter` for the object type defined by its
