@@ -1,5 +1,5 @@
 import { assertStrictEquals, assertThrows, describe, it } from "/dev_deps.ts";
-import { _boolean, _number, _string } from "./asserters.ts";
+import { _boolean, _null, _number, _string, _undefined } from "./asserters.ts";
 import { TypeAssertionError } from "./type_assertion_error.ts";
 
 describe("_boolean", () => {
@@ -140,6 +140,98 @@ describe("_string", () => {
       () => _string({}),
       TypeAssertionError,
       new TypeAssertionError(_string.typeName, {}).message,
+    );
+  });
+});
+
+describe("_null", () => {
+  it("should return `value` if `null`", () => {
+    assertStrictEquals(_null(null), null);
+  });
+
+  it("should throw a `TypeAssertionError` with correct `message` if `value` not `null`", () => {
+    assertThrows(
+      () => _null(undefined, "name"),
+      TypeAssertionError,
+      new TypeAssertionError(_null.typeName, undefined, { valueName: "name" })
+        .message,
+    );
+
+    assertThrows(
+      () => _null(undefined),
+      TypeAssertionError,
+      new TypeAssertionError(_null.typeName, undefined).message,
+    );
+    assertThrows(
+      () => _null(false),
+      TypeAssertionError,
+      new TypeAssertionError(_null.typeName, false).message,
+    );
+    assertThrows(
+      () => _null(0),
+      TypeAssertionError,
+      new TypeAssertionError(_null.typeName, 0).message,
+    );
+    assertThrows(
+      () => _null(""),
+      TypeAssertionError,
+      new TypeAssertionError(_null.typeName, "").message,
+    );
+    assertThrows(
+      () => _null([]),
+      TypeAssertionError,
+      new TypeAssertionError(_null.typeName, []).message,
+    );
+    assertThrows(
+      () => _null({}),
+      TypeAssertionError,
+      new TypeAssertionError(_null.typeName, {}).message,
+    );
+  });
+});
+
+describe("_undefined", () => {
+  it("should return `value` if `undefined`", () => {
+    assertStrictEquals(_undefined(undefined), undefined);
+  });
+
+  it("should throw a `TypeAssertionError` with correct `message` if `value` not `undefined`", () => {
+    assertThrows(
+      () => _undefined(null, "name"),
+      TypeAssertionError,
+      new TypeAssertionError(_undefined.typeName, null, { valueName: "name" })
+        .message,
+    );
+
+    assertThrows(
+      () => _undefined(null),
+      TypeAssertionError,
+      new TypeAssertionError(_undefined.typeName, null).message,
+    );
+    assertThrows(
+      () => _undefined(false),
+      TypeAssertionError,
+      new TypeAssertionError(_undefined.typeName, false).message,
+    );
+    assertThrows(
+      () => _undefined(0),
+      TypeAssertionError,
+      new TypeAssertionError(_undefined.typeName, 0).message,
+    );
+    assertThrows(
+      () => _undefined(""),
+      TypeAssertionError,
+      new TypeAssertionError(_undefined.typeName, "").message,
+    );
+    assertThrows(
+      () => _undefined([]),
+      TypeAssertionError,
+      new TypeAssertionError(_undefined.typeName, []).message,
+    );
+    assertThrows(
+      () => _undefined({}),
+      TypeAssertionError,
+      new TypeAssertionError(_undefined.typeName, {}).message,
     );
   });
 });

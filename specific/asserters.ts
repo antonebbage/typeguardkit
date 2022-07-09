@@ -31,3 +31,24 @@ export const _string = typeAsserter(
   "string",
   (value): value is string => typeof value === "string",
 );
+
+/**
+ * `_null` is a `null` type assertion function. If `value` is `null`, `_null`
+ * returns `value` as `null`. Otherwise, `_null` throws a `TypeAssertionError`,
+ * including `name` in its `message`.
+ */
+export const _null = typeAsserter(
+  "null",
+  (value): value is null => value === null,
+);
+
+/**
+ * `_undefined` is an `undefined` type assertion function. If `value` is
+ * `undefined`, `_undefined` returns `value` as `undefined`. Otherwise,
+ * `_undefined` throws a `TypeAssertionError`, including `name` in its
+ * `message`.
+ */
+export const _undefined = typeAsserter(
+  "undefined",
+  (value): value is undefined => value === undefined,
+);

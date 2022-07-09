@@ -31,12 +31,12 @@ npm install typeguardkit
 ```ts
 import {
   _boolean,
+  _null,
   _number,
   _string,
   arrayOf,
   Asserter,
   objectAsserter,
-  undefinedOr,
   unionOf,
 } from "./mod.ts";
 // import from "typeguardkit" if using npm
@@ -47,8 +47,8 @@ const asserter = objectAsserter("Book", {
   title: _string,
   authors: arrayOf(_string),
   pageCount: _number,
+  rating: unionOf(_number, _null),
   isRecommended: _boolean,
-  websiteUrl: undefinedOr(_string),
 });
 
 export interface Book extends ReturnType<typeof asserter> {}
@@ -84,6 +84,9 @@ If `value` is of `Type`, the `Asserter` should return `value` as `Type`.
 Otherwise, the `Asserter` should throw a `TypeAssertionError`.
 
 The module includes the `_boolean`, `_number`, and `_string` `Asserter`s.
+
+It also includes the `_null` and `_undefined` `Asserter`s, which can be used to
+create union type `Asserter`s with the [`unionOf`](#unionof) function.
 
 You can use an `Asserter` like this:
 
@@ -220,21 +223,21 @@ provided `Asserter`s.
 You can use `unionOf` like this:
 
 ```ts
-import { _number, _string, is, unionOf } from "./mod.ts";
+import { _null, _string, is, unionOf } from "./mod.ts";
 // import from "typeguardkit" if using npm
 
-const _stringOrNumber = unionOf(_string, _number);
+const _stringOrNull = unionOf(_string, _null);
 
 function handleUnknown(x: unknown) {
-  if (is(_stringOrNumber, x)) {
-    // `x` has now been narrowed to type `string | number`, so can be passed
-    // to `handleStringOrNumber`.
+  if (is(_stringOrNull, x)) {
+    // `x` has now been narrowed to type `string | null`, so can be passed to
+    // `handleStringOrNull`.
 
-    handleStringOrNumber(x);
+    handleStringOrNull(x);
   }
 }
 
-function handleStringOrNumber(x: string | number) {}
+function handleStringOrNull(x: string | null) {}
 ```
 
 #### `arrayOf`
