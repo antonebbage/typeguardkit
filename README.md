@@ -3,14 +3,13 @@
 [![ci](https://github.com/antonebbage/typeguardkit/actions/workflows/ci.yml/badge.svg)](https://github.com/antonebbage/typeguardkit/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/antonebbage/typeguardkit/branch/main/graph/badge.svg?token=SL3A2OQ4W6)](https://codecov.io/gh/antonebbage/typeguardkit)
 
-A TypeScript module to help create a type and its guards from a single source
-definition, to catch unexpected, incompatible types entering your application
-due to:
+A TypeScript module to help construct type assertion functions and type guards.
 
-- interface definitions being outdated without versioning protection from
-  breaking changes.
-- interfaces not being adhered to.
-- data being corrupted.
+You can use the included functions to create types and their assertion functions
+and guards from a single source definition, and use type assertion functions and
+guards to catch unexpected, incompatible types entering your application due to
+interface definitions being outdated without versioning protection from breaking
+changes, interfaces not being adhered to, or data being corrupted.
 
 ## Setup
 

@@ -16,7 +16,7 @@ await build({
     version: Deno.args[0],
 
     description:
-      "A TypeScript module to help create a type and its guards from a single source definition.",
+      "A TypeScript module to help construct type assertion functions and type guards.",
 
     license: "MIT",
 
