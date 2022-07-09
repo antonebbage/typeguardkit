@@ -13,17 +13,15 @@ export interface Asserter<Type> {
 }
 
 /**
- * `type` returns an `Asserter<Type>` that uses `guard` to assert whether
- * `value` is of `Type`.
+ * `typeAsserter` returns an `Asserter<Type>` that uses `typeGuard` to assert
+ * whether `value` is of `Type`.
  */
-export function type<Type>(
-  name: string,
-  guard: (value: unknown) => value is Type,
+export function typeAsserter<Type>(
+  typeName: string,
+  typeGuard: (value: unknown) => value is Type,
 ): Asserter<Type> {
-  const typeName = name;
-
   const asserter = (value: unknown, valueName?: string) => {
-    if (guard(value)) {
+    if (typeGuard(value)) {
       return value;
     }
     throw new TypeAssertionError(typeName, value, { valueName });

@@ -109,14 +109,14 @@ function handleUnknown(x: unknown) {
 function handleString(y: string) {}
 ```
 
-You can create your own `Asserter` with the `type` function. For example, the
-`_string` `Asserter` was created like this:
+You can create your own `Asserter`s with the `typeAsserter` function. For
+example, the `_string` `Asserter` was created like this:
 
 ```ts
-import { type } from "./mod.ts";
+import { typeAsserter } from "./mod.ts";
 // import from "typeguardkit" if using npm
 
-export const _string = type(
+export const _string = typeAsserter(
   "string",
   (value): value is string => typeof value === "string",
 );

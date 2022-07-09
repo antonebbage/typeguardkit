@@ -6,20 +6,26 @@ import {
   it,
 } from "/dev_deps.ts";
 import { _number, TypeAssertionError } from "../mod.ts";
-import { arrayOf, nullOr, type, undefinedOr, unionOf } from "./asserter.ts";
+import {
+  arrayOf,
+  nullOr,
+  typeAsserter,
+  undefinedOr,
+  unionOf,
+} from "./asserter.ts";
 
-const _string = type(
+const _string = typeAsserter(
   "string",
   (value): value is string => typeof value === "string",
 );
 
-const _object = type(
+const _object = typeAsserter(
   "Record<string, unknown>",
   (value): value is Record<string, unknown> =>
     typeof value === "object" && !Array.isArray(value) && value !== null,
 );
 
-describe("type", () => {
+describe("typeAsserter", () => {
   it("should return a `Function` with `typeName` set to `name`", () => {
     assertInstanceOf(_string, Function);
     assertInstanceOf(_object, Function);
@@ -29,7 +35,7 @@ describe("type", () => {
   });
 
   it(
-    "should return a `Function` that returns `value` when `guard` returns `true` for `value`",
+    "should return a `Function` that returns `value` when `typeGuard` returns `true` for `value`",
     () => {
       assertStrictEquals(_string(""), "");
       assertStrictEquals(_string("a"), "a");
@@ -39,7 +45,7 @@ describe("type", () => {
     },
   );
 
-  it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `guard` returns `false` for `value`", () => {
+  it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `typeGuard` returns `false` for `value`", () => {
     assertThrows(
       () => _string(undefined, "name"),
       TypeAssertionError,
