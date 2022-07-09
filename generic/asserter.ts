@@ -61,23 +61,22 @@ export function unionOf<Asserters extends Array<Asserter<unknown>>>(
 ): Asserter<ReturnType<Asserters[number]>> {
   const newTypeName = asserters.map(({ typeName }) => typeName).join(" | ");
 
-  const newAsserter = (value: unknown, valueName?: string) => {
-    for (let i = 0; i < asserters.length; i++) {
-      try {
-        asserters[i](value);
-      } catch {
-        continue;
+  return typeAsserter(
+    newTypeName,
+    (value): value is ReturnType<Asserters[number]> => {
+      for (let i = 0; i < asserters.length; i++) {
+        try {
+          asserters[i](value);
+        } catch {
+          continue;
+        }
+
+        return true;
       }
 
-      return value as ReturnType<Asserters[number]>;
-    }
-
-    throw new TypeAssertionError(newTypeName, value, { valueName });
-  };
-
-  newAsserter.typeName = newTypeName;
-
-  return newAsserter;
+      return false;
+    },
+  );
 }
 
 /**
