@@ -36,13 +36,13 @@ import {
   _number,
   _string,
   arrayOf,
-  Asserter,
+  ObjectAsserter,
   objectAsserter,
   unionOf,
 } from "./mod.ts";
 // import from "typeguardkit" if using npm
 
-// entity_types/book.ts
+// types/book.ts
 
 const asserter = objectAsserter("Book", {
   isbn: _string,
@@ -53,9 +53,9 @@ const asserter = objectAsserter("Book", {
   isRecommended: _boolean,
 });
 
-export interface Book extends ReturnType<typeof asserter> {}
+export type Book = ReturnType<typeof asserter>;
 
-export const _Book: Asserter<Book> = asserter;
+export const _Book: ObjectAsserter<Book> = asserter;
 
 // api/get_book.ts
 
@@ -210,6 +210,8 @@ like this:
 import { Asserter, enumAsserter, is } from "./mod.ts";
 // import from "typeguardkit" if using npm
 
+// types/direction.ts
+
 export enum Direction {
   Up,
   Right,
@@ -218,6 +220,8 @@ export enum Direction {
 }
 
 export const _Direction = enumAsserter("Direction", Direction);
+
+// elsewhere.ts
 
 function handleUnknown(x: unknown) {
   if (is(_Direction, x)) {
@@ -240,6 +244,8 @@ You can create an `Asserter` for a literal union type using the
 import { Asserter, is, literalUnionAsserter } from "./mod.ts";
 // import from "typeguardkit" if using npm
 
+// types/direction.ts
+
 export const directions = ["up", "right", "down", "left"] as const;
 
 const asserter = literalUnionAsserter("Direction", directions);
@@ -247,6 +253,8 @@ const asserter = literalUnionAsserter("Direction", directions);
 export type Direction = typeof directions[number];
 
 export const _Direction: Asserter<Direction> = asserter;
+
+// elsewhere.ts
 
 function handleUnknown(x: unknown) {
   if (is(_Direction, x)) {
@@ -335,17 +343,78 @@ You can create an `ObjectAsserter` with the `objectAsserter` function and use it
 like this:
 
 ```ts
-import { _number, _string, Asserter, is, objectAsserter } from "./mod.ts";
+import { _number, _string, is, ObjectAsserter, objectAsserter } from "./mod.ts";
 // import from "typeguardkit" if using npm
+
+// types/user.ts
 
 const asserter = objectAsserter("User", {
   name: _string,
   age: _number,
 });
 
-export interface User extends ReturnType<typeof asserter> {}
+export type User = ReturnType<typeof asserter>;
 
-export const _User: Asserter<User> = asserter;
+export const _User: ObjectAsserter<User> = asserter;
+
+// elsewhere.ts
+
+function handleUnknown(x: unknown) {
+  if (is(_User, x)) {
+    // `x` has now been narrowed to type `User`, so can be passed to
+    // `handleUser`.
+
+    handleUser(x);
+  }
+}
+
+function handleUser(x: User) {}
+```
+
+### Other `ObjectAsserter` factory functions
+
+The following functions create new `ObjectAsserter`s from existing ones.
+
+#### `objectIntersectionOf`
+
+`objectIntersectionOf` returns an `ObjectAsserter` for the intersection of the
+`Type`s of the provided `ObjectAsserter`s.
+
+You can use `objectIntersectionOf` like this:
+
+```ts
+import {
+  _string,
+  is,
+  ObjectAsserter,
+  objectAsserter,
+  objectIntersectionOf,
+} from "./mod.ts";
+// import from "typeguardkit" if using npm
+
+// types/entity.ts
+
+const entityAsserter = objectAsserter("Entity", {
+  id: _string,
+});
+
+export type Entity = ReturnType<typeof entityAsserter>;
+
+export const _Entity: ObjectAsserter<Entity> = entityAsserter;
+
+// types/user.ts
+
+const userAsserter = objectIntersectionOf(
+  _Entity,
+  objectAsserter("", { name: _string }),
+  "User",
+);
+
+export type User = ReturnType<typeof userAsserter>;
+
+export const _User: ObjectAsserter<User> = userAsserter;
+
+// elsewhere.ts
 
 function handleUnknown(x: unknown) {
   if (is(_User, x)) {

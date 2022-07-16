@@ -1,7 +1,9 @@
 // This module is browser-compatible.
 
+import { checkTypeNameIsOpen } from "../internal/functions.ts";
 import { TypeAssertionError } from "../specific/type_assertion_error.ts";
-import { Asserter } from "./asserter.ts";
+import { Asserter, typeAsserter } from "./asserter.ts";
+import { is } from "./is.ts";
 
 /**
  * An `ObjectAsserter` is an `Asserter` for the object type defined by its
@@ -51,5 +53,56 @@ export function objectAsserter<
 
   return asserter as ObjectAsserter<
     { [Key in keyof PropertyAsserters]: ReturnType<PropertyAsserters[Key]> }
+  >;
+}
+
+/**
+ * `objectIntersectionOf` returns an `ObjectAsserter` for the intersection of
+ * the `Type`s of the provided `ObjectAsserter`s.
+ */
+export function objectIntersectionOf<
+  TypeA extends Record<string, unknown>,
+  TypeB extends Record<string, unknown>,
+>(
+  asserterA: ObjectAsserter<TypeA>,
+  asserterB: ObjectAsserter<TypeB>,
+  typeName?: string,
+): ObjectAsserter<TypeA & TypeB> {
+  const newTypeName = typeName ||
+    `${asserterA.typeName} & ${asserterB.typeName}`;
+
+  const newPropertyAsserters: Record<string, Asserter<unknown>> = {};
+
+  for (const key in asserterA.propertyAsserters) {
+    const propertyAsserterA = asserterA.propertyAsserters[key];
+    const propertyAsserterB = asserterB.propertyAsserters[key];
+
+    if (propertyAsserterB && propertyAsserterB !== propertyAsserterA) {
+      const newPropertyTypeName = [
+        propertyAsserterA.typeName,
+        propertyAsserterB.typeName,
+      ].map((name) => {
+        return checkTypeNameIsOpen(name) ? `(${name})` : name;
+      }).join(" & ");
+
+      newPropertyAsserters[key] = typeAsserter(
+        newPropertyTypeName,
+        (value): value is unknown => {
+          return is(propertyAsserterA, value) && is(propertyAsserterB, value);
+        },
+      );
+    } else {
+      newPropertyAsserters[key] = propertyAsserterA;
+    }
+  }
+
+  for (const key in asserterB.propertyAsserters) {
+    if (!asserterA.propertyAsserters[key]) {
+      newPropertyAsserters[key] = asserterB.propertyAsserters[key];
+    }
+  }
+
+  return objectAsserter(newTypeName, newPropertyAsserters) as ObjectAsserter<
+    TypeA & TypeB
   >;
 }
