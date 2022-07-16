@@ -201,6 +201,36 @@ function handleUnknown(x: unknown) {
 function handleString(x: string) {}
 ```
 
+### Enum `Asserter`s
+
+You can create an `Asserter` for an enum type using the `enumAsserter` function
+like this:
+
+```ts
+import { Asserter, enumAsserter, is } from "./mod.ts";
+// import from "typeguardkit" if using npm
+
+export enum Direction {
+  Up,
+  Right,
+  Down,
+  Left,
+}
+
+export const _Direction = enumAsserter("Direction", Direction);
+
+function handleUnknown(x: unknown) {
+  if (is(_Direction, x)) {
+    // `x` has now been narrowed to type `Direction`, so can be passed to
+    // `handleDirection`.
+
+    handleDirection(x);
+  }
+}
+
+function handleDirection(x: Direction) {}
+```
+
 ### Literal union `Asserter`s
 
 You can create an `Asserter` for a literal union type using the

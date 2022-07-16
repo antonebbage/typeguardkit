@@ -8,6 +8,7 @@ import {
 import { _number, TypeAssertionError } from "../mod.ts";
 import {
   arrayOf,
+  enumAsserter,
   literalUnionAsserter,
   typeAsserter,
   unionOf,
@@ -112,6 +113,136 @@ describe("typeAsserter", () => {
       () => _object([]),
       TypeAssertionError,
       new TypeAssertionError(_object.typeName, []).message,
+    );
+  });
+});
+
+describe("enumAsserter", () => {
+  const numericEnumName = "NumericEnum";
+
+  enum NumericEnum {
+    A,
+    B,
+    C,
+  }
+
+  const _NumericEnum = enumAsserter(numericEnumName, NumericEnum);
+
+  const stringEnumName = "StringEnum";
+
+  enum StringEnum {
+    A = "A",
+    B = "B",
+    C = "C",
+  }
+
+  const _StringEnum = enumAsserter(stringEnumName, StringEnum);
+
+  const heterogeneousEnumName = "HeterogeneousEnum";
+
+  enum HeterogeneousEnum {
+    A,
+    B,
+    C = "C",
+  }
+
+  const _HeterogeneousEnum = enumAsserter(
+    heterogeneousEnumName,
+    HeterogeneousEnum,
+  );
+
+  it("should return a `Function` with `typeName` set to `name`", () => {
+    assertInstanceOf(_NumericEnum, Function);
+    assertStrictEquals(_NumericEnum.typeName, numericEnumName);
+  });
+
+  it(
+    "should return a `Function` that returns `value` when it is equal to one of `enumObject`'s members",
+    () => {
+      assertStrictEquals(_NumericEnum(NumericEnum.A), NumericEnum.A);
+      assertStrictEquals(_NumericEnum(NumericEnum.B), NumericEnum.B);
+      assertStrictEquals(_NumericEnum(NumericEnum.C), NumericEnum.C);
+
+      assertStrictEquals(_StringEnum(StringEnum.A), StringEnum.A);
+      assertStrictEquals(_StringEnum(StringEnum.B), StringEnum.B);
+      assertStrictEquals(_StringEnum(StringEnum.C), StringEnum.C);
+
+      assertStrictEquals(
+        _HeterogeneousEnum(HeterogeneousEnum.A),
+        HeterogeneousEnum.A,
+      );
+      assertStrictEquals(
+        _HeterogeneousEnum(HeterogeneousEnum.B),
+        HeterogeneousEnum.B,
+      );
+      assertStrictEquals(
+        _HeterogeneousEnum(HeterogeneousEnum.C),
+        HeterogeneousEnum.C,
+      );
+    },
+  );
+
+  it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not equal to any of `enumObject`'s members", () => {
+    assertThrows(
+      () => _NumericEnum(undefined, "name"),
+      TypeAssertionError,
+      new TypeAssertionError(_NumericEnum.typeName, undefined, {
+        valueName: "name",
+      })
+        .message,
+    );
+
+    assertThrows(
+      () => _NumericEnum(undefined),
+      TypeAssertionError,
+      new TypeAssertionError(_NumericEnum.typeName, undefined).message,
+    );
+    assertThrows(
+      () => _NumericEnum(null),
+      TypeAssertionError,
+      new TypeAssertionError(_NumericEnum.typeName, null).message,
+    );
+    assertThrows(
+      () => _NumericEnum(false),
+      TypeAssertionError,
+      new TypeAssertionError(_NumericEnum.typeName, false).message,
+    );
+    assertThrows(
+      () => _NumericEnum([]),
+      TypeAssertionError,
+      new TypeAssertionError(_NumericEnum.typeName, []).message,
+    );
+    assertThrows(
+      () => _NumericEnum({}),
+      TypeAssertionError,
+      new TypeAssertionError(_NumericEnum.typeName, {}).message,
+    );
+
+    assertThrows(
+      () => _NumericEnum("A"),
+      TypeAssertionError,
+      new TypeAssertionError(_NumericEnum.typeName, "A").message,
+    );
+    assertThrows(
+      () => _StringEnum(0),
+      TypeAssertionError,
+      new TypeAssertionError(_StringEnum.typeName, 0).message,
+    );
+    assertThrows(
+      () => _HeterogeneousEnum("A"),
+      TypeAssertionError,
+      new TypeAssertionError(_HeterogeneousEnum.typeName, "A").message,
+    );
+    assertThrows(
+      () => _HeterogeneousEnum(2),
+      TypeAssertionError,
+      new TypeAssertionError(_HeterogeneousEnum.typeName, 2).message,
+    );
+
+    assertThrows(
+      () => _NumericEnum(3),
+      TypeAssertionError,
+      new TypeAssertionError(_NumericEnum.typeName, 3).message,
     );
   });
 });

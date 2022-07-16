@@ -33,6 +33,27 @@ export function typeAsserter<Type>(
 }
 
 /**
+ * `enumAsserter` returns an `Asserter` for the union of the member types of the
+ * provided `enumObject`.
+ */
+export function enumAsserter<
+  Enum extends Record<string, number | string>,
+>(typeName: string, enumObject: Enum): Asserter<Enum[keyof Enum]> {
+  const nonNumericStringKeys = Object.keys(enumObject).filter((key) =>
+    isNaN(Number(key))
+  );
+
+  return typeAsserter(typeName, (value): value is Enum[keyof Enum] => {
+    for (const key of nonNumericStringKeys) {
+      if (enumObject[key] === value) {
+        return true;
+      }
+    }
+    return false;
+  });
+}
+
+/**
  * `literalUnionAsserter` returns an `Asserter` for the union of the provided
  * `literals`.
  */
