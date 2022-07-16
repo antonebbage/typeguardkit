@@ -31,6 +31,12 @@ describe("objectAsserter", () => {
 
       object = { string: "a", number: 1 };
       assertStrictEquals(_object(object), object);
+
+      const unknownFieldObject: ReturnType<typeof _object> & {
+        boolean: boolean;
+      } = { string: "", number: 0, boolean: false };
+
+      assertStrictEquals(_object(unknownFieldObject), unknownFieldObject);
     },
   );
 
