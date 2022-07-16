@@ -9,34 +9,34 @@ import { _number, _string, TypeAssertionError } from "../mod.ts";
 import { objectAsserter } from "./object_asserter.ts";
 
 describe("objectAsserter", () => {
-  const objectTypeName = "object";
+  const objectTypeName = "ObjectType";
 
-  const _object = objectAsserter(objectTypeName, {
+  const _ObjectType = objectAsserter(objectTypeName, {
     string: _string,
     number: _number,
   });
 
   it("should return a `Function` with the provided `typeName`", () => {
-    assertInstanceOf(_object, Function);
-    assertStrictEquals(_object.typeName, objectTypeName);
+    assertInstanceOf(_ObjectType, Function);
+    assertStrictEquals(_ObjectType.typeName, objectTypeName);
   });
 
   it(
     "should return a `Function` that returns `value` when it is an object and none of the `propertyAsserters` throw an error for the corresponding properties of `value`",
     () => {
-      let object: ReturnType<typeof _object>;
+      let object: ReturnType<typeof _ObjectType>;
 
       object = { string: "", number: 0 };
-      assertStrictEquals(_object(object), object);
+      assertStrictEquals(_ObjectType(object), object);
 
       object = { string: "a", number: 1 };
-      assertStrictEquals(_object(object), object);
+      assertStrictEquals(_ObjectType(object), object);
 
-      const unknownFieldObject: ReturnType<typeof _object> & {
+      const unknownFieldObject: ReturnType<typeof _ObjectType> & {
         boolean: boolean;
       } = { string: "", number: 0, boolean: false };
 
-      assertStrictEquals(_object(unknownFieldObject), unknownFieldObject);
+      assertStrictEquals(_ObjectType(unknownFieldObject), unknownFieldObject);
     },
   );
 
@@ -46,12 +46,12 @@ describe("objectAsserter", () => {
     object = { string: 0, number: 0 };
 
     assertThrows(
-      () => _object(object, "name"),
+      () => _ObjectType(object, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_object.typeName, object, {
+      new TypeAssertionError(_ObjectType.typeName, object, {
         valueName: "name",
         innerError: new TypeAssertionError(
-          _object.propertyAsserters.string.typeName,
+          _ObjectType.propertyAsserters.string.typeName,
           object.number,
           { valueName: '["string"]' },
         ),
@@ -62,45 +62,45 @@ describe("objectAsserter", () => {
     object = { s: "", number: 0 };
 
     assertThrows(
-      () => _object(object),
+      () => _ObjectType(object),
       TypeAssertionError,
-      new TypeAssertionError(_object.typeName, object).message,
+      new TypeAssertionError(_ObjectType.typeName, object).message,
     );
 
     assertThrows(
-      () => _object(undefined),
+      () => _ObjectType(undefined),
       TypeAssertionError,
-      new TypeAssertionError(_object.typeName, undefined).message,
+      new TypeAssertionError(_ObjectType.typeName, undefined).message,
     );
     assertThrows(
-      () => _object(null),
+      () => _ObjectType(null),
       TypeAssertionError,
-      new TypeAssertionError(_object.typeName, null).message,
+      new TypeAssertionError(_ObjectType.typeName, null).message,
     );
     assertThrows(
-      () => _object(false),
+      () => _ObjectType(false),
       TypeAssertionError,
-      new TypeAssertionError(_object.typeName, false).message,
+      new TypeAssertionError(_ObjectType.typeName, false).message,
     );
     assertThrows(
-      () => _object(0),
+      () => _ObjectType(0),
       TypeAssertionError,
-      new TypeAssertionError(_object.typeName, 0).message,
+      new TypeAssertionError(_ObjectType.typeName, 0).message,
     );
     assertThrows(
-      () => _object(""),
+      () => _ObjectType(""),
       TypeAssertionError,
-      new TypeAssertionError(_object.typeName, "").message,
+      new TypeAssertionError(_ObjectType.typeName, "").message,
     );
     assertThrows(
-      () => _object([]),
+      () => _ObjectType([]),
       TypeAssertionError,
-      new TypeAssertionError(_object.typeName, []).message,
+      new TypeAssertionError(_ObjectType.typeName, []).message,
     );
     assertThrows(
-      () => _object({}),
+      () => _ObjectType({}),
       TypeAssertionError,
-      new TypeAssertionError(_object.typeName, {}).message,
+      new TypeAssertionError(_ObjectType.typeName, {}).message,
     );
   });
 });
