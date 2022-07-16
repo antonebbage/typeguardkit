@@ -64,8 +64,8 @@ export function literalUnionAsserter<
   literals: Literals,
 ): Asserter<Literals[number]> {
   return typeAsserter(typeName, (value): value is Literals[number] => {
-    for (let i = 0; i < literals.length; i++) {
-      if (literals[i] === value) {
+    for (const literal of literals) {
+      if (literal === value) {
         return true;
       }
     }
@@ -85,9 +85,9 @@ export function unionOf<Asserters extends Array<Asserter<unknown>>>(
   return typeAsserter(
     newTypeName,
     (value): value is ReturnType<Asserters[number]> => {
-      for (let i = 0; i < asserters.length; i++) {
+      for (const asserter of asserters) {
         try {
-          asserters[i](value);
+          asserter(value);
         } catch {
           continue;
         }
