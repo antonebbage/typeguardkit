@@ -14,7 +14,8 @@ describe("_boolean", () => {
       TypeAssertionError,
       new TypeAssertionError(_boolean.typeName, undefined, {
         valueName: "name",
-      }).message,
+      })
+        .message,
     );
 
     assertThrows(

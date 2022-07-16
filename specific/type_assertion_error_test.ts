@@ -19,7 +19,8 @@ describe("TypeAssertionError", () => {
         innerError: new TypeAssertionError("expectedInnerTypeName", "", {
           valueName: "innerValueName",
         }),
-      }).message,
+      })
+        .message,
       "`value` is of type `Object`; expected type of `expectedOuterTypeName`:\n  - `innerValueName` is of type `string`; expected type of `expectedInnerTypeName`",
     );
   });

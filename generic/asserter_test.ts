@@ -351,7 +351,8 @@ describe("unionOf", () => {
       TypeAssertionError,
       new TypeAssertionError(_stringOrNumberOrObject.typeName, undefined, {
         valueName: "name",
-      }).message,
+      })
+        .message,
     );
 
     assertThrows(
