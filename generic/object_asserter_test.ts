@@ -35,11 +35,30 @@ describe("objectAsserter", () => {
   );
 
   it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not an object, or any of the `propertyAsserters` throw an error for the corresponding property of `value`", () => {
+    let object: Record<string, unknown>;
+
+    object = { string: 0, number: 0 };
+
     assertThrows(
-      () => _object(undefined, "name"),
+      () => _object(object, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_object.typeName, undefined, { valueName: "name" })
+      new TypeAssertionError(_object.typeName, object, {
+        valueName: "name",
+        innerError: new TypeAssertionError(
+          _object.propertyAsserters.string.typeName,
+          object.number,
+          { valueName: '["string"]' },
+        ),
+      })
         .message,
+    );
+
+    object = { s: "", number: 0 };
+
+    assertThrows(
+      () => _object(object),
+      TypeAssertionError,
+      new TypeAssertionError(_object.typeName, object).message,
     );
 
     assertThrows(
@@ -76,24 +95,6 @@ describe("objectAsserter", () => {
       () => _object({}),
       TypeAssertionError,
       new TypeAssertionError(_object.typeName, {}).message,
-    );
-
-    let object: unknown;
-
-    object = { string: "", n: 0 };
-
-    assertThrows(
-      () => _object(object),
-      TypeAssertionError,
-      new TypeAssertionError(_object.typeName, object).message,
-    );
-
-    object = { string: 0, number: 0 };
-
-    assertThrows(
-      () => _object(object),
-      TypeAssertionError,
-      new TypeAssertionError(_object.typeName, object).message,
     );
   });
 });
