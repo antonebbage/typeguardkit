@@ -419,11 +419,15 @@ describe("arrayOf", () => {
 
   it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not an `Array` where `asserter` does not throw an error for any element", () => {
     assertThrows(
-      () => _arrayOfString(undefined, "name"),
+      () => _arrayOfString([undefined], "name"),
       TypeAssertionError,
-      new TypeAssertionError(_arrayOfString.typeName, undefined, {
+      new TypeAssertionError(_arrayOfString.typeName, [undefined], {
         valueName: "name",
-      }).message,
+        innerError: new TypeAssertionError(_string.typeName, undefined, {
+          valueName: "[0]",
+        }),
+      })
+        .message,
     );
 
     assertThrows(
