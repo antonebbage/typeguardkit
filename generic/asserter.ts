@@ -114,7 +114,7 @@ export function arrayOf<Type>(asserter: Asserter<Type>): Asserter<Array<Type>> {
 
     for (let i = 0; i < value.length; i++) {
       try {
-        asserter(value[i], `valueName[${i}]`);
+        asserter(value[i], `[${i}]`);
       } catch (innerError) {
         throw new TypeAssertionError(newTypeName, value, {
           valueName,
