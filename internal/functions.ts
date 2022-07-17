@@ -1,3 +1,5 @@
+// This module is browser-compatible.
+
 /**
  * `checkTypeNameIsOpen` returns whether `typeName` describes a non-bracketed
  * union or intersection.
