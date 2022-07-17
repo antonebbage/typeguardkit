@@ -1,3 +1,19 @@
+## [0.3.0](https://github.com/antonebbage/typeguardkit/compare/0.2.0...0.3.0) (2022-07-17)
+
+### Features
+
+- add `enumAsserter` function
+  ([2b0d48d](https://github.com/antonebbage/typeguardkit/commit/2b0d48d0faabd388163f07dac1434b54630fabf7))
+- add `objectIntersectionOf` function
+  ([b091a63](https://github.com/antonebbage/typeguardkit/commit/b091a631b751be4eded33fefecf7c5679a0736e9))
+
+### Bug Fixes
+
+- correct `arrayOf` `TypeAssertionError` message
+  ([5e01c9a](https://github.com/antonebbage/typeguardkit/commit/5e01c9a63f7158fe2f0b1984268ec0b8d8357912))
+- correct `objectAsserter` `TypeAssertionError` message
+  ([88e96e1](https://github.com/antonebbage/typeguardkit/commit/88e96e1d8f2ab3bb6a344907c37519d596cf9728))
+
 ## [0.2.0](https://github.com/antonebbage/typeguardkit/compare/0.1.0...0.2.0) (2022-07-09)
 
 ### ⚠ BREAKING CHANGES
