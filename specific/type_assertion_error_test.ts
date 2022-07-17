@@ -26,33 +26,21 @@ describe("TypeAssertionError", () => {
   });
 
   it("should set `message` including type of `value`", () => {
-    assertStringIncludes(
-      new TypeAssertionError("", undefined).message,
-      "is of type `undefined`",
-    );
-    assertStringIncludes(
-      new TypeAssertionError("", null).message,
-      "is of type `null`",
-    );
-    assertStringIncludes(
-      new TypeAssertionError("", false).message,
-      "is of type `boolean`",
-    );
-    assertStringIncludes(
-      new TypeAssertionError("", 0).message,
-      "is of type `number`",
-    );
-    assertStringIncludes(
-      new TypeAssertionError("", "").message,
-      "is of type `string`",
-    );
-    assertStringIncludes(
-      new TypeAssertionError("", []).message,
-      "is of type `Array`",
-    );
-    assertStringIncludes(
-      new TypeAssertionError("", {}).message,
-      "is of type `Object`",
-    );
+    const testCases = [
+      { value: undefined, expectedMessage: "is of type `undefined`" },
+      { value: null, expectedMessage: "is of type `null`" },
+      { value: false, expectedMessage: "is of type `boolean`" },
+      { value: 0, expectedMessage: "is of type `number`" },
+      { value: "", expectedMessage: "is of type `string`" },
+      { value: [], expectedMessage: "is of type `Array`" },
+      { value: {}, expectedMessage: "is of type `Object`" },
+    ];
+
+    for (const { value, expectedMessage } of testCases) {
+      assertStringIncludes(
+        new TypeAssertionError("", value).message,
+        expectedMessage,
+      );
+    }
   });
 });

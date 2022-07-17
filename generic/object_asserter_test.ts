@@ -31,26 +31,20 @@ describe("objectAsserter", () => {
   it(
     "should return a `Function` that returns `value` when it is an object and none of the `propertyAsserters` throw an error for the corresponding properties of `value`",
     () => {
-      let object: ReturnType<typeof _ObjectType>;
+      const testCases = [
+        { string: "", number: 0 },
+        { string: "a", number: 1 },
+        { string: "", number: 0, boolean: false },
+      ];
 
-      object = { string: "", number: 0 };
-      assertStrictEquals(_ObjectType(object), object);
-
-      object = { string: "a", number: 1 };
-      assertStrictEquals(_ObjectType(object), object);
-
-      const unknownFieldObject: ReturnType<typeof _ObjectType> & {
-        boolean: boolean;
-      } = { string: "", number: 0, boolean: false };
-
-      assertStrictEquals(_ObjectType(unknownFieldObject), unknownFieldObject);
+      for (const value of testCases) {
+        assertStrictEquals(_ObjectType(value), value);
+      }
     },
   );
 
   it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not an object, or any of the `propertyAsserters` throw an error for the corresponding property of `value`", () => {
-    let object: Record<string, unknown>;
-
-    object = { string: 0, number: 0 };
+    const object = { string: 0, number: 0 };
 
     assertThrows(
       () => _ObjectType(object, "name"),
@@ -66,49 +60,25 @@ describe("objectAsserter", () => {
         .message,
     );
 
-    object = { s: "", number: 0 };
+    const testCases = [
+      { s: "", number: 0 },
 
-    assertThrows(
-      () => _ObjectType(object),
-      TypeAssertionError,
-      new TypeAssertionError(_ObjectType.typeName, object).message,
-    );
+      undefined,
+      null,
+      false,
+      0,
+      "",
+      [],
+      {},
+    ];
 
-    assertThrows(
-      () => _ObjectType(undefined),
-      TypeAssertionError,
-      new TypeAssertionError(_ObjectType.typeName, undefined).message,
-    );
-    assertThrows(
-      () => _ObjectType(null),
-      TypeAssertionError,
-      new TypeAssertionError(_ObjectType.typeName, null).message,
-    );
-    assertThrows(
-      () => _ObjectType(false),
-      TypeAssertionError,
-      new TypeAssertionError(_ObjectType.typeName, false).message,
-    );
-    assertThrows(
-      () => _ObjectType(0),
-      TypeAssertionError,
-      new TypeAssertionError(_ObjectType.typeName, 0).message,
-    );
-    assertThrows(
-      () => _ObjectType(""),
-      TypeAssertionError,
-      new TypeAssertionError(_ObjectType.typeName, "").message,
-    );
-    assertThrows(
-      () => _ObjectType([]),
-      TypeAssertionError,
-      new TypeAssertionError(_ObjectType.typeName, []).message,
-    );
-    assertThrows(
-      () => _ObjectType({}),
-      TypeAssertionError,
-      new TypeAssertionError(_ObjectType.typeName, {}).message,
-    );
+    for (const value of testCases) {
+      assertThrows(
+        () => _ObjectType(value),
+        TypeAssertionError,
+        new TypeAssertionError(_ObjectType.typeName, value).message,
+      );
+    }
   });
 });
 
@@ -150,26 +120,20 @@ describe("objectIntersectionOf", () => {
   it(
     "should return a `Function` that returns `value` when it is an object and none of the `propertyAsserters` of `asserterA` and `asserterB` throw an error for the corresponding properties of `value`",
     () => {
-      let object: ReturnType<typeof _Intersection>;
+      const testCases = [
+        { a: "", b: "", c: "" },
+        { a: "a", b: "b", c: "c" },
+        { a: "", b: "", c: "", d: "" },
+      ];
 
-      object = { a: "", b: "", c: "" };
-      assertStrictEquals(_Intersection(object), object);
-
-      object = { a: "a", b: "b", c: "c" };
-      assertStrictEquals(_Intersection(object), object);
-
-      const unknownFieldObject: ReturnType<typeof _Intersection> & {
-        d: string;
-      } = { a: "", b: "", c: "", d: "" };
-
-      assertStrictEquals(_Intersection(unknownFieldObject), unknownFieldObject);
+      for (const value of testCases) {
+        assertStrictEquals(_Intersection(value), value);
+      }
     },
   );
 
   it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not an object, or any of the `propertyAsserters` of `asserterA` and `asserterB` throw an error for the corresponding property of `value`", () => {
-    let object: Record<string, unknown>;
-
-    object = { a: "", b: 0, c: "" };
+    const object = { a: "", b: 0, c: "" };
 
     assertThrows(
       () => _Intersection(object, "name"),
@@ -185,64 +149,26 @@ describe("objectIntersectionOf", () => {
         .message,
     );
 
-    object = { b: "", c: "" };
+    const testCases = [
+      { b: "", c: "" },
+      { a: 0, b: "", c: "" },
+      { a: "", b: false, c: "" },
 
-    assertThrows(
-      () => _Intersection(object),
-      TypeAssertionError,
-      new TypeAssertionError(_Intersection.typeName, object).message,
-    );
+      undefined,
+      null,
+      false,
+      0,
+      "",
+      [],
+      {},
+    ];
 
-    object = { a: 0, b: "", c: "" };
-
-    assertThrows(
-      () => _Intersection(object),
-      TypeAssertionError,
-      new TypeAssertionError(_Intersection.typeName, object).message,
-    );
-
-    object = { a: "", b: false, c: "" };
-
-    assertThrows(
-      () => _Intersection(object),
-      TypeAssertionError,
-      new TypeAssertionError(_Intersection.typeName, object).message,
-    );
-
-    assertThrows(
-      () => _Intersection(undefined),
-      TypeAssertionError,
-      new TypeAssertionError(_Intersection.typeName, undefined).message,
-    );
-    assertThrows(
-      () => _Intersection(null),
-      TypeAssertionError,
-      new TypeAssertionError(_Intersection.typeName, null).message,
-    );
-    assertThrows(
-      () => _Intersection(false),
-      TypeAssertionError,
-      new TypeAssertionError(_Intersection.typeName, false).message,
-    );
-    assertThrows(
-      () => _Intersection(0),
-      TypeAssertionError,
-      new TypeAssertionError(_Intersection.typeName, 0).message,
-    );
-    assertThrows(
-      () => _Intersection(""),
-      TypeAssertionError,
-      new TypeAssertionError(_Intersection.typeName, "").message,
-    );
-    assertThrows(
-      () => _Intersection([]),
-      TypeAssertionError,
-      new TypeAssertionError(_Intersection.typeName, []).message,
-    );
-    assertThrows(
-      () => _Intersection({}),
-      TypeAssertionError,
-      new TypeAssertionError(_Intersection.typeName, {}).message,
-    );
+    for (const value of testCases) {
+      assertThrows(
+        () => _Intersection(value),
+        TypeAssertionError,
+        new TypeAssertionError(_Intersection.typeName, value).message,
+      );
+    }
   });
 });

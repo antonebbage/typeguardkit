@@ -4,8 +4,11 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
 
 describe("_boolean", () => {
   it("should return `value` if of type `boolean`", () => {
-    assertStrictEquals(_boolean(false), false);
-    assertStrictEquals(_boolean(true), true);
+    const testCases = [false, true];
+
+    for (const value of testCases) {
+      assertStrictEquals(_boolean(value), value);
+    }
   });
 
   it("should throw a `TypeAssertionError` with correct `message` if `value` not of type `boolean`", () => {
@@ -18,43 +21,25 @@ describe("_boolean", () => {
         .message,
     );
 
-    assertThrows(
-      () => _boolean(undefined),
-      TypeAssertionError,
-      new TypeAssertionError(_boolean.typeName, undefined).message,
-    );
-    assertThrows(
-      () => _boolean(null),
-      TypeAssertionError,
-      new TypeAssertionError(_boolean.typeName, null).message,
-    );
-    assertThrows(
-      () => _boolean(0),
-      TypeAssertionError,
-      new TypeAssertionError(_boolean.typeName, 0).message,
-    );
-    assertThrows(
-      () => _boolean(""),
-      TypeAssertionError,
-      new TypeAssertionError(_boolean.typeName, "").message,
-    );
-    assertThrows(
-      () => _boolean([]),
-      TypeAssertionError,
-      new TypeAssertionError(_boolean.typeName, []).message,
-    );
-    assertThrows(
-      () => _boolean({}),
-      TypeAssertionError,
-      new TypeAssertionError(_boolean.typeName, {}).message,
-    );
+    const testCases = [undefined, null, 0, "", [], {}];
+
+    for (const value of testCases) {
+      assertThrows(
+        () => _boolean(value),
+        TypeAssertionError,
+        new TypeAssertionError(_boolean.typeName, value).message,
+      );
+    }
   });
 });
 
 describe("_number", () => {
   it("should return `value` if of type `number`", () => {
-    assertStrictEquals(_number(0), 0);
-    assertStrictEquals(_number(1), 1);
+    const testCases = [0, 1];
+
+    for (const value of testCases) {
+      assertStrictEquals(_number(value), value);
+    }
   });
 
   it("should throw a `TypeAssertionError` with correct `message` if `value` not of type `number`", () => {
@@ -65,43 +50,25 @@ describe("_number", () => {
         .message,
     );
 
-    assertThrows(
-      () => _number(undefined),
-      TypeAssertionError,
-      new TypeAssertionError(_number.typeName, undefined).message,
-    );
-    assertThrows(
-      () => _number(null),
-      TypeAssertionError,
-      new TypeAssertionError(_number.typeName, null).message,
-    );
-    assertThrows(
-      () => _number(false),
-      TypeAssertionError,
-      new TypeAssertionError(_number.typeName, false).message,
-    );
-    assertThrows(
-      () => _number(""),
-      TypeAssertionError,
-      new TypeAssertionError(_number.typeName, "").message,
-    );
-    assertThrows(
-      () => _number([]),
-      TypeAssertionError,
-      new TypeAssertionError(_number.typeName, []).message,
-    );
-    assertThrows(
-      () => _number({}),
-      TypeAssertionError,
-      new TypeAssertionError(_number.typeName, {}).message,
-    );
+    const testCases = [undefined, null, false, "", [], {}];
+
+    for (const value of testCases) {
+      assertThrows(
+        () => _number(value),
+        TypeAssertionError,
+        new TypeAssertionError(_number.typeName, value).message,
+      );
+    }
   });
 });
 
 describe("_string", () => {
   it("should return `value` if of type `string`", () => {
-    assertStrictEquals(_string(""), "");
-    assertStrictEquals(_string("a"), "a");
+    const testCases = ["", "a"];
+
+    for (const value of testCases) {
+      assertStrictEquals(_string(value), value);
+    }
   });
 
   it("should throw a `TypeAssertionError` with correct `message` if `value` not of type `string`", () => {
@@ -112,36 +79,15 @@ describe("_string", () => {
         .message,
     );
 
-    assertThrows(
-      () => _string(undefined),
-      TypeAssertionError,
-      new TypeAssertionError(_string.typeName, undefined).message,
-    );
-    assertThrows(
-      () => _string(null),
-      TypeAssertionError,
-      new TypeAssertionError(_string.typeName, null).message,
-    );
-    assertThrows(
-      () => _string(false),
-      TypeAssertionError,
-      new TypeAssertionError(_string.typeName, false).message,
-    );
-    assertThrows(
-      () => _string(0),
-      TypeAssertionError,
-      new TypeAssertionError(_string.typeName, 0).message,
-    );
-    assertThrows(
-      () => _string([]),
-      TypeAssertionError,
-      new TypeAssertionError(_string.typeName, []).message,
-    );
-    assertThrows(
-      () => _string({}),
-      TypeAssertionError,
-      new TypeAssertionError(_string.typeName, {}).message,
-    );
+    const testCases = [undefined, null, false, 0, [], {}];
+
+    for (const value of testCases) {
+      assertThrows(
+        () => _string(value),
+        TypeAssertionError,
+        new TypeAssertionError(_string.typeName, value).message,
+      );
+    }
   });
 });
 
@@ -158,36 +104,15 @@ describe("_null", () => {
         .message,
     );
 
-    assertThrows(
-      () => _null(undefined),
-      TypeAssertionError,
-      new TypeAssertionError(_null.typeName, undefined).message,
-    );
-    assertThrows(
-      () => _null(false),
-      TypeAssertionError,
-      new TypeAssertionError(_null.typeName, false).message,
-    );
-    assertThrows(
-      () => _null(0),
-      TypeAssertionError,
-      new TypeAssertionError(_null.typeName, 0).message,
-    );
-    assertThrows(
-      () => _null(""),
-      TypeAssertionError,
-      new TypeAssertionError(_null.typeName, "").message,
-    );
-    assertThrows(
-      () => _null([]),
-      TypeAssertionError,
-      new TypeAssertionError(_null.typeName, []).message,
-    );
-    assertThrows(
-      () => _null({}),
-      TypeAssertionError,
-      new TypeAssertionError(_null.typeName, {}).message,
-    );
+    const testCases = [undefined, false, 0, "", [], {}];
+
+    for (const value of testCases) {
+      assertThrows(
+        () => _null(value),
+        TypeAssertionError,
+        new TypeAssertionError(_null.typeName, value).message,
+      );
+    }
   });
 });
 
@@ -204,35 +129,14 @@ describe("_undefined", () => {
         .message,
     );
 
-    assertThrows(
-      () => _undefined(null),
-      TypeAssertionError,
-      new TypeAssertionError(_undefined.typeName, null).message,
-    );
-    assertThrows(
-      () => _undefined(false),
-      TypeAssertionError,
-      new TypeAssertionError(_undefined.typeName, false).message,
-    );
-    assertThrows(
-      () => _undefined(0),
-      TypeAssertionError,
-      new TypeAssertionError(_undefined.typeName, 0).message,
-    );
-    assertThrows(
-      () => _undefined(""),
-      TypeAssertionError,
-      new TypeAssertionError(_undefined.typeName, "").message,
-    );
-    assertThrows(
-      () => _undefined([]),
-      TypeAssertionError,
-      new TypeAssertionError(_undefined.typeName, []).message,
-    );
-    assertThrows(
-      () => _undefined({}),
-      TypeAssertionError,
-      new TypeAssertionError(_undefined.typeName, {}).message,
-    );
+    const testCases = [null, false, 0, "", [], {}];
+
+    for (const value of testCases) {
+      assertThrows(
+        () => _undefined(value),
+        TypeAssertionError,
+        new TypeAssertionError(_undefined.typeName, value).message,
+      );
+    }
   });
 });

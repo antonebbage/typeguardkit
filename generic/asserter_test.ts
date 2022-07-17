@@ -27,21 +27,30 @@ const _object = typeAsserter(
 
 describe("typeAsserter", () => {
   it("should return a `Function` with `typeName` set to `name`", () => {
-    assertInstanceOf(_string, Function);
-    assertInstanceOf(_object, Function);
+    const testCases = [
+      { asserter: _string, typeName: "string" },
+      { asserter: _object, typeName: "Record<string, unknown>" },
+    ];
 
-    assertStrictEquals(_string.typeName, "string");
-    assertStrictEquals(_object.typeName, "Record<string, unknown>");
+    for (const { asserter, typeName } of testCases) {
+      assertInstanceOf(asserter, Function);
+      assertStrictEquals(asserter.typeName, typeName);
+    }
   });
 
   it(
     "should return a `Function` that returns `value` when `typeGuard` returns `true` for `value`",
     () => {
-      assertStrictEquals(_string(""), "");
-      assertStrictEquals(_string("a"), "a");
+      const testCases = [
+        { asserter: _string, values: ["", "a"] },
+        { asserter: _object, values: [{}] },
+      ];
 
-      const object = {};
-      assertStrictEquals(_object(object), object);
+      for (const { asserter, values } of testCases) {
+        for (const value of values) {
+          assertStrictEquals(asserter(value), value);
+        }
+      }
     },
   );
 
@@ -53,67 +62,20 @@ describe("typeAsserter", () => {
         .message,
     );
 
-    assertThrows(
-      () => _string(undefined),
-      TypeAssertionError,
-      new TypeAssertionError(_string.typeName, undefined).message,
-    );
-    assertThrows(
-      () => _string(null),
-      TypeAssertionError,
-      new TypeAssertionError(_string.typeName, null).message,
-    );
-    assertThrows(
-      () => _string(false),
-      TypeAssertionError,
-      new TypeAssertionError(_string.typeName, false).message,
-    );
-    assertThrows(
-      () => _string(0),
-      TypeAssertionError,
-      new TypeAssertionError(_string.typeName, 0).message,
-    );
-    assertThrows(
-      () => _string([]),
-      TypeAssertionError,
-      new TypeAssertionError(_string.typeName, []).message,
-    );
-    assertThrows(
-      () => _string({}),
-      TypeAssertionError,
-      new TypeAssertionError(_string.typeName, {}).message,
-    );
+    const testCases = [
+      { asserter: _string, values: [undefined, null, false, 0, [], {}] },
+      { asserter: _object, values: [undefined, null, false, 0, "", []] },
+    ];
 
-    assertThrows(
-      () => _object(undefined),
-      TypeAssertionError,
-      new TypeAssertionError(_object.typeName, undefined).message,
-    );
-    assertThrows(
-      () => _object(null),
-      TypeAssertionError,
-      new TypeAssertionError(_object.typeName, null).message,
-    );
-    assertThrows(
-      () => _object(false),
-      TypeAssertionError,
-      new TypeAssertionError(_object.typeName, false).message,
-    );
-    assertThrows(
-      () => _object(0),
-      TypeAssertionError,
-      new TypeAssertionError(_object.typeName, 0).message,
-    );
-    assertThrows(
-      () => _object(""),
-      TypeAssertionError,
-      new TypeAssertionError(_object.typeName, "").message,
-    );
-    assertThrows(
-      () => _object([]),
-      TypeAssertionError,
-      new TypeAssertionError(_object.typeName, []).message,
-    );
+    for (const { asserter, values } of testCases) {
+      for (const value of values) {
+        assertThrows(
+          () => asserter(value),
+          TypeAssertionError,
+          new TypeAssertionError(asserter.typeName, value).message,
+        );
+      }
+    }
   });
 });
 
@@ -159,26 +121,31 @@ describe("enumAsserter", () => {
   it(
     "should return a `Function` that returns `value` when it is equal to one of `enumObject`'s members",
     () => {
-      assertStrictEquals(_NumericEnum(NumericEnum.A), NumericEnum.A);
-      assertStrictEquals(_NumericEnum(NumericEnum.B), NumericEnum.B);
-      assertStrictEquals(_NumericEnum(NumericEnum.C), NumericEnum.C);
+      const testCases = [
+        {
+          asserter: _NumericEnum,
+          values: [NumericEnum.A, NumericEnum.B, NumericEnum.C],
+        },
+        {
+          asserter: _StringEnum,
+          values: [StringEnum.A, StringEnum.B, StringEnum.C],
+        },
+        {
+          asserter: _HeterogeneousEnum,
 
-      assertStrictEquals(_StringEnum(StringEnum.A), StringEnum.A);
-      assertStrictEquals(_StringEnum(StringEnum.B), StringEnum.B);
-      assertStrictEquals(_StringEnum(StringEnum.C), StringEnum.C);
+          values: [
+            HeterogeneousEnum.A,
+            HeterogeneousEnum.B,
+            HeterogeneousEnum.C,
+          ],
+        },
+      ];
 
-      assertStrictEquals(
-        _HeterogeneousEnum(HeterogeneousEnum.A),
-        HeterogeneousEnum.A,
-      );
-      assertStrictEquals(
-        _HeterogeneousEnum(HeterogeneousEnum.B),
-        HeterogeneousEnum.B,
-      );
-      assertStrictEquals(
-        _HeterogeneousEnum(HeterogeneousEnum.C),
-        HeterogeneousEnum.C,
-      );
+      for (const { asserter, values } of testCases) {
+        for (const value of values) {
+          assertStrictEquals(asserter(value), value);
+        }
+      }
     },
   );
 
@@ -192,58 +159,24 @@ describe("enumAsserter", () => {
         .message,
     );
 
-    assertThrows(
-      () => _NumericEnum(undefined),
-      TypeAssertionError,
-      new TypeAssertionError(_NumericEnum.typeName, undefined).message,
-    );
-    assertThrows(
-      () => _NumericEnum(null),
-      TypeAssertionError,
-      new TypeAssertionError(_NumericEnum.typeName, null).message,
-    );
-    assertThrows(
-      () => _NumericEnum(false),
-      TypeAssertionError,
-      new TypeAssertionError(_NumericEnum.typeName, false).message,
-    );
-    assertThrows(
-      () => _NumericEnum([]),
-      TypeAssertionError,
-      new TypeAssertionError(_NumericEnum.typeName, []).message,
-    );
-    assertThrows(
-      () => _NumericEnum({}),
-      TypeAssertionError,
-      new TypeAssertionError(_NumericEnum.typeName, {}).message,
-    );
+    const testCases = [
+      {
+        asserter: _NumericEnum,
+        values: [undefined, null, false, "", [], {}, "A", 3],
+      },
+      { asserter: _StringEnum, values: [0] },
+      { asserter: _HeterogeneousEnum, values: ["A", 2] },
+    ];
 
-    assertThrows(
-      () => _NumericEnum("A"),
-      TypeAssertionError,
-      new TypeAssertionError(_NumericEnum.typeName, "A").message,
-    );
-    assertThrows(
-      () => _StringEnum(0),
-      TypeAssertionError,
-      new TypeAssertionError(_StringEnum.typeName, 0).message,
-    );
-    assertThrows(
-      () => _HeterogeneousEnum("A"),
-      TypeAssertionError,
-      new TypeAssertionError(_HeterogeneousEnum.typeName, "A").message,
-    );
-    assertThrows(
-      () => _HeterogeneousEnum(2),
-      TypeAssertionError,
-      new TypeAssertionError(_HeterogeneousEnum.typeName, 2).message,
-    );
-
-    assertThrows(
-      () => _NumericEnum(3),
-      TypeAssertionError,
-      new TypeAssertionError(_NumericEnum.typeName, 3).message,
-    );
+    for (const { asserter, values } of testCases) {
+      for (const value of values) {
+        assertThrows(
+          () => asserter(value),
+          TypeAssertionError,
+          new TypeAssertionError(asserter.typeName, value).message,
+        );
+      }
+    }
   });
 });
 
@@ -263,10 +196,11 @@ describe("literalUnionAsserter", () => {
   it(
     "should return a `Function` that returns `value` when it is equal to one of the `literals`",
     () => {
-      assertStrictEquals(_LiteralUnion(0), 0);
-      assertStrictEquals(_LiteralUnion(1), 1);
-      assertStrictEquals(_LiteralUnion(""), "");
-      assertStrictEquals(_LiteralUnion("a"), "a");
+      const testCases = [0, 1, "", "a"];
+
+      for (const value of testCases) {
+        assertStrictEquals(_LiteralUnion(value), value);
+      }
     },
   );
 
@@ -280,42 +214,15 @@ describe("literalUnionAsserter", () => {
         .message,
     );
 
-    assertThrows(
-      () => _LiteralUnion(undefined),
-      TypeAssertionError,
-      new TypeAssertionError(_LiteralUnion.typeName, undefined).message,
-    );
-    assertThrows(
-      () => _LiteralUnion(null),
-      TypeAssertionError,
-      new TypeAssertionError(_LiteralUnion.typeName, null).message,
-    );
-    assertThrows(
-      () => _LiteralUnion(false),
-      TypeAssertionError,
-      new TypeAssertionError(_LiteralUnion.typeName, false).message,
-    );
-    assertThrows(
-      () => _LiteralUnion([]),
-      TypeAssertionError,
-      new TypeAssertionError(_LiteralUnion.typeName, []).message,
-    );
-    assertThrows(
-      () => _LiteralUnion({}),
-      TypeAssertionError,
-      new TypeAssertionError(_LiteralUnion.typeName, {}).message,
-    );
+    const testCases = [undefined, null, false, [], {}, 2, "b"];
 
-    assertThrows(
-      () => _LiteralUnion(2),
-      TypeAssertionError,
-      new TypeAssertionError(_LiteralUnion.typeName, 2).message,
-    );
-    assertThrows(
-      () => _LiteralUnion("b"),
-      TypeAssertionError,
-      new TypeAssertionError(_LiteralUnion.typeName, "b").message,
-    );
+    for (const value of testCases) {
+      assertThrows(
+        () => _LiteralUnion(value),
+        TypeAssertionError,
+        new TypeAssertionError(_LiteralUnion.typeName, value).message,
+      );
+    }
   });
 });
 
@@ -334,14 +241,11 @@ describe("unionOf", () => {
   it(
     "should return a `Function` that returns `value` when any of the `asserters` do not throw an error for it",
     () => {
-      assertStrictEquals(_stringOrNumberOrObject(""), "");
-      assertStrictEquals(_stringOrNumberOrObject("a"), "a");
+      const testCases = ["", "a", 0, 1, {}];
 
-      assertStrictEquals(_stringOrNumberOrObject(0), 0);
-      assertStrictEquals(_stringOrNumberOrObject(1), 1);
-
-      const object = {};
-      assertStrictEquals(_stringOrNumberOrObject(object), object);
+      for (const value of testCases) {
+        assertStrictEquals(_stringOrNumberOrObject(value), value);
+      }
     },
   );
 
@@ -355,27 +259,15 @@ describe("unionOf", () => {
         .message,
     );
 
-    assertThrows(
-      () => _stringOrNumberOrObject(undefined),
-      TypeAssertionError,
-      new TypeAssertionError(_stringOrNumberOrObject.typeName, undefined)
-        .message,
-    );
-    assertThrows(
-      () => _stringOrNumberOrObject(null),
-      TypeAssertionError,
-      new TypeAssertionError(_stringOrNumberOrObject.typeName, null).message,
-    );
-    assertThrows(
-      () => _stringOrNumberOrObject(false),
-      TypeAssertionError,
-      new TypeAssertionError(_stringOrNumberOrObject.typeName, false).message,
-    );
-    assertThrows(
-      () => _stringOrNumberOrObject([]),
-      TypeAssertionError,
-      new TypeAssertionError(_stringOrNumberOrObject.typeName, []).message,
-    );
+    const testCases = [undefined, null, false, []];
+
+    for (const value of testCases) {
+      assertThrows(
+        () => _stringOrNumberOrObject(value),
+        TypeAssertionError,
+        new TypeAssertionError(_stringOrNumberOrObject.typeName, value).message,
+      );
+    }
   });
 });
 
@@ -384,37 +276,30 @@ describe("arrayOf", () => {
   const _arrayOfNumber = arrayOf(_number);
 
   it("should return a `Function` with correct `typeName`", () => {
-    assertInstanceOf(_arrayOfString, Function);
-    assertInstanceOf(_arrayOfNumber, Function);
+    const testCases = [
+      { asserter: _arrayOfString, typeName: `Array<${_string.typeName}>` },
+      { asserter: _arrayOfNumber, typeName: `Array<${_number.typeName}>` },
+    ];
 
-    assertStrictEquals(_arrayOfString.typeName, `Array<${_string.typeName}>`);
-    assertStrictEquals(_arrayOfNumber.typeName, `Array<${_number.typeName}>`);
+    for (const { asserter, typeName } of testCases) {
+      assertInstanceOf(asserter, Function);
+      assertStrictEquals(asserter.typeName, typeName);
+    }
   });
 
   it(
     "should return a `Function` that returns `value` when it is an `Array` where `asserter` does not throw an error for any element",
     () => {
-      let arrayOfString: string[];
+      const testCases = [
+        { asserter: _arrayOfString, values: [[], [""], ["a", "b", "c"]] },
+        { asserter: _arrayOfNumber, values: [[], [0], [0, 1, 2]] },
+      ];
 
-      arrayOfString = [];
-      assertStrictEquals(_arrayOfString(arrayOfString), arrayOfString);
-
-      arrayOfString = [""];
-      assertStrictEquals(_arrayOfString(arrayOfString), arrayOfString);
-
-      arrayOfString = ["a", "b", "c"];
-      assertStrictEquals(_arrayOfString(arrayOfString), arrayOfString);
-
-      let arrayOfNumber: number[];
-
-      arrayOfNumber = [];
-      assertStrictEquals(_arrayOfNumber(arrayOfNumber), arrayOfNumber);
-
-      arrayOfNumber = [0];
-      assertStrictEquals(_arrayOfNumber(arrayOfNumber), arrayOfNumber);
-
-      arrayOfNumber = [1, 2, 3];
-      assertStrictEquals(_arrayOfNumber(arrayOfNumber), arrayOfNumber);
+      for (const { asserter, values } of testCases) {
+        for (const value of values) {
+          assertStrictEquals(asserter(value), value);
+        }
+      }
     },
   );
 
@@ -431,103 +316,42 @@ describe("arrayOf", () => {
         .message,
     );
 
-    assertThrows(
-      () => _arrayOfString(undefined),
-      TypeAssertionError,
-      new TypeAssertionError(_arrayOfString.typeName, undefined).message,
-    );
-    assertThrows(
-      () => _arrayOfString(null),
-      TypeAssertionError,
-      new TypeAssertionError(_arrayOfString.typeName, null).message,
-    );
-    assertThrows(
-      () => _arrayOfString(false),
-      TypeAssertionError,
-      new TypeAssertionError(_arrayOfString.typeName, false).message,
-    );
-    assertThrows(
-      () => _arrayOfString(0),
-      TypeAssertionError,
-      new TypeAssertionError(_arrayOfString.typeName, 0).message,
-    );
-    assertThrows(
-      () => _arrayOfString(""),
-      TypeAssertionError,
-      new TypeAssertionError(_arrayOfString.typeName, "").message,
-    );
-    assertThrows(
-      () => _arrayOfString({}),
-      TypeAssertionError,
-      new TypeAssertionError(_arrayOfString.typeName, {}).message,
-    );
+    const testCases = [
+      {
+        asserter: _arrayOfString,
 
-    assertThrows(
-      () => _arrayOfString([undefined]),
-      TypeAssertionError,
-      new TypeAssertionError(_arrayOfString.typeName, [undefined]).message,
-    );
-    assertThrows(
-      () => _arrayOfString([null]),
-      TypeAssertionError,
-      new TypeAssertionError(_arrayOfString.typeName, [null]).message,
-    );
-    assertThrows(
-      () => _arrayOfString([false]),
-      TypeAssertionError,
-      new TypeAssertionError(_arrayOfString.typeName, [false]).message,
-    );
-    assertThrows(
-      () => _arrayOfString([0]),
-      TypeAssertionError,
-      new TypeAssertionError(_arrayOfString.typeName, [0]).message,
-    );
-    assertThrows(
-      () => _arrayOfString([[]]),
-      TypeAssertionError,
-      new TypeAssertionError(_arrayOfString.typeName, [[]]).message,
-    );
-    assertThrows(
-      () => _arrayOfString([{}]),
-      TypeAssertionError,
-      new TypeAssertionError(_arrayOfString.typeName, [{}]).message,
-    );
+        values: [
+          undefined,
+          null,
+          false,
+          0,
+          "",
+          {},
 
-    assertThrows(
-      () => _arrayOfString(["", undefined]),
-      TypeAssertionError,
-      new TypeAssertionError(_arrayOfString.typeName, ["", undefined]).message,
-    );
+          [undefined],
+          [null],
+          [false],
+          [0],
+          [[]],
+          [{}],
 
-    assertThrows(
-      () => _arrayOfNumber([undefined]),
-      TypeAssertionError,
-      new TypeAssertionError(_arrayOfNumber.typeName, [undefined]).message,
-    );
-    assertThrows(
-      () => _arrayOfNumber([null]),
-      TypeAssertionError,
-      new TypeAssertionError(_arrayOfNumber.typeName, [null]).message,
-    );
-    assertThrows(
-      () => _arrayOfNumber([false]),
-      TypeAssertionError,
-      new TypeAssertionError(_arrayOfNumber.typeName, [false]).message,
-    );
-    assertThrows(
-      () => _arrayOfNumber([""]),
-      TypeAssertionError,
-      new TypeAssertionError(_arrayOfNumber.typeName, [""]).message,
-    );
-    assertThrows(
-      () => _arrayOfNumber([[]]),
-      TypeAssertionError,
-      new TypeAssertionError(_arrayOfNumber.typeName, [[]]).message,
-    );
-    assertThrows(
-      () => _arrayOfNumber([{}]),
-      TypeAssertionError,
-      new TypeAssertionError(_arrayOfNumber.typeName, [{}]).message,
-    );
+          ["", undefined],
+        ],
+      },
+      {
+        asserter: _arrayOfNumber,
+        values: [[undefined], [null], [false], [""], [[]], [{}]],
+      },
+    ];
+
+    for (const { asserter, values } of testCases) {
+      for (const value of values) {
+        assertThrows(
+          () => asserter(value),
+          TypeAssertionError,
+          new TypeAssertionError(asserter.typeName, value).message,
+        );
+      }
+    }
   });
 });

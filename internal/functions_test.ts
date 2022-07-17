@@ -26,15 +26,15 @@ describe("checkTypeNameIsOpen", () => {
   });
 
   it("should return `false` if `typeName` does not describe a non-bracketed union or intersection", () => {
-    assertStrictEquals(checkTypeNameIsOpen(""), false);
+    const testCases = [
+      "",
+      "A",
+      ...openTypeNames.map((name) => `Array<${name}>`),
+      ...openTypeNames.map((name) => `(${name})`),
+    ];
 
-    assertStrictEquals(checkTypeNameIsOpen("A"), false);
-
-    for (const typeName of openTypeNames) {
-      assertStrictEquals(checkTypeNameIsOpen(`Array<${typeName}>`), false);
-    }
-    for (const typeName of openTypeNames) {
-      assertStrictEquals(checkTypeNameIsOpen(`(${typeName})`), false);
+    for (const typeName of testCases) {
+      assertStrictEquals(checkTypeNameIsOpen(typeName), false);
     }
   });
 });

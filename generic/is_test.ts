@@ -4,16 +4,18 @@ import { is } from "./is.ts";
 
 describe("is", () => {
   it("should return `true` if `asserter` does not throw an error for `value`", () => {
-    assertStrictEquals(is(_string, ""), true);
-    assertStrictEquals(is(_string, "a"), true);
+    const testCases = ["", "a"];
+
+    for (const value of testCases) {
+      assertStrictEquals(is(_string, value), true);
+    }
   });
 
   it("should return `false` if `asserter` does throw an error for `value`", () => {
-    assertStrictEquals(is(_string, undefined), false);
-    assertStrictEquals(is(_string, null), false);
-    assertStrictEquals(is(_string, false), false);
-    assertStrictEquals(is(_string, 0), false);
-    assertStrictEquals(is(_string, []), false);
-    assertStrictEquals(is(_string, {}), false);
+    const testCases = [undefined, null, false, 0, [], {}];
+
+    for (const value of testCases) {
+      assertStrictEquals(is(_string, value), false);
+    }
   });
 });
