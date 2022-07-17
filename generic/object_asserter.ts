@@ -83,7 +83,8 @@ export function objectIntersectionOf<
         propertyAsserterB.typeName,
       ].map((name) => {
         return checkTypeNameIsOpen(name) ? `(${name})` : name;
-      }).join(" & ");
+      })
+        .join(" & ");
 
       newPropertyAsserters[key] = typeAsserter(
         newPropertyTypeName,
