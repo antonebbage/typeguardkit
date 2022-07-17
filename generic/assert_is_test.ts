@@ -1,5 +1,5 @@
 import { assertStrictEquals, assertThrows, describe, it } from "/dev_deps.ts";
-import { _string, TypeAssertionError } from "../mod.ts";
+import { _string, TypeAssertionError } from "/mod.ts";
 import { assertIs } from "./assert_is.ts";
 
 describe("assertIs", () => {

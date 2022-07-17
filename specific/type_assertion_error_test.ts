@@ -4,7 +4,7 @@ import {
   describe,
   it,
 } from "/dev_deps.ts";
-import { _number, _string } from "./asserters.ts";
+import { _number, _string } from "/mod.ts";
 import { TypeAssertionError } from "./type_assertion_error.ts";
 
 describe("TypeAssertionError", () => {

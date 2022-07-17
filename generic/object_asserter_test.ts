@@ -9,11 +9,10 @@ import {
   _boolean,
   _number,
   _string,
-  objectAsserter,
-  objectIntersectionOf,
   TypeAssertionError,
   unionOf,
-} from "../mod.ts";
+} from "/mod.ts";
+import { objectAsserter, objectIntersectionOf } from "./object_asserter.ts";
 
 describe("objectAsserter", () => {
   const objectTypeName = "ObjectType";

@@ -1,5 +1,5 @@
 import { assertStrictEquals, describe, it } from "/dev_deps.ts";
-import { _string } from "../mod.ts";
+import { _string } from "/mod.ts";
 import { is } from "./is.ts";
 
 describe("is", () => {

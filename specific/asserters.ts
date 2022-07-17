@@ -1,6 +1,6 @@
 // This module is browser-compatible.
 
-import { typeAsserter } from "../generic/mod.ts";
+import { typeAsserter } from "/generic/mod.ts";
 
 /**
  * `_boolean` is a `boolean` type assertion function. If `value` is a `boolean`,

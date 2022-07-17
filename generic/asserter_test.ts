@@ -5,7 +5,7 @@ import {
   describe,
   it,
 } from "/dev_deps.ts";
-import { _number, TypeAssertionError } from "../mod.ts";
+import { _number, TypeAssertionError } from "/mod.ts";
 import {
   arrayOf,
   enumAsserter,

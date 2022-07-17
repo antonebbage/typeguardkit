@@ -1,6 +1,6 @@
 import { assertStrictEquals, assertThrows, describe, it } from "/dev_deps.ts";
+import { TypeAssertionError } from "/mod.ts";
 import { _boolean, _null, _number, _string, _undefined } from "./asserters.ts";
-import { TypeAssertionError } from "./type_assertion_error.ts";
 
 describe("_boolean", () => {
   it("should return `value` if of type `boolean`", () => {
