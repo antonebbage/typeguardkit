@@ -406,7 +406,9 @@ export const _Entity: ObjectAsserter<Entity> = entityAsserter;
 
 const userAsserter = objectIntersectionOf(
   _Entity,
-  objectAsserter("", { name: _string }),
+  objectAsserter("", {
+    name: _string,
+  }),
   "User",
 );
 
