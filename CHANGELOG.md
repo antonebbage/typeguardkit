@@ -1,4 +1,4 @@
-### [0.3.1](https://github.com/antonebbage/typeguardkit/compare/0.3.0...0.3.1) (2022-07-18)
+## [0.3.1](https://github.com/antonebbage/typeguardkit/compare/0.3.0...0.3.1) (2022-07-18)
 
 ### Bug Fixes
 
