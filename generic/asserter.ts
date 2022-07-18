@@ -1,6 +1,6 @@
 // This module is browser-compatible.
 
-import { TypeAssertionError } from "/specific/type_assertion_error.ts";
+import { TypeAssertionError } from "../specific/type_assertion_error.ts";
 
 /**
  * An `Asserter` is a type assertion function. If `value` is of `Type`, the

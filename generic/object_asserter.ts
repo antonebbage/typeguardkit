@@ -1,7 +1,7 @@
 // This module is browser-compatible.
 
-import { checkTypeNameIsOpen } from "/internal/mod.ts";
-import { TypeAssertionError } from "/specific/type_assertion_error.ts";
+import { checkTypeNameIsOpen } from "../internal/mod.ts";
+import { TypeAssertionError } from "../specific/type_assertion_error.ts";
 import { Asserter, typeAsserter } from "./asserter.ts";
 import { is } from "./is.ts";
 
