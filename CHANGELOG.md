@@ -1,3 +1,10 @@
+### [0.3.1](https://github.com/antonebbage/typeguardkit/compare/0.3.0...0.3.1) (2022-07-18)
+
+### Bug Fixes
+
+- fix imports from https://deno.land/x/typeguardkit/mod.ts
+  ([55e4090](https://github.com/antonebbage/typeguardkit/commit/55e40906fee0318405c6ad5db42ab96237f9feb3))
+
 ## [0.3.0](https://github.com/antonebbage/typeguardkit/compare/0.2.0...0.3.0) (2022-07-17)
 
 ### Features
