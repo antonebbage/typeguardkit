@@ -458,3 +458,39 @@ export type Options = ReturnType<typeof asserter>;
 
 export const _Options: ObjectAsserter<Options> = asserter;
 ```
+
+#### `pickFrom`
+
+`pickFrom` returns an `ObjectAsserter<Pick<Type, Keys[number]>>`, created using
+the provided `ObjectAsserter<Type>` and `Keys`.
+
+[`Pick<Type, Keys>`](https://www.typescriptlang.org/docs/handbook/utility-types.html#picktype-keys)
+is a utility type that constructs a type consisting of the properties of `Type`
+with `Keys`.
+
+You can use `pickFrom` like this:
+
+```ts
+import { _string, ObjectAsserter, objectAsserter, pickFrom } from "./mod.ts";
+// import from "typeguardkit" if using npm
+
+// types/user.ts
+
+const userAsserter = objectAsserter("User", {
+  id: _string,
+  firstName: _string,
+  lastName: _string,
+});
+
+export type User = ReturnType<typeof userAsserter>;
+
+export const _User: ObjectAsserter<User> = userAsserter;
+
+// types/user_name.ts
+
+const userNameAsserter = pickFrom(_User, ["firstName", "lastName"]);
+
+export type UserName = ReturnType<typeof userNameAsserter>;
+
+export const _UserName: ObjectAsserter<UserName> = userNameAsserter;
+```

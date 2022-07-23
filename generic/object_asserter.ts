@@ -132,3 +132,31 @@ export function partialFrom<Type extends Record<string, unknown>>(
     Partial<Type>
   >;
 }
+
+/**
+ * `pickFrom` returns an `ObjectAsserter<Pick<Type, Keys[number]>>`, created
+ * using the provided `ObjectAsserter<Type>` and `Keys`.
+ */
+export function pickFrom<
+  Type extends Record<string, unknown>,
+  Keys extends Array<keyof Type>,
+>(
+  asserter: ObjectAsserter<Type>,
+  keys: Keys,
+  typeName?: string,
+): ObjectAsserter<Pick<Type, Keys[number]>> {
+  const newTypeName = typeName ??
+    `Pick<${asserter.typeName}, ${
+      keys.map((key) => `"${String(key)}"`).join(" | ")
+    }>`;
+
+  const newPropertyAsserters: Record<string, Asserter<unknown>> = {};
+
+  for (const key of keys as string[]) {
+    newPropertyAsserters[key] = asserter.propertyAsserters[key];
+  }
+
+  return objectAsserter(newTypeName, newPropertyAsserters) as ObjectAsserter<
+    Pick<Type, Keys[number]>
+  >;
+}
