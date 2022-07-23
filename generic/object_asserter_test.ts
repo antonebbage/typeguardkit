@@ -109,14 +109,18 @@ describe("objectIntersectionOf", () => {
   );
 
   it("should return a `Function` with the provided `typeName` or the correct default if `undefined`", () => {
-    assertInstanceOf(_Intersection, Function);
+    const testCases = [
+      { asserter: _Intersection, typeName: intersectionName },
+      {
+        asserter: objectIntersectionOf(_ObjectType1, _ObjectType2),
+        typeName: `${_ObjectType1.typeName} & ${_ObjectType2.typeName}`,
+      },
+    ];
 
-    assertStrictEquals(_Intersection.typeName, intersectionName);
-
-    assertStrictEquals(
-      objectIntersectionOf(_ObjectType1, _ObjectType2).typeName,
-      `${_ObjectType1.typeName} & ${_ObjectType2.typeName}`,
-    );
+    for (const { asserter, typeName } of testCases) {
+      assertInstanceOf(asserter, Function);
+      assertStrictEquals(asserter.typeName, typeName);
+    }
   });
 
   it(
