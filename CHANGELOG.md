@@ -1,3 +1,20 @@
+## [0.4.0](https://github.com/antonebbage/typeguardkit/compare/0.3.1...0.4.0) (2022-07-23)
+
+### ⚠ BREAKING CHANGES
+
+- add optional `typeName` parameter to `unionOf`
+
+### Features
+
+- add `partialFrom` function
+  ([490cbe9](https://github.com/antonebbage/typeguardkit/commit/490cbe931d35936a50e6720e0e068a97f36f68ed))
+- add `pickFrom` function
+  ([b6ea6af](https://github.com/antonebbage/typeguardkit/commit/b6ea6af0d8ed964f864d5c061f4b44b5028cb4da))
+- add optional `typeName` parameter to `arrayOf`
+  ([4a8e150](https://github.com/antonebbage/typeguardkit/commit/4a8e15084ebc81ff8a12388add4bdf82c7bd3c08))
+- add optional `typeName` parameter to `unionOf`
+  ([92528f0](https://github.com/antonebbage/typeguardkit/commit/92528f0f300eebdb85d1eca796a846a7fdd1cb05))
+
 ## [0.3.1](https://github.com/antonebbage/typeguardkit/compare/0.3.0...0.3.1) (2022-07-18)
 
 ### Bug Fixes
