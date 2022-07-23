@@ -1,10 +1,6 @@
-import {
-  assertStrictEquals,
-  assertStringIncludes,
-  describe,
-  it,
-} from "/dev_deps.ts";
-import { _number, _string } from "/mod.ts";
+import { assertStrictEquals, assertStringIncludes } from "testing/asserts.ts";
+import { describe, it } from "testing/bdd.ts";
+import { _number, _string } from "../mod.ts";
 import { TypeAssertionError } from "./type_assertion_error.ts";
 
 describe("TypeAssertionError", () => {

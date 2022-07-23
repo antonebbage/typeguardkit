@@ -9,7 +9,7 @@ import { Asserter } from "./asserter.ts";
  * will be narrowed to `Type`.
  *
  * ```ts
- * import { _string } from "/mod.ts";
+ * import { _string } from "../mod.ts";
  * import { assertIs } from "./assert_is.ts";
  *
  * function handleUnknown(x: unknown) {

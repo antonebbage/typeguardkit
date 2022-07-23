@@ -2,16 +2,15 @@ import {
   assertInstanceOf,
   assertStrictEquals,
   assertThrows,
-  describe,
-  it,
-} from "/dev_deps.ts";
+} from "testing/asserts.ts";
+import { describe, it } from "testing/bdd.ts";
 import {
   _boolean,
   _number,
   _string,
   TypeAssertionError,
   unionOf,
-} from "/mod.ts";
+} from "../mod.ts";
 import { objectAsserter, objectIntersectionOf } from "./object_asserter.ts";
 
 describe("objectAsserter", () => {

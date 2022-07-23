@@ -8,7 +8,7 @@ import { Asserter } from "./asserter.ts";
  * will catch it and return `false`. Otherwise, `is` will return `true`.
  *
  * ```ts
- * import { _string } from "/mod.ts";
+ * import { _string } from "../mod.ts";
  * import { is } from "./is.ts";
  *
  * function handleUnknown(x: unknown) {

@@ -2,10 +2,9 @@ import {
   assertInstanceOf,
   assertStrictEquals,
   assertThrows,
-  describe,
-  it,
-} from "/dev_deps.ts";
-import { _number, TypeAssertionError } from "/mod.ts";
+} from "testing/asserts.ts";
+import { describe, it } from "testing/bdd.ts";
+import { _number, TypeAssertionError } from "../mod.ts";
 import {
   arrayOf,
   enumAsserter,

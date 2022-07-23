@@ -1,5 +1,6 @@
-import { assertStrictEquals, assertThrows, describe, it } from "/dev_deps.ts";
-import { TypeAssertionError } from "/mod.ts";
+import { assertStrictEquals, assertThrows } from "testing/asserts.ts";
+import { describe, it } from "testing/bdd.ts";
+import { TypeAssertionError } from "../mod.ts";
 import { _boolean, _null, _number, _string, _undefined } from "./asserters.ts";
 
 describe("_boolean", () => {

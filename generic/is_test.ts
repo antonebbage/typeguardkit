@@ -1,5 +1,6 @@
-import { assertStrictEquals, describe, it } from "/dev_deps.ts";
-import { _string } from "/mod.ts";
+import { assertStrictEquals } from "testing/asserts.ts";
+import { describe, it } from "testing/bdd.ts";
+import { _string } from "../mod.ts";
 import { is } from "./is.ts";
 
 describe("is", () => {

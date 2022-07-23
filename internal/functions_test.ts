@@ -1,4 +1,5 @@
-import { assertStrictEquals, describe, it } from "/dev_deps.ts";
+import { assertStrictEquals } from "testing/asserts.ts";
+import { describe, it } from "testing/bdd.ts";
 import { checkTypeNameIsOpen } from "./functions.ts";
 
 describe("checkTypeNameIsOpen", () => {
