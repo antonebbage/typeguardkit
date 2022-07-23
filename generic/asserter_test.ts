@@ -274,10 +274,20 @@ describe("arrayOf", () => {
   const _arrayOfString = arrayOf(_string);
   const _arrayOfNumber = arrayOf(_number);
 
-  it("should return a `Function` with correct `typeName`", () => {
+  it("should return a `Function` with the provided `typeName` or the correct default if `undefined`", () => {
     const testCases = [
-      { asserter: _arrayOfString, typeName: `Array<${_string.typeName}>` },
-      { asserter: _arrayOfNumber, typeName: `Array<${_number.typeName}>` },
+      {
+        asserter: arrayOf(_string, "ArrayOfString"),
+        typeName: "ArrayOfString",
+      },
+      {
+        asserter: _arrayOfString,
+        typeName: `Array<${_string.typeName}>`,
+      },
+      {
+        asserter: _arrayOfNumber,
+        typeName: `Array<${_number.typeName}>`,
+      },
     ];
 
     for (const { asserter, typeName } of testCases) {

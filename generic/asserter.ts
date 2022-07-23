@@ -104,8 +104,11 @@ export function unionOf<Asserters extends Array<Asserter<unknown>>>(
  * `arrayOf` returns an `Asserter<Array<Type>>`, created using the provided
  * `Asserter<Type>`.
  */
-export function arrayOf<Type>(asserter: Asserter<Type>): Asserter<Array<Type>> {
-  const newTypeName = `Array<${asserter.typeName}>`;
+export function arrayOf<Type>(
+  asserter: Asserter<Type>,
+  typeName?: string,
+): Asserter<Array<Type>> {
+  const newTypeName = typeName ?? `Array<${asserter.typeName}>`;
 
   const newAsserter = (value: unknown, valueName?: string) => {
     if (!Array.isArray(value)) {
