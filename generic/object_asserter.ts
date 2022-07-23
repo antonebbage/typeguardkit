@@ -2,7 +2,8 @@
 
 import { checkTypeNameIsOpen } from "../internal/mod.ts";
 import { TypeAssertionError } from "../specific/type_assertion_error.ts";
-import { Asserter, typeAsserter } from "./asserter.ts";
+import { _undefined } from "../specific/asserters.ts";
+import { Asserter, typeAsserter, unionOf } from "./asserter.ts";
 import { is } from "./is.ts";
 
 /**
@@ -12,7 +13,7 @@ import { is } from "./is.ts";
 export interface ObjectAsserter<Type extends Record<string, unknown>>
   extends Asserter<Type> {
   readonly propertyAsserters: Readonly<
-    { [Key in keyof Type]: Asserter<Type[Key]> }
+    { [Key in keyof Type]-?: Asserter<Type[Key]> }
   >;
 }
 
@@ -49,7 +50,7 @@ export function objectAsserter<
   };
 
   asserter.typeName = typeName;
-  asserter.propertyAsserters = propertyAsserters;
+  asserter.propertyAsserters = propertyAsserters as Required<PropertyAsserters>;
 
   return asserter as ObjectAsserter<
     { [Key in keyof PropertyAsserters]: ReturnType<PropertyAsserters[Key]> }
@@ -105,5 +106,29 @@ export function objectIntersectionOf<
 
   return objectAsserter(newTypeName, newPropertyAsserters) as ObjectAsserter<
     TypeA & TypeB
+  >;
+}
+
+/**
+ * `partialFrom` returns an `ObjectAsserter<Partial<Type>>`, created using the
+ * provided `ObjectAsserter<Type>`.
+ */
+export function partialFrom<Type extends Record<string, unknown>>(
+  asserter: ObjectAsserter<Type>,
+  typeName?: string,
+): ObjectAsserter<Partial<Type>> {
+  const newTypeName = typeName ?? `Partial<${asserter.typeName}>`;
+
+  const newPropertyAsserters: Record<string, Asserter<unknown>> = {};
+
+  for (const key in asserter.propertyAsserters) {
+    newPropertyAsserters[key] = unionOf([
+      asserter.propertyAsserters[key],
+      _undefined,
+    ]);
+  }
+
+  return objectAsserter(newTypeName, newPropertyAsserters) as ObjectAsserter<
+    Partial<Type>
   >;
 }

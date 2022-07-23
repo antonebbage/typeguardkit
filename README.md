@@ -334,7 +334,7 @@ import { Asserter } from "./mod.ts";
 interface ObjectAsserter<Type extends Record<string, unknown>>
   extends Asserter<Type> {
   readonly propertyAsserters: Readonly<
-    { [Key in keyof Type]: Asserter<Type[Key]> }
+    { [Key in keyof Type]-?: Asserter<Type[Key]> }
   >;
 }
 ```
@@ -428,4 +428,33 @@ function handleUnknown(x: unknown) {
 }
 
 function handleUser(x: User) {}
+```
+
+#### `partialFrom`
+
+`partialFrom` returns an `ObjectAsserter<Partial<Type>>`, created using the
+provided `ObjectAsserter<Type>`.
+
+[`Partial<Type>`](https://www.typescriptlang.org/docs/handbook/utility-types.html#partialtype)
+is a utility type that constructs a type the same as `Type`, but with all
+properties made optional.
+
+You can use `partialFrom` like this:
+
+```ts
+import { _string, ObjectAsserter, objectAsserter, partialFrom } from "./mod.ts";
+// import from "typeguardkit" if using npm
+
+const asserter = partialFrom(
+  objectAsserter("", {
+    option1: _string,
+    option2: _string,
+    option3: _string,
+  }),
+  "Options",
+);
+
+export type Options = ReturnType<typeof asserter>;
+
+export const _Options: ObjectAsserter<Options> = asserter;
 ```
