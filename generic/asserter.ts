@@ -78,9 +78,11 @@ export function literalUnionAsserter<
  * `Asserter`s.
  */
 export function unionOf<Asserters extends Array<Asserter<unknown>>>(
-  ...asserters: Asserters
+  asserters: Asserters,
+  typeName?: string,
 ): Asserter<ReturnType<Asserters[number]>> {
-  const newTypeName = asserters.map(({ typeName }) => typeName).join(" | ");
+  const newTypeName = typeName ??
+    asserters.map((asserter) => asserter.typeName).join(" | ");
 
   return typeAsserter(
     newTypeName,

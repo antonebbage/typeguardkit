@@ -226,15 +226,25 @@ describe("literalUnionAsserter", () => {
 });
 
 describe("unionOf", () => {
-  const _stringOrNumberOrObject = unionOf(_string, _number, _object);
+  const _stringOrNumberOrObject = unionOf([_string, _number, _object]);
 
-  it("should return a `Function` with correct `typeName`", () => {
-    assertInstanceOf(_stringOrNumberOrObject, Function);
+  it("should return a `Function` with the provided `typeName` or the correct default if `undefined`", () => {
+    const testCases = [
+      {
+        asserter: unionOf([_string, _number], "StringOrNumber"),
+        typeName: "StringOrNumber",
+      },
+      {
+        asserter: _stringOrNumberOrObject,
+        typeName:
+          `${_string.typeName} | ${_number.typeName} | ${_object.typeName}`,
+      },
+    ];
 
-    assertStrictEquals(
-      _stringOrNumberOrObject.typeName,
-      `${_string.typeName} | ${_number.typeName} | ${_object.typeName}`,
-    );
+    for (const { asserter, typeName } of testCases) {
+      assertInstanceOf(asserter, Function);
+      assertStrictEquals(asserter.typeName, typeName);
+    }
   });
 
   it(

@@ -49,7 +49,7 @@ const asserter = objectAsserter("Book", {
   title: _string,
   authors: arrayOf(_string),
   pageCount: _number,
-  rating: unionOf(_number, _null),
+  rating: unionOf([_number, _null]),
   isRecommended: _boolean,
 });
 
@@ -283,7 +283,7 @@ You can use `unionOf` like this:
 import { _null, _string, is, unionOf } from "./mod.ts";
 // import from "typeguardkit" if using npm
 
-const _stringOrNull = unionOf(_string, _null);
+const _stringOrNull = unionOf([_string, _null]);
 
 function handleUnknown(x: unknown) {
   if (is(_stringOrNull, x)) {

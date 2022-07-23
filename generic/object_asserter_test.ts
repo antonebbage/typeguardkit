@@ -85,14 +85,14 @@ describe("objectIntersectionOf", () => {
 
   const _ObjectType1 = objectAsserter(objectType1Name, {
     a: _string,
-    b: unionOf(_string, _number),
+    b: unionOf([_string, _number]),
   });
 
   const objectType2Name = "ObjectType2";
 
   const _ObjectType2 = objectAsserter(objectType2Name, {
     a: _string,
-    b: unionOf(_string, _boolean),
+    b: unionOf([_string, _boolean]),
     c: _string,
   });
 
