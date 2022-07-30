@@ -26,9 +26,16 @@ describe("objectAsserter", () => {
     number: _number,
   });
 
-  it("should return a `Function` with the provided `typeName`", () => {
-    assertInstanceOf(_ObjectType, Function);
-    assertStrictEquals(_ObjectType.typeName, objectTypeName);
+  it("should return a `Function` with the provided `typeName` or the correct default if empty", () => {
+    const testCases = [
+      { asserter: _ObjectType, typeName: objectTypeName },
+      { asserter: objectAsserter("", {}), typeName: "UnnamedObject" },
+    ];
+
+    for (const { asserter, typeName } of testCases) {
+      assertInstanceOf(asserter, Function);
+      assertStrictEquals(asserter.typeName, typeName);
+    }
   });
 
   it(
@@ -109,12 +116,22 @@ describe("objectIntersectionOf", () => {
     intersectionName,
   );
 
-  it("should return a `Function` with the provided `typeName` or the correct default if `undefined`", () => {
+  it("should return a `Function` with the provided `typeName` or the correct default if `undefined` or empty", () => {
+    const defaultTypeName =
+      `${_ObjectType1.typeName} & ${_ObjectType2.typeName}`;
+
     const testCases = [
-      { asserter: _Intersection, typeName: intersectionName },
+      {
+        asserter: _Intersection,
+        typeName: intersectionName,
+      },
       {
         asserter: objectIntersectionOf(_ObjectType1, _ObjectType2),
-        typeName: `${_ObjectType1.typeName} & ${_ObjectType2.typeName}`,
+        typeName: defaultTypeName,
+      },
+      {
+        asserter: objectIntersectionOf(_ObjectType1, _ObjectType2, ""),
+        typeName: defaultTypeName,
       },
     ];
 
@@ -189,7 +206,9 @@ describe("partialFrom", () => {
 
   const _PartialObjectType = partialFrom(_ObjectType);
 
-  it("should return a `Function` with the provided `typeName` or the correct default if `undefined`", () => {
+  it("should return a `Function` with the provided `typeName` or the correct default if `undefined` or empty", () => {
+    const defaultTypeName = `Partial<${_ObjectType.typeName}>`;
+
     const testCases = [
       {
         asserter: partialFrom(_ObjectType, "PartialObjectType"),
@@ -197,7 +216,11 @@ describe("partialFrom", () => {
       },
       {
         asserter: _PartialObjectType,
-        typeName: `Partial<${_ObjectType.typeName}>`,
+        typeName: defaultTypeName,
+      },
+      {
+        asserter: partialFrom(_ObjectType, ""),
+        typeName: defaultTypeName,
       },
     ];
 
@@ -268,9 +291,13 @@ describe("pickFrom", () => {
     c: _boolean,
   });
 
-  const _PickedObjectType = pickFrom(_ObjectType, ["b", "c"]);
+  const keys: Array<keyof ReturnType<typeof _ObjectType>> = ["b", "c"];
 
-  it("should return a `Function` with the provided `typeName` or the correct default if `undefined`", () => {
+  const _PickedObjectType = pickFrom(_ObjectType, keys);
+
+  it("should return a `Function` with the provided `typeName` or the correct default if `undefined` or empty", () => {
+    const defaultTypeName = `Pick<${_ObjectType.typeName}, "b" | "c">`;
+
     const testCases = [
       {
         asserter: pickFrom(_ObjectType, ["a"], "PickedObjectType"),
@@ -278,7 +305,11 @@ describe("pickFrom", () => {
       },
       {
         asserter: _PickedObjectType,
-        typeName: `Pick<${_ObjectType.typeName}, "b" | "c">`,
+        typeName: defaultTypeName,
+      },
+      {
+        asserter: pickFrom(_ObjectType, keys, ""),
+        typeName: defaultTypeName,
       },
     ];
 

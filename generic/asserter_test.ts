@@ -13,10 +13,11 @@ import {
   unionOf,
 } from "./asserter.ts";
 
-const _string = typeAsserter(
-  "string",
-  (value): value is string => typeof value === "string",
-);
+function isString(value: unknown): value is string {
+  return typeof value === "string";
+}
+
+const _string = typeAsserter("string", isString);
 
 const _object = typeAsserter(
   "Record<string, unknown>",
@@ -25,10 +26,11 @@ const _object = typeAsserter(
 );
 
 describe("typeAsserter", () => {
-  it("should return a `Function` with `typeName` set to `name`", () => {
+  it("should return a `Function` with the provided `typeName` or the correct default if empty", () => {
     const testCases = [
       { asserter: _string, typeName: "string" },
       { asserter: _object, typeName: "Record<string, unknown>" },
+      { asserter: typeAsserter("", isString), typeName: "UnnamedType" },
     ];
 
     for (const { asserter, typeName } of testCases) {
@@ -112,9 +114,18 @@ describe("enumAsserter", () => {
     HeterogeneousEnum,
   );
 
-  it("should return a `Function` with `typeName` set to `name`", () => {
-    assertInstanceOf(_NumericEnum, Function);
-    assertStrictEquals(_NumericEnum.typeName, numericEnumName);
+  it("should return a `Function` with the provided `typeName` or the correct default if empty", () => {
+    const testCases = [
+      { asserter: _NumericEnum, typeName: numericEnumName },
+      { asserter: _StringEnum, typeName: stringEnumName },
+      { asserter: _HeterogeneousEnum, typeName: heterogeneousEnumName },
+      { asserter: enumAsserter("", NumericEnum), typeName: "UnnamedEnum" },
+    ];
+
+    for (const { asserter, typeName } of testCases) {
+      assertInstanceOf(asserter, Function);
+      assertStrictEquals(asserter.typeName, typeName);
+    }
   });
 
   it(
@@ -180,16 +191,26 @@ describe("enumAsserter", () => {
 });
 
 describe("literalUnionAsserter", () => {
-  const typeName = "LiteralUnion";
+  const literalUnionName = "LiteralUnion";
 
   const _LiteralUnion = literalUnionAsserter(
-    typeName,
+    literalUnionName,
     [0, 1, "", "a"] as const,
   );
 
-  it("should return a `Function` with `typeName` set to `name`", () => {
-    assertInstanceOf(_LiteralUnion, Function);
-    assertStrictEquals(_LiteralUnion.typeName, typeName);
+  it("should return a `Function` with the provided `typeName` or the correct default if empty", () => {
+    const testCases = [
+      { asserter: _LiteralUnion, typeName: literalUnionName },
+      {
+        asserter: literalUnionAsserter("", [0, 1] as const),
+        typeName: "UnnamedLiteralUnion",
+      },
+    ];
+
+    for (const { asserter, typeName } of testCases) {
+      assertInstanceOf(asserter, Function);
+      assertStrictEquals(asserter.typeName, typeName);
+    }
   });
 
   it(
@@ -226,9 +247,14 @@ describe("literalUnionAsserter", () => {
 });
 
 describe("unionOf", () => {
-  const _stringOrNumberOrObject = unionOf([_string, _number, _object]);
+  const memberAsserters = [_string, _number, _object];
 
-  it("should return a `Function` with the provided `typeName` or the correct default if `undefined`", () => {
+  const _stringOrNumberOrObject = unionOf(memberAsserters);
+
+  it("should return a `Function` with the provided `typeName` or the correct default if `undefined` or empty", () => {
+    const defaultTypeName =
+      `${_string.typeName} | ${_number.typeName} | ${_object.typeName}`;
+
     const testCases = [
       {
         asserter: unionOf([_string, _number], "StringOrNumber"),
@@ -236,8 +262,11 @@ describe("unionOf", () => {
       },
       {
         asserter: _stringOrNumberOrObject,
-        typeName:
-          `${_string.typeName} | ${_number.typeName} | ${_object.typeName}`,
+        typeName: defaultTypeName,
+      },
+      {
+        asserter: unionOf(memberAsserters, ""),
+        typeName: defaultTypeName,
       },
     ];
 
@@ -284,7 +313,7 @@ describe("arrayOf", () => {
   const _arrayOfString = arrayOf(_string);
   const _arrayOfNumber = arrayOf(_number);
 
-  it("should return a `Function` with the provided `typeName` or the correct default if `undefined`", () => {
+  it("should return a `Function` with the provided `typeName` or the correct default if `undefined` or empty", () => {
     const testCases = [
       {
         asserter: arrayOf(_string, "ArrayOfString"),
@@ -297,6 +326,10 @@ describe("arrayOf", () => {
       {
         asserter: _arrayOfNumber,
         typeName: `Array<${_number.typeName}>`,
+      },
+      {
+        asserter: arrayOf(_string, ""),
+        typeName: `Array<${_string.typeName}>`,
       },
     ];
 

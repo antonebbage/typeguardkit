@@ -49,7 +49,7 @@ export function objectAsserter<
     return value;
   };
 
-  asserter.typeName = typeName;
+  asserter.typeName = typeName || "UnnamedObject";
   asserter.propertyAsserters = propertyAsserters as Required<PropertyAsserters>;
 
   return asserter as ObjectAsserter<
@@ -117,7 +117,7 @@ export function partialFrom<Type extends Record<string, unknown>>(
   asserter: ObjectAsserter<Type>,
   typeName?: string,
 ): ObjectAsserter<Partial<Type>> {
-  const newTypeName = typeName ?? `Partial<${asserter.typeName}>`;
+  const newTypeName = typeName || `Partial<${asserter.typeName}>`;
 
   const newPropertyAsserters: Record<string, Asserter<unknown>> = {};
 
@@ -145,7 +145,7 @@ export function pickFrom<
   keys: Keys,
   typeName?: string,
 ): ObjectAsserter<Pick<Type, Keys[number]>> {
-  const newTypeName = typeName ??
+  const newTypeName = typeName ||
     `Pick<${asserter.typeName}, ${
       keys.map((key) => `"${String(key)}"`).join(" | ")
     }>`;

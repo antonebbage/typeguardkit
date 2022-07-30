@@ -27,7 +27,7 @@ export function typeAsserter<Type>(
     throw new TypeAssertionError(typeName, value, { valueName });
   };
 
-  asserter.typeName = typeName;
+  asserter.typeName = typeName || "UnnamedType";
 
   return asserter;
 }
@@ -43,14 +43,17 @@ export function enumAsserter<
     isNaN(Number(key))
   );
 
-  return typeAsserter(typeName, (value): value is Enum[keyof Enum] => {
-    for (const key of nonNumericStringKeys) {
-      if (enumObject[key] === value) {
-        return true;
+  return typeAsserter(
+    typeName || "UnnamedEnum",
+    (value): value is Enum[keyof Enum] => {
+      for (const key of nonNumericStringKeys) {
+        if (enumObject[key] === value) {
+          return true;
+        }
       }
-    }
-    return false;
-  });
+      return false;
+    },
+  );
 }
 
 /**
@@ -63,14 +66,17 @@ export function literalUnionAsserter<
   typeName: string,
   literals: Literals,
 ): Asserter<Literals[number]> {
-  return typeAsserter(typeName, (value): value is Literals[number] => {
-    for (const literal of literals) {
-      if (literal === value) {
-        return true;
+  return typeAsserter(
+    typeName || "UnnamedLiteralUnion",
+    (value): value is Literals[number] => {
+      for (const literal of literals) {
+        if (literal === value) {
+          return true;
+        }
       }
-    }
-    return false;
-  });
+      return false;
+    },
+  );
 }
 
 /**
@@ -81,7 +87,7 @@ export function unionOf<Asserters extends Array<Asserter<unknown>>>(
   asserters: Asserters,
   typeName?: string,
 ): Asserter<ReturnType<Asserters[number]>> {
-  const newTypeName = typeName ??
+  const newTypeName = typeName ||
     asserters.map((asserter) => asserter.typeName).join(" | ");
 
   return typeAsserter(
@@ -110,7 +116,7 @@ export function arrayOf<Type>(
   asserter: Asserter<Type>,
   typeName?: string,
 ): Asserter<Array<Type>> {
-  const newTypeName = typeName ?? `Array<${asserter.typeName}>`;
+  const newTypeName = typeName || `Array<${asserter.typeName}>`;
 
   const newAsserter = (value: unknown, valueName?: string) => {
     if (!Array.isArray(value)) {
