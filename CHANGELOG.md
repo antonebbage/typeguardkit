@@ -1,3 +1,10 @@
+## [0.5.0](https://github.com/antonebbage/typeguardkit/compare/0.4.0...0.5.0) (2022-07-30)
+
+### Features
+
+- set default `Asserter.typeName` if empty `string` provided
+  ([c69a147](https://github.com/antonebbage/typeguardkit/commit/c69a14748b7fce982c633cecd863f752659a8168))
+
 ## [0.4.0](https://github.com/antonebbage/typeguardkit/compare/0.3.1...0.4.0) (2022-07-23)
 
 ### ⚠ BREAKING CHANGES
