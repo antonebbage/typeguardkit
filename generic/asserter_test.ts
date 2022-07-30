@@ -39,21 +39,18 @@ describe("typeAsserter", () => {
     }
   });
 
-  it(
-    "should return a `Function` that returns `value` when `typeGuard` returns `true` for `value`",
-    () => {
-      const testCases = [
-        { asserter: _string, values: ["", "a"] },
-        { asserter: _object, values: [{}] },
-      ];
+  it("should return a `Function` that returns `value` when `typeGuard` returns `true` for `value`", () => {
+    const testCases = [
+      { asserter: _string, values: ["", "a"] },
+      { asserter: _object, values: [{}] },
+    ];
 
-      for (const { asserter, values } of testCases) {
-        for (const value of values) {
-          assertStrictEquals(asserter(value), value);
-        }
+    for (const { asserter, values } of testCases) {
+      for (const value of values) {
+        assertStrictEquals(asserter(value), value);
       }
-    },
-  );
+    }
+  });
 
   it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `typeGuard` returns `false` for `value`", () => {
     assertThrows(
@@ -128,36 +125,28 @@ describe("enumAsserter", () => {
     }
   });
 
-  it(
-    "should return a `Function` that returns `value` when it is equal to one of `enumObject`'s members",
-    () => {
-      const testCases = [
-        {
-          asserter: _NumericEnum,
-          values: [NumericEnum.A, NumericEnum.B, NumericEnum.C],
-        },
-        {
-          asserter: _StringEnum,
-          values: [StringEnum.A, StringEnum.B, StringEnum.C],
-        },
-        {
-          asserter: _HeterogeneousEnum,
+  it("should return a `Function` that returns `value` when it is equal to one of `enumObject`'s members", () => {
+    const testCases = [
+      {
+        asserter: _NumericEnum,
+        values: [NumericEnum.A, NumericEnum.B, NumericEnum.C],
+      },
+      {
+        asserter: _StringEnum,
+        values: [StringEnum.A, StringEnum.B, StringEnum.C],
+      },
+      {
+        asserter: _HeterogeneousEnum,
+        values: [HeterogeneousEnum.A, HeterogeneousEnum.B, HeterogeneousEnum.C],
+      },
+    ];
 
-          values: [
-            HeterogeneousEnum.A,
-            HeterogeneousEnum.B,
-            HeterogeneousEnum.C,
-          ],
-        },
-      ];
-
-      for (const { asserter, values } of testCases) {
-        for (const value of values) {
-          assertStrictEquals(asserter(value), value);
-        }
+    for (const { asserter, values } of testCases) {
+      for (const value of values) {
+        assertStrictEquals(asserter(value), value);
       }
-    },
-  );
+    }
+  });
 
   it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not equal to any of `enumObject`'s members", () => {
     assertThrows(
@@ -213,16 +202,13 @@ describe("literalUnionAsserter", () => {
     }
   });
 
-  it(
-    "should return a `Function` that returns `value` when it is equal to one of the `literals`",
-    () => {
-      const testCases = [0, 1, "", "a"];
+  it("should return a `Function` that returns `value` when it is equal to one of the `literals`", () => {
+    const testCases = [0, 1, "", "a"];
 
-      for (const value of testCases) {
-        assertStrictEquals(_LiteralUnion(value), value);
-      }
-    },
-  );
+    for (const value of testCases) {
+      assertStrictEquals(_LiteralUnion(value), value);
+    }
+  });
 
   it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not equal to any of the `literals`", () => {
     assertThrows(
@@ -276,16 +262,13 @@ describe("unionOf", () => {
     }
   });
 
-  it(
-    "should return a `Function` that returns `value` when any of the `asserters` do not throw an error for it",
-    () => {
-      const testCases = ["", "a", 0, 1, {}];
+  it("should return a `Function` that returns `value` when any of the `asserters` do not throw an error for it", () => {
+    const testCases = ["", "a", 0, 1, {}];
 
-      for (const value of testCases) {
-        assertStrictEquals(_stringOrNumberOrObject(value), value);
-      }
-    },
-  );
+    for (const value of testCases) {
+      assertStrictEquals(_stringOrNumberOrObject(value), value);
+    }
+  });
 
   it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when all of the `asserters` throw an error for `value`", () => {
     assertThrows(
@@ -339,21 +322,18 @@ describe("arrayOf", () => {
     }
   });
 
-  it(
-    "should return a `Function` that returns `value` when it is an `Array` where `asserter` does not throw an error for any element",
-    () => {
-      const testCases = [
-        { asserter: _arrayOfString, values: [[], [""], ["a", "b", "c"]] },
-        { asserter: _arrayOfNumber, values: [[], [0], [0, 1, 2]] },
-      ];
+  it("should return a `Function` that returns `value` when it is an `Array` where `asserter` does not throw an error for any element", () => {
+    const testCases = [
+      { asserter: _arrayOfString, values: [[], [""], ["a", "b", "c"]] },
+      { asserter: _arrayOfNumber, values: [[], [0], [0, 1, 2]] },
+    ];
 
-      for (const { asserter, values } of testCases) {
-        for (const value of values) {
-          assertStrictEquals(asserter(value), value);
-        }
+    for (const { asserter, values } of testCases) {
+      for (const value of values) {
+        assertStrictEquals(asserter(value), value);
       }
-    },
-  );
+    }
+  });
 
   it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not an `Array` where `asserter` does not throw an error for any element", () => {
     assertThrows(

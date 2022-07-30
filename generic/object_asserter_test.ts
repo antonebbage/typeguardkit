@@ -38,20 +38,17 @@ describe("objectAsserter", () => {
     }
   });
 
-  it(
-    "should return a `Function` that returns `value` when it is an object and none of the `propertyAsserters` throw an error for the corresponding properties of `value`",
-    () => {
-      const testCases = [
-        { string: "", number: 0 },
-        { string: "a", number: 1 },
-        { string: "", number: 0, boolean: false },
-      ];
+  it("should return a `Function` that returns `value` when it is an object and none of the `propertyAsserters` throw an error for the corresponding properties of `value`", () => {
+    const testCases = [
+      { string: "", number: 0 },
+      { string: "a", number: 1 },
+      { string: "", number: 0, boolean: false },
+    ];
 
-      for (const value of testCases) {
-        assertStrictEquals(_ObjectType(value), value);
-      }
-    },
-  );
+    for (const value of testCases) {
+      assertStrictEquals(_ObjectType(value), value);
+    }
+  });
 
   it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not an object, or any of the `propertyAsserters` throw an error for the corresponding property of `value`", () => {
     const object = { string: 0, number: 0 };
@@ -141,20 +138,17 @@ describe("objectIntersectionOf", () => {
     }
   });
 
-  it(
-    "should return a `Function` that returns `value` when it is an object and none of the `propertyAsserters` of `asserterA` and `asserterB` throw an error for the corresponding properties of `value`",
-    () => {
-      const testCases = [
-        { a: "", b: "", c: "" },
-        { a: "a", b: "b", c: "c" },
-        { a: "", b: "", c: "", d: "" },
-      ];
+  it("should return a `Function` that returns `value` when it is an object and none of the `propertyAsserters` of `asserterA` and `asserterB` throw an error for the corresponding properties of `value`", () => {
+    const testCases = [
+      { a: "", b: "", c: "" },
+      { a: "a", b: "b", c: "c" },
+      { a: "", b: "", c: "", d: "" },
+    ];
 
-      for (const value of testCases) {
-        assertStrictEquals(_Intersection(value), value);
-      }
-    },
-  );
+    for (const value of testCases) {
+      assertStrictEquals(_Intersection(value), value);
+    }
+  });
 
   it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not an object, or any of the `propertyAsserters` of `asserterA` and `asserterB` throw an error for the corresponding property of `value`", () => {
     const object = { a: "", b: 0, c: "" };
@@ -230,24 +224,21 @@ describe("partialFrom", () => {
     }
   });
 
-  it(
-    "should return a `Function` that returns `value` when it is an object and none of the `propertyAsserters` throw an error for the corresponding properties of `value` when not `undefined`",
-    () => {
-      const testCases = [
-        { a: "", b: 0, c: false },
-        { a: "a", b: 1, c: true },
-        {},
-        { a: undefined, b: undefined, c: undefined },
-        { a: "", b: 0, c: false, d: "" },
-        { d: "" },
-        [],
-      ];
+  it("should return a `Function` that returns `value` when it is an object and none of the `propertyAsserters` throw an error for the corresponding properties of `value` when not `undefined`", () => {
+    const testCases = [
+      { a: "", b: 0, c: false },
+      { a: "a", b: 1, c: true },
+      {},
+      { a: undefined, b: undefined, c: undefined },
+      { a: "", b: 0, c: false, d: "" },
+      { d: "" },
+      [],
+    ];
 
-      for (const value of testCases) {
-        assertStrictEquals(_PartialObjectType(value), value);
-      }
-    },
-  );
+    for (const value of testCases) {
+      assertStrictEquals(_PartialObjectType(value), value);
+    }
+  });
 
   it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not an object, or any of the `asserter.propertyAsserters` throw an error for the corresponding property of `value` when not `undefined`", () => {
     const object = { a: 0, b: 0, c: false };
@@ -319,22 +310,19 @@ describe("pickFrom", () => {
     }
   });
 
-  it(
-    "should return a `Function` that returns `value` when it is an object and none of the `asserter.propertyAsserters` with `keys` throw an error for the corresponding properties of `value`",
-    () => {
-      const testCases = [
-        { b: 0, c: false },
-        { b: 1, c: true },
-        { a: "", b: 0, c: false },
-        { a: 0, b: 0, c: false },
-        { b: 0, c: false, d: "" },
-      ];
+  it("should return a `Function` that returns `value` when it is an object and none of the `asserter.propertyAsserters` with `keys` throw an error for the corresponding properties of `value`", () => {
+    const testCases = [
+      { b: 0, c: false },
+      { b: 1, c: true },
+      { a: "", b: 0, c: false },
+      { a: 0, b: 0, c: false },
+      { b: 0, c: false, d: "" },
+    ];
 
-      for (const value of testCases) {
-        assertStrictEquals(_PickedObjectType(value), value);
-      }
-    },
-  );
+    for (const value of testCases) {
+      assertStrictEquals(_PickedObjectType(value), value);
+    }
+  });
 
   it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not an object, or any of the `asserter.propertyAsserters` with `keys` throw an error for the corresponding property of `value`", () => {
     const object = { b: "", c: false };
