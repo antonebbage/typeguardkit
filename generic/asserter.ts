@@ -52,7 +52,7 @@ export function typeAsserter<Type>(
  * Example:
  *
  * ```ts
- * import { Asserter, enumAsserter, is } from "../mod.ts";
+ * import { enumAsserter } from "../mod.ts";
  *
  * export enum Direction {
  *   Up,
