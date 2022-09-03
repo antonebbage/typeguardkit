@@ -31,6 +31,8 @@ export function typeAsserter<Type>(
   typeName: string,
   typeGuard: (value: unknown) => value is Type,
 ): Asserter<Type> {
+  typeName ||= "UnnamedType";
+
   const asserter = (value: unknown, valueName?: string) => {
     if (typeGuard(value)) {
       return value;
@@ -38,7 +40,7 @@ export function typeAsserter<Type>(
     throw new TypeAssertionError(typeName, value, { valueName });
   };
 
-  asserter.typeName = typeName || "UnnamedType";
+  asserter.typeName = typeName;
 
   return asserter;
 }

@@ -44,6 +44,8 @@ export function objectAsserter<
 ): ObjectAsserter<
   { [Key in keyof PropertyAsserters]: ReturnType<PropertyAsserters[Key]> }
 > {
+  typeName ||= "UnnamedObject";
+
   const asserter = (value: unknown, valueName?: string) => {
     if (typeof value !== "object" || value === null) {
       throw new TypeAssertionError(typeName, value, { valueName });
@@ -64,7 +66,7 @@ export function objectAsserter<
     return value;
   };
 
-  asserter.typeName = typeName || "UnnamedObject";
+  asserter.typeName = typeName;
   asserter.propertyAsserters = propertyAsserters as Required<PropertyAsserters>;
 
   return asserter as ObjectAsserter<
