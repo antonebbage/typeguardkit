@@ -67,6 +67,24 @@ describe("objectAsserter", () => {
         .message,
     );
 
+    const unnamedAsserter = objectAsserter("", {
+      string: _string,
+      number: _number,
+    });
+
+    assertThrows(
+      () => unnamedAsserter(object),
+      TypeAssertionError,
+      new TypeAssertionError(unnamedAsserter.typeName, object, {
+        innerError: new TypeAssertionError(
+          unnamedAsserter.propertyAsserters.string.typeName,
+          object.number,
+          { valueName: '["string"]' },
+        ),
+      })
+        .message,
+    );
+
     const testCases = [
       { s: "", number: 0 },
 
@@ -167,6 +185,21 @@ describe("objectIntersectionOf", () => {
         .message,
     );
 
+    const unnamedAsserter = objectIntersectionOf(_ObjectType1, _ObjectType2);
+
+    assertThrows(
+      () => unnamedAsserter(object),
+      TypeAssertionError,
+      new TypeAssertionError(unnamedAsserter.typeName, object, {
+        innerError: new TypeAssertionError(
+          unnamedAsserter.propertyAsserters.b.typeName,
+          object.b,
+          { valueName: '["b"]' },
+        ),
+      })
+        .message,
+    );
+
     const testCases = [
       { b: "", c: "" },
       { a: 0, b: "", c: "" },
@@ -257,6 +290,21 @@ describe("partialFrom", () => {
         .message,
     );
 
+    const namedAsserter = partialFrom(_ObjectType, "PartialObjectType");
+
+    assertThrows(
+      () => namedAsserter(object),
+      TypeAssertionError,
+      new TypeAssertionError(namedAsserter.typeName, object, {
+        innerError: new TypeAssertionError(
+          namedAsserter.propertyAsserters.a.typeName,
+          object.a,
+          { valueName: '["a"]' },
+        ),
+      })
+        .message,
+    );
+
     const testCases = [
       undefined,
       null,
@@ -334,6 +382,21 @@ describe("pickFrom", () => {
         valueName: "name",
         innerError: new TypeAssertionError(
           _PickedObjectType.propertyAsserters.b.typeName,
+          object.b,
+          { valueName: '["b"]' },
+        ),
+      })
+        .message,
+    );
+
+    const namedAsserter = pickFrom(_ObjectType, keys, "PickedObjectType");
+
+    assertThrows(
+      () => namedAsserter(object),
+      TypeAssertionError,
+      new TypeAssertionError(namedAsserter.typeName, object, {
+        innerError: new TypeAssertionError(
+          namedAsserter.propertyAsserters.b.typeName,
           object.b,
           { valueName: '["b"]' },
         ),

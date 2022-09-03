@@ -60,6 +60,14 @@ describe("typeAsserter", () => {
         .message,
     );
 
+    const unnamedAsserter = typeAsserter("", isString);
+
+    assertThrows(
+      () => unnamedAsserter(undefined),
+      TypeAssertionError,
+      new TypeAssertionError(unnamedAsserter.typeName, undefined).message,
+    );
+
     const testCases = [
       { asserter: _string, values: [undefined, null, false, 0, [], {}] },
       { asserter: _object, values: [undefined, null, false, 0, "", []] },
@@ -158,6 +166,14 @@ describe("enumAsserter", () => {
         .message,
     );
 
+    const unnamedAsserter = enumAsserter("", NumericEnum);
+
+    assertThrows(
+      () => unnamedAsserter(undefined),
+      TypeAssertionError,
+      new TypeAssertionError(unnamedAsserter.typeName, undefined).message,
+    );
+
     const testCases = [
       {
         asserter: _NumericEnum,
@@ -220,6 +236,14 @@ describe("literalUnionAsserter", () => {
         .message,
     );
 
+    const unnamedAsserter = literalUnionAsserter("", [0, 1, "", "a"] as const);
+
+    assertThrows(
+      () => unnamedAsserter(undefined),
+      TypeAssertionError,
+      new TypeAssertionError(unnamedAsserter.typeName, undefined).message,
+    );
+
     const testCases = [undefined, null, false, [], {}, 2, "b"];
 
     for (const value of testCases) {
@@ -278,6 +302,14 @@ describe("unionOf", () => {
         valueName: "name",
       })
         .message,
+    );
+
+    const namedAsserter = unionOf(memberAsserters, "StringOrNumberOrObject");
+
+    assertThrows(
+      () => namedAsserter(undefined),
+      TypeAssertionError,
+      new TypeAssertionError(namedAsserter.typeName, undefined).message,
     );
 
     const testCases = [undefined, null, false, []];
@@ -341,6 +373,19 @@ describe("arrayOf", () => {
       TypeAssertionError,
       new TypeAssertionError(_arrayOfString.typeName, [undefined], {
         valueName: "name",
+        innerError: new TypeAssertionError(_string.typeName, undefined, {
+          valueName: "[0]",
+        }),
+      })
+        .message,
+    );
+
+    const namedAsserter = arrayOf(_string, "ArrayOfString");
+
+    assertThrows(
+      () => namedAsserter([undefined]),
+      TypeAssertionError,
+      new TypeAssertionError(namedAsserter.typeName, [undefined], {
         innerError: new TypeAssertionError(_string.typeName, undefined, {
           valueName: "[0]",
         }),

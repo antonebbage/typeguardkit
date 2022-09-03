@@ -4,6 +4,10 @@ import { TypeAssertionError } from "../mod.ts";
 import { _boolean, _null, _number, _string, _undefined } from "./asserters.ts";
 
 describe("_boolean", () => {
+  it('should have a `typeName` of `"boolean"`', () => {
+    assertStrictEquals(_boolean.typeName, "boolean");
+  });
+
   it("should return `value` if of type `boolean`", () => {
     const testCases = [false, true];
 
@@ -22,6 +26,12 @@ describe("_boolean", () => {
         .message,
     );
 
+    assertThrows(
+      () => _boolean(undefined),
+      TypeAssertionError,
+      new TypeAssertionError(_boolean.typeName, undefined).message,
+    );
+
     const testCases = [undefined, null, 0, "", [], {}];
 
     for (const value of testCases) {
@@ -35,6 +45,10 @@ describe("_boolean", () => {
 });
 
 describe("_number", () => {
+  it('should have a `typeName` of `"number"`', () => {
+    assertStrictEquals(_number.typeName, "number");
+  });
+
   it("should return `value` if of type `number`", () => {
     const testCases = [0, 1];
 
@@ -51,6 +65,12 @@ describe("_number", () => {
         .message,
     );
 
+    assertThrows(
+      () => _number(undefined),
+      TypeAssertionError,
+      new TypeAssertionError(_number.typeName, undefined).message,
+    );
+
     const testCases = [undefined, null, false, "", [], {}];
 
     for (const value of testCases) {
@@ -64,6 +84,10 @@ describe("_number", () => {
 });
 
 describe("_string", () => {
+  it('should have a `typeName` of `"string"`', () => {
+    assertStrictEquals(_string.typeName, "string");
+  });
+
   it("should return `value` if of type `string`", () => {
     const testCases = ["", "a"];
 
@@ -80,6 +104,12 @@ describe("_string", () => {
         .message,
     );
 
+    assertThrows(
+      () => _string(undefined),
+      TypeAssertionError,
+      new TypeAssertionError(_string.typeName, undefined).message,
+    );
+
     const testCases = [undefined, null, false, 0, [], {}];
 
     for (const value of testCases) {
@@ -93,6 +123,10 @@ describe("_string", () => {
 });
 
 describe("_null", () => {
+  it('should have a `typeName` of `"null"`', () => {
+    assertStrictEquals(_null.typeName, "null");
+  });
+
   it("should return `value` if `null`", () => {
     assertStrictEquals(_null(null), null);
   });
@@ -103,6 +137,12 @@ describe("_null", () => {
       TypeAssertionError,
       new TypeAssertionError(_null.typeName, undefined, { valueName: "name" })
         .message,
+    );
+
+    assertThrows(
+      () => _null(undefined),
+      TypeAssertionError,
+      new TypeAssertionError(_null.typeName, undefined).message,
     );
 
     const testCases = [undefined, false, 0, "", [], {}];
@@ -118,6 +158,10 @@ describe("_null", () => {
 });
 
 describe("_undefined", () => {
+  it('should have a `typeName` of `"undefined"`', () => {
+    assertStrictEquals(_undefined.typeName, "undefined");
+  });
+
   it("should return `value` if `undefined`", () => {
     assertStrictEquals(_undefined(undefined), undefined);
   });
@@ -128,6 +172,12 @@ describe("_undefined", () => {
       TypeAssertionError,
       new TypeAssertionError(_undefined.typeName, null, { valueName: "name" })
         .message,
+    );
+
+    assertThrows(
+      () => _undefined(null),
+      TypeAssertionError,
+      new TypeAssertionError(_undefined.typeName, null).message,
     );
 
     const testCases = [null, false, 0, "", [], {}];
