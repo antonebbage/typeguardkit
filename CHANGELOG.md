@@ -1,3 +1,10 @@
+## [0.5.1](https://github.com/antonebbage/typeguardkit/compare/0.5.0...0.5.1) (2022-09-03)
+
+### Bug Fixes
+
+- correctly set default `typeAsserter` + `objectAsserter` `typeName`
+  ([0e90b0b](https://github.com/antonebbage/typeguardkit/commit/0e90b0b2d183e8d568402ac6b58a3b36a452f4a5))
+
 ## [0.5.0](https://github.com/antonebbage/typeguardkit/compare/0.4.0...0.5.0) (2022-07-30)
 
 ### Features
