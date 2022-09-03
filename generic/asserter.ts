@@ -15,6 +15,17 @@ export interface Asserter<Type> {
 /**
  * `typeAsserter` returns an `Asserter<Type>` that uses `typeGuard` to assert
  * whether `value` is of `Type`.
+ *
+ * Example:
+ *
+ * ```ts
+ * import { typeAsserter } from "../mod.ts";
+ *
+ * export const _string = typeAsserter(
+ *   "string",
+ *   (value): value is string => typeof value === "string",
+ * );
+ * ```
  */
 export function typeAsserter<Type>(
   typeName: string,
@@ -35,6 +46,21 @@ export function typeAsserter<Type>(
 /**
  * `enumAsserter` returns an `Asserter` for the union of the member types of the
  * provided `enumObject`.
+ *
+ * Example:
+ *
+ * ```ts
+ * import { Asserter, enumAsserter, is } from "../mod.ts";
+ *
+ * export enum Direction {
+ *   Up,
+ *   Right,
+ *   Down,
+ *   Left,
+ * }
+ *
+ * export const _Direction = enumAsserter("Direction", Direction);
+ * ```
  */
 export function enumAsserter<
   Enum extends Record<string, number | string>,
@@ -59,6 +85,20 @@ export function enumAsserter<
 /**
  * `literalUnionAsserter` returns an `Asserter` for the union of the provided
  * `literals`.
+ *
+ * Example:
+ *
+ * ```ts
+ * import { Asserter, literalUnionAsserter } from "../mod.ts";
+ *
+ * export const directions = ["up", "right", "down", "left"] as const;
+ *
+ * const asserter = literalUnionAsserter("Direction", directions);
+ *
+ * export type Direction = typeof directions[number];
+ *
+ * export const _Direction: Asserter<Direction> = asserter;
+ * ```
  */
 export function literalUnionAsserter<
   Literals extends ReadonlyArray<number | string>,
@@ -82,6 +122,14 @@ export function literalUnionAsserter<
 /**
  * `unionOf` returns an `Asserter` for the union of the `Type`s of the provided
  * `Asserter`s.
+ *
+ * Example:
+ *
+ * ```ts
+ * import { _null, _string, unionOf } from "../mod.ts";
+ *
+ * const _stringOrNull = unionOf([_string, _null]);
+ * ```
  */
 export function unionOf<Asserters extends Array<Asserter<unknown>>>(
   asserters: Asserters,
@@ -111,6 +159,14 @@ export function unionOf<Asserters extends Array<Asserter<unknown>>>(
 /**
  * `arrayOf` returns an `Asserter<Array<Type>>`, created using the provided
  * `Asserter<Type>`.
+ *
+ * Example:
+ *
+ * ```ts
+ * import { _string, arrayOf } from "../mod.ts";
+ *
+ * const _arrayOfString = arrayOf(_string);
+ * ```
  */
 export function arrayOf<Type>(
   asserter: Asserter<Type>,

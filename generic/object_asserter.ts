@@ -20,6 +20,21 @@ export interface ObjectAsserter<Type extends Record<string, unknown>>
 /**
  * `objectAsserter` returns an `ObjectAsserter` for the type defined by the
  * provided `typeName` and `propertyAsserters`.
+ *
+ * Example:
+ *
+ * ```ts
+ * import { _number, _string, ObjectAsserter, objectAsserter } from "../mod.ts";
+ *
+ * const asserter = objectAsserter("User", {
+ *   name: _string,
+ *   age: _number,
+ * });
+ *
+ * export type User = ReturnType<typeof asserter>;
+ *
+ * export const _User: ObjectAsserter<User> = asserter;
+ * ```
  */
 export function objectAsserter<
   PropertyAsserters extends Record<string, Asserter<unknown>>,
@@ -60,6 +75,41 @@ export function objectAsserter<
 /**
  * `objectIntersectionOf` returns an `ObjectAsserter` for the intersection of
  * the `Type`s of the provided `ObjectAsserter`s.
+ *
+ * Example:
+ *
+ * ```ts
+ * import {
+ *   _string,
+ *   ObjectAsserter,
+ *   objectAsserter,
+ *   objectIntersectionOf,
+ * } from "../mod.ts";
+ *
+ * // types/entity.ts
+ *
+ * const entityAsserter = objectAsserter("Entity", {
+ *   id: _string,
+ * });
+ *
+ * export type Entity = ReturnType<typeof entityAsserter>;
+ *
+ * export const _Entity: ObjectAsserter<Entity> = entityAsserter;
+ *
+ * // types/user.ts
+ *
+ * const userAsserter = objectIntersectionOf(
+ *   _Entity,
+ *   objectAsserter("", {
+ *     name: _string,
+ *   }),
+ *   "User",
+ * );
+ *
+ * export type User = ReturnType<typeof userAsserter>;
+ *
+ * export const _User: ObjectAsserter<User> = userAsserter;
+ * ```
  */
 export function objectIntersectionOf<
   TypeA extends Record<string, unknown>,
@@ -112,6 +162,30 @@ export function objectIntersectionOf<
 /**
  * `partialFrom` returns an `ObjectAsserter<Partial<Type>>`, created using the
  * provided `ObjectAsserter<Type>`.
+ *
+ * Example:
+ *
+ * ```ts
+ * import {
+ *   _string,
+ *   ObjectAsserter,
+ *   objectAsserter,
+ *   partialFrom,
+ * } from "../mod.ts";
+ *
+ * const asserter = partialFrom(
+ *   objectAsserter("", {
+ *     option1: _string,
+ *     option2: _string,
+ *     option3: _string,
+ *   }),
+ *   "Options",
+ * );
+ *
+ * export type Options = ReturnType<typeof asserter>;
+ *
+ * export const _Options: ObjectAsserter<Options> = asserter;
+ * ```
  */
 export function partialFrom<Type extends Record<string, unknown>>(
   asserter: ObjectAsserter<Type>,
@@ -136,6 +210,37 @@ export function partialFrom<Type extends Record<string, unknown>>(
 /**
  * `pickFrom` returns an `ObjectAsserter<Pick<Type, Keys[number]>>`, created
  * using the provided `ObjectAsserter<Type>` and `Keys`.
+ *
+ * Example:
+ *
+ * ```ts
+ * import {
+ *   _string,
+ *   ObjectAsserter,
+ *   objectAsserter,
+ *   pickFrom,
+ * } from "../mod.ts";
+ *
+ * // types/user.ts
+ *
+ * const userAsserter = objectAsserter("User", {
+ *   id: _string,
+ *   firstName: _string,
+ *   lastName: _string,
+ * });
+ *
+ * export type User = ReturnType<typeof userAsserter>;
+ *
+ * export const _User: ObjectAsserter<User> = userAsserter;
+ *
+ * // types/user_name.ts
+ *
+ * const userNameAsserter = pickFrom(_User, ["firstName", "lastName"]);
+ *
+ * export type UserName = ReturnType<typeof userNameAsserter>;
+ *
+ * export const _UserName: ObjectAsserter<UserName> = userNameAsserter;
+ * ```
  */
 export function pickFrom<
   Type extends Record<string, unknown>,

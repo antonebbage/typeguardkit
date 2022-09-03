@@ -7,9 +7,10 @@ import { Asserter } from "./asserter.ts";
  * that `value` can be narrowed to `Type`. If `asserter` throws an error, `is`
  * will catch it and return `false`. Otherwise, `is` will return `true`.
  *
+ * Example:
+ *
  * ```ts
- * import { _string } from "../mod.ts";
- * import { is } from "./is.ts";
+ * import { _string, is } from "../mod.ts";
  *
  * function handleUnknown(x: unknown) {
  *   if (is(_string, x)) {

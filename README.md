@@ -208,7 +208,7 @@ You can create an `Asserter` for an enum type using the `enumAsserter` function
 like this:
 
 ```ts
-import { Asserter, enumAsserter, is } from "./mod.ts";
+import { enumAsserter, is } from "./mod.ts";
 // import from "typeguardkit" if using npm
 
 // types/direction.ts

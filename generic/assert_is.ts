@@ -8,9 +8,10 @@ import { Asserter } from "./asserter.ts";
  * Otherwise, `assertIs` will not return a value, but after calling it, `value`
  * will be narrowed to `Type`.
  *
+ * Example:
+ *
  * ```ts
- * import { _string } from "../mod.ts";
- * import { assertIs } from "./assert_is.ts";
+ * import { _string, assertIs } from "../mod.ts";
  *
  * function handleUnknown(x: unknown) {
  *   try {
