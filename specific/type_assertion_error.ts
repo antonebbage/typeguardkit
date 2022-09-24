@@ -5,8 +5,13 @@
  * constructor.
  */
 export interface TypeAssertionErrorOptions {
-  valueName?: string;
-  innerError?: TypeAssertionError;
+  readonly valueName?: string;
+
+  readonly issues?:
+    | TypeAssertionError
+    | readonly TypeAssertionError[]
+    | string
+    | readonly string[];
 }
 
 /**
@@ -28,16 +33,29 @@ export class TypeAssertionError extends Error {
     let message =
       `\`${valueName}\` is of type \`${actualTypeName}\`; expected type of \`${expectedTypeName}\``;
 
-    if (options.innerError) {
-      message += `:\n  - ${options.innerError.message}`;
+    if (options.issues) {
+      message += ":";
+
+      const issues = Array.isArray(options.issues)
+        ? options.issues
+        : [options.issues];
+
+      for (const issue of issues) {
+        message += `\n- ${
+          issue instanceof TypeAssertionError ? issue.message : issue
+        }`;
+      }
+
+      message = message.replaceAll("\n", "\n  ");
     }
 
     super(message);
 
-    // Maintains proper stack trace for where the error was thrown (only
-    // available on V8)
-    // Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error#custom_error_types
     if (Error.captureStackTrace) {
+      // Maintains proper stack trace for where the error was thrown (only
+      // available on V8). Source:
+      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error#custom_error_types
+
       Error.captureStackTrace(this, TypeAssertionError);
     }
 

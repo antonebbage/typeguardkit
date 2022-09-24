@@ -181,15 +181,18 @@ export function arrayOf<Type>(
       throw new TypeAssertionError(newTypeName, value, { valueName });
     }
 
+    const issues: TypeAssertionError[] = [];
+
     for (let i = 0; i < value.length; i++) {
       try {
         asserter(value[i], `[${i}]`);
-      } catch (innerError) {
-        throw new TypeAssertionError(newTypeName, value, {
-          valueName,
-          innerError,
-        });
+      } catch (error) {
+        issues.push(error);
       }
+    }
+
+    if (issues.length) {
+      throw new TypeAssertionError(newTypeName, value, { valueName, issues });
     }
 
     return value;

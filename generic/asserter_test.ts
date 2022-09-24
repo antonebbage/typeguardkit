@@ -369,13 +369,19 @@ describe("arrayOf", () => {
 
   it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not an `Array` where `asserter` does not throw an error for any element", () => {
     assertThrows(
-      () => _arrayOfString([undefined], "name"),
+      () => _arrayOfString([undefined, undefined], "name"),
       TypeAssertionError,
-      new TypeAssertionError(_arrayOfString.typeName, [undefined], {
+      new TypeAssertionError(_arrayOfString.typeName, [undefined, undefined], {
         valueName: "name",
-        innerError: new TypeAssertionError(_string.typeName, undefined, {
-          valueName: "[0]",
-        }),
+
+        issues: [
+          new TypeAssertionError(_string.typeName, undefined, {
+            valueName: "[0]",
+          }),
+          new TypeAssertionError(_string.typeName, undefined, {
+            valueName: "[1]",
+          }),
+        ],
       })
         .message,
     );
@@ -383,12 +389,17 @@ describe("arrayOf", () => {
     const namedAsserter = arrayOf(_string, "ArrayOfString");
 
     assertThrows(
-      () => namedAsserter([undefined]),
+      () => namedAsserter([undefined, undefined]),
       TypeAssertionError,
-      new TypeAssertionError(namedAsserter.typeName, [undefined], {
-        innerError: new TypeAssertionError(_string.typeName, undefined, {
-          valueName: "[0]",
-        }),
+      new TypeAssertionError(namedAsserter.typeName, [undefined, undefined], {
+        issues: [
+          new TypeAssertionError(_string.typeName, undefined, {
+            valueName: "[0]",
+          }),
+          new TypeAssertionError(_string.typeName, undefined, {
+            valueName: "[1]",
+          }),
+        ],
       })
         .message,
     );

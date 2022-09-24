@@ -51,16 +51,19 @@ export function objectAsserter<
       throw new TypeAssertionError(typeName, value, { valueName });
     }
 
+    const issues: TypeAssertionError[] = [];
+
     for (const key in propertyAsserters) {
       try {
         const propertyValue = (value as Record<string, unknown>)[key];
         propertyAsserters[key](propertyValue, `["${key}"]`);
-      } catch (innerError) {
-        throw new TypeAssertionError(typeName, value, {
-          valueName,
-          innerError,
-        });
+      } catch (error) {
+        issues.push(error);
       }
+    }
+
+    if (issues.length) {
+      throw new TypeAssertionError(typeName, value, { valueName, issues });
     }
 
     return value;
