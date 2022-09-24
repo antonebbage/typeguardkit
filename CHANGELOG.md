@@ -1,3 +1,23 @@
+## [0.6.0](https://github.com/antonebbage/typeguardkit/compare/0.5.1...0.6.0) (2022-09-24)
+
+### ⚠ BREAKING CHANGES
+
+- exports from the `/generic` and `/specific` folders have moved to `/core` and
+  `/asserters`, respectively, except for the `TypeAssertionError` exports, which
+  moved from `/specific` to `/core`.
+- `TypeAssertionErrorOptions` is now `readonly` and its `innerError` property
+  renamed to `issues`.
+
+### Features
+
+- include all issues in array + object asserter errors
+  ([929e663](https://github.com/antonebbage/typeguardkit/commit/929e6634d20f0dd91ea826ef058758a6c355cb5c))
+
+### Code Refactoring
+
+- reorganize code
+  ([f1edcf1](https://github.com/antonebbage/typeguardkit/commit/f1edcf1744c34f9693e16212cebf616936512b7c))
+
 ## [0.5.1](https://github.com/antonebbage/typeguardkit/compare/0.5.0...0.5.1) (2022-09-03)
 
 ### Bug Fixes
