@@ -59,7 +59,9 @@ export function objectIntersectionOf<
 
   for (const key in asserterA.propertyAsserters) {
     const propertyAsserterA = asserterA.propertyAsserters[key];
-    const propertyAsserterB = asserterB.propertyAsserters[key];
+    const propertyAsserterB = asserterB.propertyAsserters[key] as
+      | Asserter<unknown>
+      | undefined;
 
     if (propertyAsserterB && propertyAsserterB !== propertyAsserterA) {
       const newPropertyTypeName = [
