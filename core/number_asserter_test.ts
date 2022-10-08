@@ -111,12 +111,10 @@ describe("numberAsserter", () => {
     const exclusiveMaxIssue = `must be < ${max}`;
     const evenIssue = "must be even";
 
-    const testCases: Array<
-      {
-        asserter: Asserter<unknown>;
-        values: Array<[value: unknown, issues: string[]]>;
-      }
-    > = [
+    const testCases: Array<{
+      asserter: Asserter<unknown>;
+      values: Array<[value: unknown, issues: string[]]>;
+    }> = [
       {
         asserter: _AnyNumber,
 
