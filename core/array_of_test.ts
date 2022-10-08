@@ -17,14 +17,17 @@ describe("arrayOf", () => {
         asserter: arrayOf(_string, "ArrayOfString"),
         typeName: "ArrayOfString",
       },
+
       {
         asserter: _arrayOfString,
         typeName: `Array<${_string.typeName}>`,
       },
+
       {
         asserter: _arrayOfNumber,
         typeName: `Array<${_number.typeName}>`,
       },
+
       {
         asserter: arrayOf(_string, ""),
         typeName: `Array<${_string.typeName}>`,
@@ -61,6 +64,7 @@ describe("arrayOf", () => {
           new TypeAssertionError(_string.typeName, undefined, {
             valueName: "[0]",
           }),
+
           new TypeAssertionError(_string.typeName, undefined, {
             valueName: "[1]",
           }),
@@ -79,6 +83,7 @@ describe("arrayOf", () => {
           new TypeAssertionError(_string.typeName, undefined, {
             valueName: "[0]",
           }),
+
           new TypeAssertionError(_string.typeName, undefined, {
             valueName: "[1]",
           }),
@@ -109,6 +114,7 @@ describe("arrayOf", () => {
           ["", undefined],
         ],
       },
+
       {
         asserter: _arrayOfNumber,
         values: [[undefined], [null], [false], [""], [[]], [{}]],

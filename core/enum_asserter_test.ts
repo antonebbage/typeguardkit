@@ -61,10 +61,12 @@ describe("enumAsserter", () => {
         asserter: _NumericEnum,
         values: [NumericEnum.A, NumericEnum.B, NumericEnum.C],
       },
+
       {
         asserter: _StringEnum,
         values: [StringEnum.A, StringEnum.B, StringEnum.C],
       },
+
       {
         asserter: _HeterogeneousEnum,
         values: [HeterogeneousEnum.A, HeterogeneousEnum.B, HeterogeneousEnum.C],
@@ -101,6 +103,7 @@ describe("enumAsserter", () => {
         asserter: _NumericEnum,
         values: [undefined, null, false, "", [], {}, "A", 3],
       },
+
       { asserter: _StringEnum, values: [0] },
       { asserter: _HeterogeneousEnum, values: ["A", 2] },
     ];

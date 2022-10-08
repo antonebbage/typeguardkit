@@ -35,9 +35,11 @@ describe("TypeAssertionError", () => {
           new TypeAssertionError("ExpectedInnerType1", "", {
             valueName: "innerValue1",
           }),
+
           new TypeAssertionError("ExpectedInnerType2", "", {
             valueName: "innerValue2",
           }),
+
           new TypeAssertionError("ExpectedInnerType3", "", {
             valueName: "innerValue3",
           }),
@@ -76,10 +78,12 @@ describe("TypeAssertionError", () => {
             valueName: "innerValue1",
             issues: ["issue 1.1", "issue 1.2", "issue 1.3"],
           }),
+
           new TypeAssertionError("ExpectedInnerType2", "", {
             valueName: "innerValue2",
             issues: ["issue 2.1", "issue 2.2", "issue 2.3"],
           }),
+
           new TypeAssertionError("ExpectedInnerType3", "", {
             valueName: "innerValue3",
             issues: ["issue 3.1", "issue 3.2", "issue 3.3"],

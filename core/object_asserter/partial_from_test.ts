@@ -30,10 +30,12 @@ describe("partialFrom", () => {
         asserter: partialFrom(_ObjectType, "PartialObjectType"),
         typeName: "PartialObjectType",
       },
+
       {
         asserter: _PartialObjectType,
         typeName: defaultTypeName,
       },
+
       {
         asserter: partialFrom(_ObjectType, ""),
         typeName: defaultTypeName,
@@ -77,6 +79,7 @@ describe("partialFrom", () => {
             object.a,
             { valueName: '["a"]' },
           ),
+
           new TypeAssertionError(
             _PartialObjectType.propertyAsserters.b.typeName,
             object.b,
@@ -99,6 +102,7 @@ describe("partialFrom", () => {
             object.a,
             { valueName: '["a"]' },
           ),
+
           new TypeAssertionError(
             _PartialObjectType.propertyAsserters.b.typeName,
             object.b,

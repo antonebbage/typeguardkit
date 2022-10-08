@@ -32,10 +32,12 @@ describe("pickFrom", () => {
         asserter: pickFrom(_ObjectType, ["a"], "PickedObjectType"),
         typeName: "PickedObjectType",
       },
+
       {
         asserter: _PickedObjectType,
         typeName: defaultTypeName,
       },
+
       {
         asserter: pickFrom(_ObjectType, keys, ""),
         typeName: defaultTypeName,
@@ -77,6 +79,7 @@ describe("pickFrom", () => {
             object.b,
             { valueName: '["b"]' },
           ),
+
           new TypeAssertionError(
             _PickedObjectType.propertyAsserters.c.typeName,
             object.c,
@@ -99,6 +102,7 @@ describe("pickFrom", () => {
             object.b,
             { valueName: '["b"]' },
           ),
+
           new TypeAssertionError(
             _PickedObjectType.propertyAsserters.c.typeName,
             object.c,

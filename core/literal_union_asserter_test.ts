@@ -18,6 +18,7 @@ describe("literalUnionAsserter", () => {
   it("should return a `Function` with the provided `typeName` or the correct default if empty", () => {
     const testCases = [
       { asserter: _LiteralUnion, typeName: literalUnionName },
+
       {
         asserter: literalUnionAsserter("", [0, 1] as const),
         typeName: "UnnamedLiteralUnion",

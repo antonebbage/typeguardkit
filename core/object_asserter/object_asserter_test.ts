@@ -54,6 +54,7 @@ describe("objectAsserter", () => {
             object.stringValue,
             { valueName: '["stringValue"]' },
           ),
+
           new TypeAssertionError(
             _ObjectType.propertyAsserters.numberValue.typeName,
             object.numberValue,
@@ -79,6 +80,7 @@ describe("objectAsserter", () => {
             object.stringValue,
             { valueName: '["stringValue"]' },
           ),
+
           new TypeAssertionError(
             unnamedAsserter.propertyAsserters.numberValue.typeName,
             object.numberValue,

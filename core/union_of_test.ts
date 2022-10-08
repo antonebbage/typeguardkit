@@ -27,10 +27,12 @@ describe("unionOf", () => {
         asserter: unionOf([_string, _number], "StringOrNumber"),
         typeName: "StringOrNumber",
       },
+
       {
         asserter: _stringOrNumberOrObject,
         typeName: defaultTypeName,
       },
+
       {
         asserter: unionOf(memberAsserters, ""),
         typeName: defaultTypeName,
