@@ -495,3 +495,32 @@ export type UserName = ReturnType<typeof userNameAsserter>;
 
 export const _UserName: ObjectAsserter<UserName> = userNameAsserter;
 ```
+
+### Validator `Asserter` factory functions
+
+#### `numberAsserter`
+
+`numberAsserter` returns an `Asserter<number>` that asserts whether `value` is
+of type `number` and valid according to the provided `NumberAsserterOptions`.
+
+You can use `numberAsserter` like this:
+
+```ts
+import { numberAsserter } from "./mod.ts";
+// import from "typeguardkit" if using npm
+
+export const _EvenNumberInRange = numberAsserter(
+  "EvenNumberInRange",
+  {
+    min: 0,
+    max: 100,
+
+    validate: (value) => {
+      if (value % 2 !== 0) {
+        return ["must be even"];
+      }
+      return [];
+    },
+  },
+);
+```

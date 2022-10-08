@@ -6,6 +6,7 @@ export * from "./assert_is.ts";
 export * from "./enum_asserter.ts";
 export * from "./is.ts";
 export * from "./literal_union_asserter.ts";
+export * from "./number_asserter.ts";
 export * from "./object_asserter/mod.ts";
 export * from "./type_assertion_error.ts";
 export * from "./union_of.ts";
