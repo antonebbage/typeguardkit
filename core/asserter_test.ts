@@ -7,19 +7,19 @@ import { describe, it } from "testing/bdd.ts";
 import { TypeAssertionError } from "../mod.ts";
 import { typeAsserter } from "./asserter.ts";
 
-function isString(value: unknown): value is string {
-  return typeof value === "string";
-}
-
-const _string = typeAsserter("string", isString);
-
-const _object = typeAsserter(
-  "Record<string, unknown>",
-  (value): value is Record<string, unknown> =>
-    typeof value === "object" && !Array.isArray(value) && value !== null,
-);
-
 describe("typeAsserter", () => {
+  function isString(value: unknown): value is string {
+    return typeof value === "string";
+  }
+
+  const _string = typeAsserter("string", isString);
+
+  const _object = typeAsserter(
+    "Record<string, unknown>",
+    (value): value is Record<string, unknown> =>
+      typeof value === "object" && !Array.isArray(value) && value !== null,
+  );
+
   it("should return a `Function` with the provided `typeName` or the correct default if empty", () => {
     const testCases = [
       { asserter: _string, typeName: "string" },

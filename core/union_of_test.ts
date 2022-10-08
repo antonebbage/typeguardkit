@@ -7,13 +7,13 @@ import { describe, it } from "testing/bdd.ts";
 import { _number, _string, typeAsserter, TypeAssertionError } from "../mod.ts";
 import { unionOf } from "./union_of.ts";
 
-const _object = typeAsserter(
-  "Record<string, unknown>",
-  (value): value is Record<string, unknown> =>
-    typeof value === "object" && !Array.isArray(value) && value !== null,
-);
-
 describe("unionOf", () => {
+  const _object = typeAsserter(
+    "Record<string, unknown>",
+    (value): value is Record<string, unknown> =>
+      typeof value === "object" && !Array.isArray(value) && value !== null,
+  );
+
   const memberAsserters = [_string, _number, _object];
 
   const _stringOrNumberOrObject = unionOf(memberAsserters);
