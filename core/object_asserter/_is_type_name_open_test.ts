@@ -1,8 +1,8 @@
 import { assertStrictEquals } from "testing/asserts.ts";
 import { describe, it } from "testing/bdd.ts";
-import { checkTypeNameIsOpen } from "./functions.ts";
+import { isTypeNameOpen } from "./_is_type_name_open.ts";
 
-describe("checkTypeNameIsOpen", () => {
+describe("isTypeNameOpen", () => {
   const openTypeNames = [
     "A | B",
     "A & B",
@@ -22,7 +22,7 @@ describe("checkTypeNameIsOpen", () => {
 
   it("should return `true` if `typeName` describes a non-bracketed union or intersection", () => {
     for (const typeName of openTypeNames) {
-      assertStrictEquals(checkTypeNameIsOpen(typeName), true);
+      assertStrictEquals(isTypeNameOpen(typeName), true);
     }
   });
 
@@ -35,7 +35,7 @@ describe("checkTypeNameIsOpen", () => {
     ];
 
     for (const typeName of testCases) {
-      assertStrictEquals(checkTypeNameIsOpen(typeName), false);
+      assertStrictEquals(isTypeNameOpen(typeName), false);
     }
   });
 });

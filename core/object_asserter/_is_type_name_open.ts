@@ -1,10 +1,10 @@
 // This module is browser-compatible.
 
 /**
- * `checkTypeNameIsOpen` returns whether `typeName` describes a non-bracketed
- * union or intersection.
+ * `isTypeNameOpen` returns whether `typeName` describes a non-bracketed union
+ * or intersection.
  */
-export function checkTypeNameIsOpen(typeName: string): boolean {
+export function isTypeNameOpen(typeName: string): boolean {
   let bracketDepth = 0;
 
   for (const character of typeName) {

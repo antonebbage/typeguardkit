@@ -1,9 +1,9 @@
 // This module is browser-compatible.
 
-import { checkTypeNameIsOpen } from "../../internal/mod.ts";
 import { Asserter, typeAsserter } from "../asserter.ts";
 import { is } from "../is.ts";
 import { ObjectAsserter, objectAsserter } from "./object_asserter.ts";
+import { isTypeNameOpen } from "./_is_type_name_open.ts";
 
 /**
  * `objectIntersectionOf` returns an `ObjectAsserter` for the intersection of
@@ -68,7 +68,7 @@ export function objectIntersectionOf<
         propertyAsserterA.typeName,
         propertyAsserterB.typeName,
       ].map((name) => {
-        return checkTypeNameIsOpen(name) ? `(${name})` : name;
+        return isTypeNameOpen(name) ? `(${name})` : name;
       })
         .join(" & ");
 
