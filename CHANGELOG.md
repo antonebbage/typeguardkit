@@ -1,3 +1,15 @@
+## [0.7.0](https://github.com/antonebbage/typeguardkit/compare/0.6.0...0.7.0) (2022-10-08)
+
+### Features
+
+- add `numberAsserter` function
+  ([4c33f67](https://github.com/antonebbage/typeguardkit/commit/4c33f6730ef22ef7519a29f88ae7a8be341b555e))
+
+### Bug Fixes
+
+- assert `objectIntersectionOf` property asserter type
+  ([a3d6e97](https://github.com/antonebbage/typeguardkit/commit/a3d6e97c9a3d7c5cde8da83db1392f02293949a4))
+
 ## [0.6.0](https://github.com/antonebbage/typeguardkit/compare/0.5.1...0.6.0) (2022-09-24)
 
 ### ⚠ BREAKING CHANGES
