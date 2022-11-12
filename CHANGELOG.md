@@ -1,3 +1,10 @@
+## [0.8.0](https://github.com/antonebbage/typeguardkit/compare/0.7.0...0.8.0) (2022-11-12)
+
+### Features
+
+- add `TypeAssertionError` issue tree
+  ([fe59078](https://github.com/antonebbage/typeguardkit/commit/fe59078d659b260bfd42521c3073d78e289cd108))
+
 ## [0.7.0](https://github.com/antonebbage/typeguardkit/compare/0.6.0...0.7.0) (2022-10-08)
 
 ### Features
