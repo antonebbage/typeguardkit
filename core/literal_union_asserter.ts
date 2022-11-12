@@ -11,11 +11,11 @@ import { Asserter, typeAsserter } from "./asserter.ts";
  * ```ts
  * import { Asserter, literalUnionAsserter } from "../mod.ts";
  *
- * export const directions = ["up", "right", "down", "left"] as const;
+ * export const directionValues = ["up", "right", "down", "left"] as const;
  *
- * const asserter = literalUnionAsserter("Direction", directions);
+ * const asserter = literalUnionAsserter("Direction", directionValues);
  *
- * export type Direction = typeof directions[number];
+ * export type Direction = typeof directionValues[number];
  *
  * export const _Direction: Asserter<Direction> = asserter;
  * ```
