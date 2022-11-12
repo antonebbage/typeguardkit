@@ -30,7 +30,7 @@ export function arrayOf<Type>(
 
     for (let i = 0; i < value.length; i++) {
       try {
-        asserter(value[i], `[${i}]`);
+        asserter(value[i], `${i}`);
       } catch (error) {
         issues.push(error);
       }

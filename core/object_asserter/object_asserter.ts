@@ -58,7 +58,7 @@ export function objectAsserter<
     for (const key in propertyAsserters) {
       try {
         const propertyValue = (value as Record<string, unknown>)[key];
-        propertyAsserters[key](propertyValue, `["${key}"]`);
+        propertyAsserters[key](propertyValue, key);
       } catch (error) {
         issues.push(error);
       }

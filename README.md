@@ -8,7 +8,7 @@ A TypeScript module to help construct type assertion functions and type guards.
 
 You can use the included functions to create types and their assertion functions
 and guards from a single source definition, and use type assertion functions and
-guards to catch unexpected, incompatible types entering your application due to
+guards to catch unexpected, incompatible types entering your program due to
 interface definitions being outdated without versioning protection from breaking
 changes, interfaces not being adhered to, or data being corrupted.
 
@@ -518,3 +518,93 @@ export type UserName = ReturnType<typeof userNameAsserter>;
 
 export const _UserName: ObjectAsserter<UserName> = userNameAsserter;
 ```
+
+### The `TypeAssertionError` issue tree
+
+A `TypeAssertionError` has an `issueTree` property of type
+`TypeAssertionIssueTree`, which provides a tree representation of the issue data
+contained in the error's `message`.
+
+`TypeAssertionIssueTree` is an alias of `TypeAssertionIssueTreeNode` for typing
+the root `TypeAssertionIssueTreeNode`.
+
+A `TypeAssertionError` also has an `issueTreeNode` method to find the node at a
+given `path`. The `path` separator is a forward slash, and a `path` segment can
+be an object property name or array index.
+
+`issueTreeNode` could be called to get the issue data for each field in a form,
+for example:
+
+```ts
+import {
+  assertIs,
+  numberAsserter,
+  ObjectAsserter,
+  objectAsserter,
+  TypeAssertionError,
+} from "./mod.ts";
+// import from "typeguardkit" if using npm
+
+// types/item.ts
+
+const itemAsserter = objectAsserter("Item", {
+  quantity: numberAsserter("Quantity", {
+    disallowNaN: true,
+    integersOnly: true,
+    min: 0,
+  }),
+});
+
+export type Item = ReturnType<typeof itemAsserter>;
+
+export const _Item: ObjectAsserter<Item> = itemAsserter;
+
+// types/form.ts
+
+const formAsserter = objectAsserter("Form", {
+  item: _Item,
+});
+
+export type Form = ReturnType<typeof formAsserter>;
+
+export const _Form: ObjectAsserter<Form> = formAsserter;
+
+// elsewhere.ts
+
+const form: Form = {
+  item: {
+    quantity: 0,
+  },
+};
+
+let itemQuantityIssues: string[] = [];
+
+function validateForm(): boolean {
+  try {
+    assertIs(_Form, form);
+  } catch (error) {
+    if (error instanceof TypeAssertionError) {
+      const node = error.issueTreeNode("item/quantity");
+
+      itemQuantityIssues = node?.issues
+        ? node.issues.filter((issue) => typeof issue === "string") as string[]
+        : [];
+    }
+
+    return false;
+  }
+
+  return true;
+}
+```
+
+### Sending `TypeAssertionError`s to another program
+
+A `TypeAssertionError`'s `toJSON` method returns a JSON representation of the
+error's `issueTree`, which can then be sent to another program and used to
+create a new `TypeAssertionError` there with the same `issueTree`.
+
+In the receiving program, you can assert that a received object is a
+`TypeAssertionIssueTree` using the `_TypeAssertionIssueTree` `Asserter`. You can
+then create a `TypeAssertionError` by passing the asserted
+`TypeAssertionIssueTree` to its constructor.

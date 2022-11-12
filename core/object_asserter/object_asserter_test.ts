@@ -52,13 +52,13 @@ describe("objectAsserter", () => {
           new TypeAssertionError(
             _ObjectType.propertyAsserters.stringValue.typeName,
             object.stringValue,
-            { valueName: '["stringValue"]' },
+            { valueName: "stringValue" },
           ),
 
           new TypeAssertionError(
             _ObjectType.propertyAsserters.numberValue.typeName,
             object.numberValue,
-            { valueName: '["numberValue"]' },
+            { valueName: "numberValue" },
           ),
         ],
       })
@@ -78,13 +78,13 @@ describe("objectAsserter", () => {
           new TypeAssertionError(
             unnamedAsserter.propertyAsserters.stringValue.typeName,
             object.stringValue,
-            { valueName: '["stringValue"]' },
+            { valueName: "stringValue" },
           ),
 
           new TypeAssertionError(
             unnamedAsserter.propertyAsserters.numberValue.typeName,
             object.numberValue,
-            { valueName: '["numberValue"]' },
+            { valueName: "numberValue" },
           ),
         ],
       })

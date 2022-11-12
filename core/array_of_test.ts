@@ -62,11 +62,11 @@ describe("arrayOf", () => {
 
         issues: [
           new TypeAssertionError(_string.typeName, undefined, {
-            valueName: "[0]",
+            valueName: "0",
           }),
 
           new TypeAssertionError(_string.typeName, undefined, {
-            valueName: "[1]",
+            valueName: "1",
           }),
         ],
       })
@@ -81,11 +81,11 @@ describe("arrayOf", () => {
       new TypeAssertionError(namedAsserter.typeName, [undefined, undefined], {
         issues: [
           new TypeAssertionError(_string.typeName, undefined, {
-            valueName: "[0]",
+            valueName: "0",
           }),
 
           new TypeAssertionError(_string.typeName, undefined, {
-            valueName: "[1]",
+            valueName: "1",
           }),
         ],
       })
