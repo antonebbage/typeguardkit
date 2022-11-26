@@ -335,8 +335,8 @@ import { numberAsserter } from "./mod.ts";
 export const _EvenNumberInRange = numberAsserter(
   "EvenNumberInRange",
   {
-    min: 0,
-    max: 100,
+    min: { value: 0, inclusive: true },
+    max: { value: 100, inclusive: true },
 
     validate: (value) => {
       if (value % 2 !== 0) {
@@ -551,9 +551,8 @@ import {
 
 const itemAsserter = objectAsserter("Item", {
   quantity: numberAsserter("Quantity", {
-    disallowNaN: true,
-    integersOnly: true,
-    min: 0,
+    subtype: "integer",
+    min: { value: 0, inclusive: true },
   }),
 });
 

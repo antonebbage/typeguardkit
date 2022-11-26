@@ -5,19 +5,25 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
 
 /** `NumberAsserterOptions` can be passed to the `numberAsserter` function. */
 export interface NumberAsserterOptions {
-  disallowNaN?: boolean;
-  integersOnly?: boolean;
-  min?: number;
-  minExclusive?: boolean;
-  max?: number;
-  maxExclusive?: boolean;
-  validate?: (value: number) => string[];
+  readonly subtype?: "valid" | "integer";
+  readonly min?: NumberAsserterBound;
+  readonly max?: NumberAsserterBound;
+  readonly validate?: (value: number) => string[];
+}
+
+export interface NumberAsserterBound {
+  readonly value: number;
+  readonly inclusive: boolean;
 }
 
 /**
  * `numberAsserter` returns an `Asserter<number>` that asserts whether `value`
  * is of type `number` and valid according to the provided
  * `NumberAsserterOptions`.
+ *
+ * If the `NumberAsserterOptions` `subtype` is `"valid"`, `value` cannot be
+ * `NaN`. If `subtype` is `"integer"`, `value` cannot be `NaN` and must be an
+ * integer.
  *
  * Example:
  *
@@ -27,8 +33,8 @@ export interface NumberAsserterOptions {
  * export const _EvenNumberInRange = numberAsserter(
  *   "EvenNumberInRange",
  *   {
- *     min: 0,
- *     max: 100,
+ *     min: { value: 0, inclusive: true },
+ *     max: { value: 100, inclusive: true },
  *
  *     validate: (value) => {
  *       if (value % 2 !== 0) {
@@ -42,15 +48,7 @@ export interface NumberAsserterOptions {
  */
 export function numberAsserter(
   typeName: string,
-  {
-    disallowNaN = false,
-    integersOnly = false,
-    min,
-    minExclusive = false,
-    max,
-    maxExclusive = false,
-    validate,
-  }: NumberAsserterOptions,
+  { subtype, min, max, validate }: NumberAsserterOptions,
 ): Asserter<number> {
   typeName ||= "UnnamedNumber";
 
@@ -64,31 +62,31 @@ export function numberAsserter(
 
     const issues: string[] = [];
 
-    if (disallowNaN && isNaN(value)) {
-      issues.push("must be a valid number");
-    }
-
-    if (integersOnly && !Number.isInteger(value)) {
+    if (subtype === "valid") {
+      if (isNaN(value)) {
+        issues.push("must be a valid number");
+      }
+    } else if (subtype === "integer" && !Number.isInteger(value)) {
       issues.push("must be an integer");
     }
 
-    if (min !== undefined) {
-      if (minExclusive) {
-        if (!(value > min)) {
-          issues.push(`must be > ${min}`);
+    if (min) {
+      if (min.inclusive) {
+        if (!(value >= min.value)) {
+          issues.push(`must be >= ${min.value}`);
         }
-      } else if (!(value >= min)) {
-        issues.push(`must be >= ${min}`);
+      } else if (!(value > min.value)) {
+        issues.push(`must be > ${min.value}`);
       }
     }
 
-    if (max !== undefined) {
-      if (maxExclusive) {
-        if (!(value < max)) {
-          issues.push(`must be < ${max}`);
+    if (max) {
+      if (max.inclusive) {
+        if (!(value <= max.value)) {
+          issues.push(`must be <= ${max.value}`);
         }
-      } else if (!(value <= max)) {
-        issues.push(`must be <= ${max}`);
+      } else if (!(value < max.value)) {
+        issues.push(`must be < ${max.value}`);
       }
     }
 

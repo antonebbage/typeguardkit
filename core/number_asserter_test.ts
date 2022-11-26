@@ -10,25 +10,23 @@ import { numberAsserter } from "./number_asserter.ts";
 describe("numberAsserter", () => {
   const _AnyNumber = numberAsserter("AnyNumber", {});
 
-  const _ValidNumber = numberAsserter("ValidNumber", { disallowNaN: true });
+  const _ValidNumber = numberAsserter("ValidNumber", { subtype: "valid" });
 
-  const _Integer = numberAsserter("Integer", { integersOnly: true });
+  const _Integer = numberAsserter("Integer", { subtype: "integer" });
 
   const min = -10;
   const max = 10;
 
   const _NumberInInclusiveRange = numberAsserter("NumberInInclusiveRange", {
-    min,
-    max,
+    min: { value: min, inclusive: true },
+    max: { value: max, inclusive: true },
   });
 
   const _EvenNumberInExclusiveRange = numberAsserter(
     "EvenNumberInExclusiveRange",
     {
-      min,
-      minExclusive: true,
-      max,
-      maxExclusive: true,
+      min: { value: min, inclusive: false },
+      max: { value: max, inclusive: false },
 
       validate: (value) => {
         if (value % 2 !== 0) {

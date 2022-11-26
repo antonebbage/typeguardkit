@@ -127,9 +127,8 @@ export class TypeAssertionError extends Error {
    *
    * const itemAsserter = objectAsserter("Item", {
    *   quantity: numberAsserter("Quantity", {
-   *     disallowNaN: true,
-   *     integersOnly: true,
-   *     min: 0,
+   *     subtype: "integer",
+   *     min: { value: 0, inclusive: true },
    *   }),
    * });
    *
