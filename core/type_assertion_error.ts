@@ -114,12 +114,14 @@ export class TypeAssertionError extends Error {
    *
    * ```ts
    * import {
+   *   _string,
    *   assertIs,
+   *   is,
    *   numberAsserter,
    *   ObjectAsserter,
    *   objectAsserter,
    *   TypeAssertionError,
-   * } from "./mod.ts";
+   * } from "../mod.ts";
    *
    * // types/item.ts
    *
@@ -163,9 +165,7 @@ export class TypeAssertionError extends Error {
    *       const node = error.issueTreeNode("item/quantity");
    *
    *       itemQuantityIssues = node?.issues
-   *         ? node.issues.filter((issue) =>
-   *           typeof issue === "string"
-   *         ) as string[]
+   *         ? node.issues.filter((issue) => is(_string, issue)) as string[]
    *         : [];
    *     }
    *

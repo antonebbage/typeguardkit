@@ -537,7 +537,9 @@ for example:
 
 ```ts
 import {
+  _string,
   assertIs,
+  is,
   numberAsserter,
   ObjectAsserter,
   objectAsserter,
@@ -587,7 +589,7 @@ function validateForm(): boolean {
       const node = error.issueTreeNode("item/quantity");
 
       itemQuantityIssues = node?.issues
-        ? node.issues.filter((issue) => typeof issue === "string") as string[]
+        ? node.issues.filter((issue) => is(_string, issue)) as string[]
         : [];
     }
 
