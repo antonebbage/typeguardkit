@@ -1,3 +1,16 @@
+## [0.9.0](https://github.com/antonebbage/typeguardkit/compare/0.8.0...0.9.0) (2022-11-26)
+
+### ⚠ BREAKING CHANGES
+
+- modify `NumberAsserterOptions`
+
+### Features
+
+- modify `NumberAsserterOptions`
+  ([c5226ea](https://github.com/antonebbage/typeguardkit/commit/c5226ea25e43805d7c331d2f80f839fa21fe725f))
+- return `NumberAsserter` from `numberAsserter`
+  ([230a3cf](https://github.com/antonebbage/typeguardkit/commit/230a3cfce1fd5ecce517fd4c19ed5dcb12f7307b))
+
 ## [0.8.0](https://github.com/antonebbage/typeguardkit/compare/0.7.0...0.8.0) (2022-11-12)
 
 ### Features
