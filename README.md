@@ -6,11 +6,13 @@
 
 A TypeScript module to help construct type assertion functions and type guards.
 
-You can use the included functions to create types and their assertion functions
-and guards from a single source definition, and use type assertion functions and
-guards to catch unexpected, incompatible types entering your program due to
-interface definitions being outdated without versioning protection from breaking
-changes, interfaces not being adhered to, or data being corrupted.
+The included functions can be used to create types and their assertion functions
+and guards from a single source definition.
+
+Type assertion functions and guards can be used to catch incompatible types
+entering your program due to data corruption, interfaces not being adhered to,
+or interface definitions being outdated without versioning protection from
+breaking changes.
 
 ## Setup
 
