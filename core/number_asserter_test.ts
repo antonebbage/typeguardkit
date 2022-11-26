@@ -5,49 +5,85 @@ import {
 } from "testing/asserts.ts";
 import { describe, it } from "testing/bdd.ts";
 import { Asserter, TypeAssertionError } from "../mod.ts";
-import { numberAsserter } from "./number_asserter.ts";
+import { numberAsserter, NumberAsserterOptions } from "./number_asserter.ts";
 
 describe("numberAsserter", () => {
-  const _AnyNumber = numberAsserter("AnyNumber", {});
+  const anyNumberTypeName = "AnyNumber";
+  const anyNumberOptions: NumberAsserterOptions = {};
+  const _AnyNumber = numberAsserter(anyNumberTypeName, anyNumberOptions);
 
-  const _ValidNumber = numberAsserter("ValidNumber", { subtype: "valid" });
+  const validNumberOptions: NumberAsserterOptions = { subtype: "valid" };
+  const _ValidNumber = numberAsserter("ValidNumber", validNumberOptions);
 
-  const _Integer = numberAsserter("Integer", { subtype: "integer" });
+  const integerOptions: NumberAsserterOptions = { subtype: "integer" };
+  const _Integer = numberAsserter("Integer", integerOptions);
 
-  const min = -10;
-  const max = 10;
+  const minValue = -10;
+  const maxValue = 10;
 
-  const _NumberInInclusiveRange = numberAsserter("NumberInInclusiveRange", {
-    min: { value: min, inclusive: true },
-    max: { value: max, inclusive: true },
-  });
+  const numberInInclusiveRangeOptions: NumberAsserterOptions = {
+    min: { value: minValue, inclusive: true },
+    max: { value: maxValue, inclusive: true },
+  };
+
+  const _NumberInInclusiveRange = numberAsserter(
+    "NumberInInclusiveRange",
+    numberInInclusiveRangeOptions,
+  );
+
+  const evenNumberInExclusiveRangeOptions: NumberAsserterOptions = {
+    min: { value: minValue, inclusive: false },
+    max: { value: maxValue, inclusive: false },
+
+    validate: (value) => {
+      if (value % 2 !== 0) {
+        return ["must be even"];
+      }
+      return [];
+    },
+  };
 
   const _EvenNumberInExclusiveRange = numberAsserter(
     "EvenNumberInExclusiveRange",
-    {
-      min: { value: min, inclusive: false },
-      max: { value: max, inclusive: false },
-
-      validate: (value) => {
-        if (value % 2 !== 0) {
-          return ["must be even"];
-        }
-        return [];
-      },
-    },
+    evenNumberInExclusiveRangeOptions,
   );
 
   const unnamedAsserter = numberAsserter("", {});
 
   it("should return a `Function` with the provided `typeName` or the correct default if empty", () => {
     const testCases = [
-      { asserter: _AnyNumber, typeName: "AnyNumber" },
+      { asserter: _AnyNumber, typeName: anyNumberTypeName },
       { asserter: unnamedAsserter, typeName: "UnnamedNumber" },
     ];
 
     for (const { asserter, typeName } of testCases) {
       assertInstanceOf(asserter, Function);
       assertStrictEquals(asserter.typeName, typeName);
+    }
+  });
+
+  it("should return a `Function` with the provided `NumberAsserterOptions` as properties", () => {
+    const testCases = [
+      { asserter: _AnyNumber, options: anyNumberOptions },
+      { asserter: _ValidNumber, options: validNumberOptions },
+      { asserter: _Integer, options: integerOptions },
+
+      {
+        asserter: _NumberInInclusiveRange,
+        options: numberInInclusiveRangeOptions,
+      },
+
+      {
+        asserter: _EvenNumberInExclusiveRange,
+        options: evenNumberInExclusiveRangeOptions,
+      },
+    ];
+
+    for (const { asserter, options } of testCases) {
+      assertStrictEquals(asserter.subtype, options.subtype);
+      assertStrictEquals(asserter.min, options.min);
+      assertStrictEquals(asserter.max, options.max);
+      assertStrictEquals(asserter.validate, options.validate);
     }
   });
 
@@ -103,10 +139,10 @@ describe("numberAsserter", () => {
 
     const validIssue = "must be a valid number";
     const integerIssue = "must be an integer";
-    const inclusiveMinIssue = `must be >= ${min}`;
-    const inclusiveMaxIssue = `must be <= ${max}`;
-    const exclusiveMinIssue = `must be > ${min}`;
-    const exclusiveMaxIssue = `must be < ${max}`;
+    const inclusiveMinIssue = `must be >= ${minValue}`;
+    const inclusiveMaxIssue = `must be <= ${maxValue}`;
+    const exclusiveMinIssue = `must be > ${minValue}`;
+    const exclusiveMaxIssue = `must be < ${maxValue}`;
     const evenIssue = "must be even";
 
     const testCases: Array<{

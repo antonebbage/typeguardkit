@@ -3,13 +3,26 @@
 import { Asserter } from "./asserter.ts";
 import { TypeAssertionError } from "./type_assertion_error.ts";
 
+/**
+ * A `NumberAsserter` is an `Asserter<number>` with any additional validation
+ * defined by its `NumberAsserterOptions` properties.
+ */
+export interface NumberAsserter
+  extends Asserter<number>, NumberAsserterOptions {}
+
 /** `NumberAsserterOptions` can be passed to the `numberAsserter` function. */
 export interface NumberAsserterOptions {
-  readonly subtype?: "valid" | "integer";
+  readonly subtype?: NumberAsserterSubtype;
   readonly min?: NumberAsserterBound;
   readonly max?: NumberAsserterBound;
   readonly validate?: (value: number) => string[];
 }
+
+/**
+ * A `NumberAsserterSubtype` can be set for the `subtype` in
+ * `NumberAsserterOptions`.
+ */
+export type NumberAsserterSubtype = "valid" | "integer";
 
 /**
  * A `NumberAsserterBound` can be set for the `min` and `max`
@@ -21,13 +34,15 @@ export interface NumberAsserterBound {
 }
 
 /**
- * `numberAsserter` returns an `Asserter<number>` that asserts whether `value`
- * is of type `number` and valid according to the provided
- * `NumberAsserterOptions`.
+ * `numberAsserter` returns a `NumberAsserter` that asserts whether `value` is
+ * of type `number` and valid according to the provided `NumberAsserterOptions`.
  *
  * If the `NumberAsserterOptions` `subtype` is `"valid"`, `value` cannot be
  * `NaN`. If `subtype` is `"integer"`, `value` cannot be `NaN` and must be an
  * integer.
+ *
+ * The provided `NumberAsserterOptions` are made accessible as properties of the
+ * returned `NumberAsserter`.
  *
  * Example:
  *
@@ -53,7 +68,7 @@ export interface NumberAsserterBound {
 export function numberAsserter(
   typeName: string,
   { subtype, min, max, validate }: NumberAsserterOptions,
-): Asserter<number> {
+): NumberAsserter {
   typeName ||= "UnnamedNumber";
 
   const asserter = (value: unknown, valueName?: string) => {
@@ -106,6 +121,11 @@ export function numberAsserter(
   };
 
   asserter.typeName = typeName;
+
+  asserter.subtype = subtype;
+  asserter.min = min;
+  asserter.max = max;
+  asserter.validate = validate;
 
   return asserter;
 }

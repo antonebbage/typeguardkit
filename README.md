@@ -322,8 +322,11 @@ function handleArrayOfString(x: string[]) {}
 
 #### `numberAsserter`
 
-`numberAsserter` returns an `Asserter<number>` that asserts whether `value` is
-of type `number` and valid according to the provided `NumberAsserterOptions`.
+`numberAsserter` returns a `NumberAsserter` that asserts whether `value` is of
+type `number` and valid according to the provided `NumberAsserterOptions`.
+
+The provided `NumberAsserterOptions` are made accessible as properties of the
+returned `NumberAsserter`.
 
 You can use `numberAsserter` like this:
 
