@@ -28,6 +28,12 @@ npm install typeguardkit
 
 ## Usage
 
+### Example `import`s
+
+Where you see relative `import` paths in documentation examples, instead
+`import` `from "https://deno.land/x/typeguardkit/mod.ts"` if using Deno, or
+`from "typeguardkit"` if using npm.
+
 ### Example
 
 ```ts
@@ -41,7 +47,6 @@ import {
   objectAsserter,
   unionOf,
 } from "./mod.ts";
-// import from "typeguardkit" if using npm
 
 // types/book.ts
 
@@ -110,7 +115,6 @@ As well as wrapping `Asserter`s in the
 
 ```ts
 import { _string } from "./mod.ts";
-// import from "typeguardkit" if using npm
 
 function handleUnknown(x: unknown) {
   let y;
@@ -135,7 +139,6 @@ example, the `_string` `Asserter` was created like this:
 
 ```ts
 import { typeAsserter } from "./mod.ts";
-// import from "typeguardkit" if using npm
 
 export const _string = typeAsserter(
   "string",
@@ -158,7 +161,6 @@ You can use `assertIs` like this:
 
 ```ts
 import { _string, assertIs } from "./mod.ts";
-// import from "typeguardkit" if using npm
 
 function handleUnknown(x: unknown) {
   try {
@@ -188,7 +190,6 @@ You can use `is` like this:
 
 ```ts
 import { _string, is } from "./mod.ts";
-// import from "typeguardkit" if using npm
 
 function handleUnknown(x: unknown) {
   if (is(_string, x)) {
@@ -209,7 +210,6 @@ like this:
 
 ```ts
 import { enumAsserter, is } from "./mod.ts";
-// import from "typeguardkit" if using npm
 
 // types/direction.ts
 
@@ -243,7 +243,6 @@ You can create an `Asserter` for a literal union type using the
 
 ```ts
 import { Asserter, is, literalUnionAsserter } from "./mod.ts";
-// import from "typeguardkit" if using npm
 
 // types/direction.ts
 
@@ -280,7 +279,6 @@ You can use `unionOf` like this:
 
 ```ts
 import { _null, _string, is, unionOf } from "./mod.ts";
-// import from "typeguardkit" if using npm
 
 const _stringOrNull = unionOf([_string, _null]);
 
@@ -305,7 +303,6 @@ You can use `arrayOf` like this:
 
 ```ts
 import { _string, arrayOf, is } from "./mod.ts";
-// import from "typeguardkit" if using npm
 
 const _arrayOfString = arrayOf(_string);
 
@@ -330,7 +327,6 @@ You can use `numberAsserter` like this:
 
 ```ts
 import { numberAsserter } from "./mod.ts";
-// import from "typeguardkit" if using npm
 
 export const _EvenNumberInRange = numberAsserter(
   "EvenNumberInRange",
@@ -355,7 +351,6 @@ An `ObjectAsserter` is an `Asserter` for the object type defined by its
 
 ```ts
 import { Asserter } from "./mod.ts";
-// import from "typeguardkit" if using npm
 
 interface ObjectAsserter<Type extends Record<string, unknown>>
   extends Asserter<Type> {
@@ -370,7 +365,6 @@ like this:
 
 ```ts
 import { _number, _string, is, ObjectAsserter, objectAsserter } from "./mod.ts";
-// import from "typeguardkit" if using npm
 
 // types/user.ts
 
@@ -414,7 +408,6 @@ import {
   objectAsserter,
   objectIntersectionOf,
 } from "./mod.ts";
-// import from "typeguardkit" if using npm
 
 // types/entity.ts
 
@@ -467,7 +460,6 @@ You can use `partialFrom` like this:
 
 ```ts
 import { _string, ObjectAsserter, objectAsserter, partialFrom } from "./mod.ts";
-// import from "typeguardkit" if using npm
 
 const asserter = partialFrom(
   objectAsserter("", {
@@ -496,7 +488,6 @@ You can use `pickFrom` like this:
 
 ```ts
 import { _string, ObjectAsserter, objectAsserter, pickFrom } from "./mod.ts";
-// import from "typeguardkit" if using npm
 
 // types/user.ts
 
@@ -545,7 +536,6 @@ import {
   objectAsserter,
   TypeAssertionError,
 } from "./mod.ts";
-// import from "typeguardkit" if using npm
 
 // types/item.ts
 
