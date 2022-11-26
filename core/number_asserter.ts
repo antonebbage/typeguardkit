@@ -11,6 +11,10 @@ export interface NumberAsserterOptions {
   readonly validate?: (value: number) => string[];
 }
 
+/**
+ * A `NumberAsserterBound` can be set for the `min` and `max`
+ * `NumberAsserterOptions`.
+ */
 export interface NumberAsserterBound {
   readonly value: number;
   readonly inclusive: boolean;
