@@ -51,7 +51,7 @@ const asserter = objectAsserter("Book", {
   authors: arrayOf(_string),
   pageCount: _number,
   rating: unionOf([_number, _null]),
-  isRecommended: _boolean,
+  recommended: _boolean,
 });
 
 export type Book = ReturnType<typeof asserter>;
