@@ -43,6 +43,7 @@ import {
   _boolean,
   _null,
   _number,
+  _PositiveInteger,
   _string,
   arrayOf,
   ObjectAsserter,
@@ -56,7 +57,7 @@ const asserter = objectAsserter("Book", {
   isbn: _string,
   title: _string,
   authors: arrayOf(_string),
-  pageCount: _number,
+  pageCount: _PositiveInteger,
   rating: unionOf([_number, _null]),
   recommended: _boolean,
 });
@@ -364,13 +365,19 @@ You can create an `ObjectAsserter` with the `objectAsserter` function and use it
 like this:
 
 ```ts
-import { _number, _string, is, ObjectAsserter, objectAsserter } from "./mod.ts";
+import {
+  _NonNegativeInteger,
+  _string,
+  is,
+  ObjectAsserter,
+  objectAsserter,
+} from "./mod.ts";
 
 // types/user.ts
 
 const asserter = objectAsserter("User", {
   name: _string,
-  age: _number,
+  age: _NonNegativeInteger,
 });
 
 export type User = ReturnType<typeof asserter>;

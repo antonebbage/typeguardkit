@@ -22,7 +22,7 @@ export interface ObjectAsserter<Type extends Record<string, unknown>>
  *
  * ```ts
  * import {
- *   _number,
+ *   _NonNegativeInteger,
  *   _string,
  *   ObjectAsserter,
  *   objectAsserter,
@@ -30,7 +30,7 @@ export interface ObjectAsserter<Type extends Record<string, unknown>>
  *
  * const asserter = objectAsserter("User", {
  *   name: _string,
- *   age: _number,
+ *   age: _NonNegativeInteger,
  * });
  *
  * export type User = ReturnType<typeof asserter>;
