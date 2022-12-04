@@ -1,3 +1,24 @@
+## [0.10.0](https://github.com/antonebbage/typeguardkit/compare/0.9.0...0.10.0) (2022-12-04)
+
+### ⚠ BREAKING CHANGES
+
+- `NumberAsserterSubtype` has been removed, along with
+  `NumberAsserterOptions.subtype`. `NumberAsserterOptions.disallowNaN` has been
+  added back to use instead of setting `subtype` to `"valid"`, but the default
+  value of `false` now means `NaN` is valid regardless of any other constraints.
+  `step` can be set to `1` instead of setting `subtype` to `"integer"`.
+
+### Features
+
+- add `_Integer` `Asserter`
+  ([13ddb76](https://github.com/antonebbage/typeguardkit/commit/13ddb76e0661296ed32c13f2a48315e2d7940b74))
+- add `_NonNegativeInteger` `Asserter`
+  ([b02f119](https://github.com/antonebbage/typeguardkit/commit/b02f119cbfaeaeada744ad53ac50f851e1a858c3))
+- add `_PositiveInteger` `Asserter`
+  ([77da461](https://github.com/antonebbage/typeguardkit/commit/77da461a5b627ae55cdd5dfd0ab6d5dbf1fd7e1f))
+- add `step` to `NumberAsserterOptions`
+  ([4bddd24](https://github.com/antonebbage/typeguardkit/commit/4bddd2442b7011fe1ea075b4165724fec1ba621d))
+
 ## [0.9.0](https://github.com/antonebbage/typeguardkit/compare/0.8.0...0.9.0) (2022-11-26)
 
 ### ⚠ BREAKING CHANGES
