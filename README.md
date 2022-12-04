@@ -338,13 +338,7 @@ export const _EvenNumberInRange = numberAsserter(
   {
     min: { value: 0, inclusive: true },
     max: { value: 100, inclusive: true },
-
-    validate: (value) => {
-      if (value % 2 !== 0) {
-        return ["must be even"];
-      }
-      return [];
-    },
+    step: 2,
   },
 );
 ```
@@ -546,8 +540,8 @@ import {
 
 const itemAsserter = objectAsserter("Item", {
   quantity: numberAsserter("Quantity", {
-    subtype: "integer",
     min: { value: 0, inclusive: true },
+    step: 1,
   }),
 });
 

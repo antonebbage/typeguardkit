@@ -8,21 +8,18 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  * defined by its `NumberAsserterOptions` properties.
  */
 export interface NumberAsserter
-  extends Asserter<number>, NumberAsserterOptions {}
+  extends Asserter<number>, NumberAsserterOptions {
+  disallowNaN: boolean;
+}
 
 /** `NumberAsserterOptions` can be passed to the `numberAsserter` function. */
 export interface NumberAsserterOptions {
-  readonly subtype?: NumberAsserterSubtype;
+  readonly disallowNaN?: boolean;
   readonly min?: NumberAsserterBound;
   readonly max?: NumberAsserterBound;
+  readonly step?: number;
   readonly validate?: (value: number) => string[];
 }
-
-/**
- * A `NumberAsserterSubtype` can be set for the `subtype` in
- * `NumberAsserterOptions`.
- */
-export type NumberAsserterSubtype = "valid" | "integer";
 
 /**
  * A `NumberAsserterBound` can be set for the `min` and `max`
@@ -37,9 +34,8 @@ export interface NumberAsserterBound {
  * `numberAsserter` returns a `NumberAsserter` that asserts whether `value` is
  * of type `number` and valid according to the provided `NumberAsserterOptions`.
  *
- * If the `NumberAsserterOptions` `subtype` is `"valid"`, `value` cannot be
- * `NaN`. If `subtype` is `"integer"`, `value` cannot be `NaN` and must be an
- * integer.
+ * If defined, the `NumberAsserterOptions` `validate` function should return an
+ * empty array if `value` is valid, or an array of issues if `value` is invalid.
  *
  * The provided `NumberAsserterOptions` are made accessible as properties of the
  * returned `NumberAsserter`.
@@ -54,21 +50,19 @@ export interface NumberAsserterBound {
  *   {
  *     min: { value: 0, inclusive: true },
  *     max: { value: 100, inclusive: true },
- *
- *     validate: (value) => {
- *       if (value % 2 !== 0) {
- *         return ["must be even"];
- *       }
- *       return [];
- *     },
+ *     step: 2,
  *   },
  * );
  * ```
  */
 export function numberAsserter(
   typeName: string,
-  { subtype, min, max, validate }: NumberAsserterOptions,
+  { disallowNaN = false, min, max, step, validate }: NumberAsserterOptions,
 ): NumberAsserter {
+  if (step !== undefined && (step <= 0 || !isFinite(step))) {
+    throw new Error("`step` must be positive and finite if defined");
+  }
+
   typeName ||= "UnnamedNumber";
 
   const asserter = (value: unknown, valueName?: string) => {
@@ -81,12 +75,12 @@ export function numberAsserter(
 
     const issues: string[] = [];
 
-    if (subtype === "valid") {
+    if (disallowNaN) {
       if (isNaN(value)) {
         issues.push("must be a valid number");
       }
-    } else if (subtype === "integer" && !Number.isInteger(value)) {
-      issues.push("must be an integer");
+    } else if (isNaN(value)) {
+      return value;
     }
 
     if (min) {
@@ -109,6 +103,36 @@ export function numberAsserter(
       }
     }
 
+    if (step !== undefined) {
+      let isMultiple = false;
+
+      if (isFinite(value)) {
+        // Using `valueInteger` and `stepInteger` with `%` operator to try to
+        // avoid unexpected results due to floating-point precision.
+
+        const valueDecimalPlaceCount = `${value}`.split(".")[1]?.length ?? 0;
+        const stepDecimalPlaceCount = `${step}`.split(".")[1]?.length ?? 0;
+
+        const largestDecimalPlaceCount = Math.max(
+          valueDecimalPlaceCount,
+          stepDecimalPlaceCount,
+        );
+
+        const valueInteger = Number(
+          value.toFixed(largestDecimalPlaceCount).replace(".", ""),
+        );
+        const stepInteger = Number(
+          step.toFixed(largestDecimalPlaceCount).replace(".", ""),
+        );
+
+        isMultiple = valueInteger % stepInteger === 0;
+      }
+
+      if (!isMultiple) {
+        issues.push(`must be a multiple of ${step}`);
+      }
+    }
+
     if (validate) {
       issues.push(...validate(value));
     }
@@ -122,9 +146,10 @@ export function numberAsserter(
 
   asserter.typeName = typeName;
 
-  asserter.subtype = subtype;
+  asserter.disallowNaN = disallowNaN;
   asserter.min = min;
   asserter.max = max;
+  asserter.step = step;
   asserter.validate = validate;
 
   return asserter;

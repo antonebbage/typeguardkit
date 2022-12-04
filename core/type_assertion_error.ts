@@ -127,8 +127,8 @@ export class TypeAssertionError extends Error {
    *
    * const itemAsserter = objectAsserter("Item", {
    *   quantity: numberAsserter("Quantity", {
-   *     subtype: "integer",
    *     min: { value: 0, inclusive: true },
+   *     step: 1,
    *   }),
    * });
    *
