@@ -528,10 +528,10 @@ for example:
 
 ```ts
 import {
+  _NonNegativeInteger,
   _string,
   assertIs,
   is,
-  numberAsserter,
   ObjectAsserter,
   objectAsserter,
   TypeAssertionError,
@@ -540,10 +540,7 @@ import {
 // types/item.ts
 
 const itemAsserter = objectAsserter("Item", {
-  quantity: numberAsserter("Quantity", {
-    min: { value: 0, inclusive: true },
-    step: 1,
-  }),
+  quantity: _NonNegativeInteger,
 });
 
 export type Item = ReturnType<typeof itemAsserter>;
