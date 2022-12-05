@@ -59,6 +59,26 @@ describe("numberAsserter", () => {
     evenNumberInExclusiveRangeOptions,
   );
 
+  const positiveOddNumberOptions: NumberAsserterOptions = {
+    min: { value: 1, inclusive: true },
+    step: 2,
+  };
+
+  const _PositiveOddNumber = numberAsserter(
+    "PositiveOddNumber",
+    positiveOddNumberOptions,
+  );
+
+  const exclusiveMinPositiveOddNumberOptions: NumberAsserterOptions = {
+    min: { value: 1, inclusive: false },
+    step: 2,
+  };
+
+  const _ExclusiveMinPositiveOddNumber = numberAsserter(
+    "ExclusiveMinPositiveOddNumber",
+    exclusiveMinPositiveOddNumberOptions,
+  );
+
   const unnamedAsserter = numberAsserter("", {});
 
   it("should return a `Function` with the provided `typeName` or the correct default if empty", () => {
@@ -101,6 +121,13 @@ describe("numberAsserter", () => {
         asserter: _EvenNumberInExclusiveRange,
         options: evenNumberInExclusiveRangeOptions,
       },
+
+      { asserter: _PositiveOddNumber, options: positiveOddNumberOptions },
+
+      {
+        asserter: _ExclusiveMinPositiveOddNumber,
+        options: exclusiveMinPositiveOddNumberOptions,
+      },
     ];
 
     for (const { asserter, options } of testCases) {
@@ -140,6 +167,8 @@ describe("numberAsserter", () => {
       },
 
       { asserter: _EvenNumberInExclusiveRange, values: [NaN, -8, -4, 0, 4, 8] },
+      { asserter: _PositiveOddNumber, values: [NaN, 1, 3, 5, 7, 9] },
+      { asserter: _ExclusiveMinPositiveOddNumber, values: [NaN, 3, 5, 7, 9] },
     ];
 
     for (const { asserter, values } of testCases) {
@@ -179,6 +208,9 @@ describe("numberAsserter", () => {
     const exclusiveMinIssue = `must be > ${minValue}`;
     const exclusiveMaxIssue = `must be < ${maxValue}`;
     const evenIssue = "must be even";
+    const positiveOddMinIssue = "must be >= 1";
+    const positiveOddStepIssue = "must be a multiple of 2 from 1";
+    const exclusiveMinPositiveOddMinIssue = "must be > 1";
 
     const testCases: Array<{
       asserter: Asserter<unknown>;
@@ -256,6 +288,31 @@ describe("numberAsserter", () => {
           [9.5, [evenIssue]],
           [10, [exclusiveMaxIssue]],
           [Infinity, [exclusiveMaxIssue, evenIssue]],
+        ],
+      },
+
+      {
+        asserter: _PositiveOddNumber,
+
+        values: [
+          [-Infinity, [positiveOddMinIssue, positiveOddStepIssue]],
+          [-1, [positiveOddMinIssue]],
+          [0, [positiveOddMinIssue, positiveOddStepIssue]],
+          [2, [positiveOddStepIssue]],
+          [Infinity, [positiveOddStepIssue]],
+        ],
+      },
+
+      {
+        asserter: _ExclusiveMinPositiveOddNumber,
+
+        values: [
+          [-Infinity, [exclusiveMinPositiveOddMinIssue, positiveOddStepIssue]],
+          [-1, [exclusiveMinPositiveOddMinIssue]],
+          [0, [exclusiveMinPositiveOddMinIssue, positiveOddStepIssue]],
+          [1, [exclusiveMinPositiveOddMinIssue]],
+          [2, [positiveOddStepIssue]],
+          [Infinity, [positiveOddStepIssue]],
         ],
       },
     ];

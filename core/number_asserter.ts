@@ -104,32 +104,50 @@ export function numberAsserter(
     }
 
     if (step !== undefined) {
-      let isMultiple = false;
+      let isStepMismatch = false;
 
-      if (isFinite(value)) {
-        // Using `valueInteger` and `stepInteger` with `%` operator to try to
-        // avoid unexpected results due to floating-point precision.
+      if (!isFinite(value)) {
+        isStepMismatch = true;
+      } else {
+        // Using `valueInteger`, `minValueInteger`, and `stepInteger` with `%`
+        // operator to try to avoid unexpected results due to floating-point
+        // precision.
 
-        const valueDecimalPlaceCount = `${value}`.split(".")[1]?.length ?? 0;
-        const stepDecimalPlaceCount = `${step}`.split(".")[1]?.length ?? 0;
+        const decimalPlaceCount = (value: number): number =>
+          `${value}`.split(".")[1]?.length ?? 0;
+
+        const valueDecimalPlaceCount = decimalPlaceCount(value);
+
+        const minVaiueDecimalPlaceCount = min
+          ? decimalPlaceCount(min.value)
+          : 0;
+
+        const stepDecimalPlaceCount = decimalPlaceCount(step);
 
         const largestDecimalPlaceCount = Math.max(
           valueDecimalPlaceCount,
+          minVaiueDecimalPlaceCount,
           stepDecimalPlaceCount,
         );
 
-        const valueInteger = Number(
-          value.toFixed(largestDecimalPlaceCount).replace(".", ""),
-        );
-        const stepInteger = Number(
-          step.toFixed(largestDecimalPlaceCount).replace(".", ""),
-        );
+        const integer = (value: number): number =>
+          Number(value.toFixed(largestDecimalPlaceCount).replace(".", ""));
 
-        isMultiple = valueInteger % stepInteger === 0;
+        const valueInteger = integer(value);
+        const minValueInteger = min ? integer(min.value) : 0;
+        const stepInteger = integer(step);
+
+        isStepMismatch = (valueInteger - minValueInteger) % stepInteger !== 0;
       }
 
-      if (!isMultiple) {
-        issues.push(`must be a multiple of ${step}`);
+      if (isStepMismatch) {
+        let issue = `must be a multiple of ${step}`;
+
+        if (min?.value) {
+          issue += ` from ${min.value}`;
+        }
+
+        issues.push(issue);
       }
     }
 
