@@ -1,3 +1,10 @@
+## [0.10.1](https://github.com/antonebbage/typeguardkit/compare/0.10.0...0.10.1) (2022-12-05)
+
+### Bug Fixes
+
+- use `NumberAsserter.min.value` as stepping base
+  ([13f83de](https://github.com/antonebbage/typeguardkit/commit/13f83de4cd0432b2300257e25ff9c3fc512597b1))
+
 ## [0.10.0](https://github.com/antonebbage/typeguardkit/compare/0.9.0...0.10.0) (2022-12-04)
 
 ### ⚠ BREAKING CHANGES
