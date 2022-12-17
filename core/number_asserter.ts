@@ -9,7 +9,7 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  */
 export interface NumberAsserter
   extends Asserter<number>, NumberAsserterOptions {
-  disallowNaN: boolean;
+  readonly disallowNaN: boolean;
 }
 
 /** `NumberAsserterOptions` can be passed to the `numberAsserter` function. */
