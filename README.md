@@ -105,7 +105,8 @@ interface Asserter<Type> {
 ```
 
 If `value` is of `Type`, the `Asserter` should return `value` as `Type`.
-Otherwise, the `Asserter` should throw a `TypeAssertionError`.
+Otherwise, the `Asserter` should throw a `TypeAssertionError`, including
+`valueName` in its `message`.
 
 The module includes the `_boolean`, `_number`, `_string`, `_null`, and
 `_undefined` primitive type `Asserter`s.
