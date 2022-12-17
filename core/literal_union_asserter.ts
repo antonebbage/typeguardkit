@@ -11,7 +11,7 @@ export interface LiteralUnionAsserter<
 
 /**
  * `literalUnionAsserter` returns a `LiteralUnionAsserter` for the union of the
- * provided `values`.
+ * provided `values`. The `values` array should be asserted `as const`.
  *
  * The provided `values` will be set to the `values` property of the returned
  * `LiteralUnionAsserter`.
