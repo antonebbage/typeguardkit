@@ -107,11 +107,15 @@ interface Asserter<Type> {
 If `value` is of `Type`, the `Asserter` should return `value` as `Type`.
 Otherwise, the `Asserter` should throw a `TypeAssertionError`.
 
-The module includes the `_boolean`, `_number`, `_Integer`,
-`_NonNegativeInteger`, `_PositiveInteger`, and `_string` `Asserter`s.
+The module includes the `_boolean`, `_number`, `_string`, `_null`, and
+`_undefined` primitive type `Asserter`s.
 
-It also includes the `_null` and `_undefined` `Asserter`s, which can be used to
-create union type `Asserter`s with the [`unionOf`](#unionof) function.
+It also includes the `_NonNegativeNumber`, `_PositiveNumber`, `_Integer`,
+`_NonNegativeInteger`, and `_PositiveInteger` `Asserter`s, which are `number`
+`Asserter`s that perform additional validation.
+
+The `_null` and `_undefined` `Asserter`s can be used to create union type
+`Asserter`s with the [`unionOf`](#unionof) function.
 
 As well as wrapping `Asserter`s in the
 [`assertIs`](#assertion-signature-wrapper) or
