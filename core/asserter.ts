@@ -8,7 +8,7 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  * throw a `TypeAssertionError`.
  */
 export interface Asserter<Type> {
-  (value: unknown, name?: string): Type;
+  (value: unknown, valueName?: string): Type;
   readonly typeName: string;
 }
 

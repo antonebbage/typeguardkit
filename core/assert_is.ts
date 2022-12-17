@@ -29,7 +29,7 @@ import { Asserter } from "./asserter.ts";
 export function assertIs<Type>(
   asserter: Asserter<Type>,
   value: unknown,
-  name?: string,
+  valueName?: string,
 ): asserts value is Type {
-  asserter(value, name);
+  asserter(value, valueName);
 }

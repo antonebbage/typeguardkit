@@ -5,7 +5,7 @@ import { typeAsserter } from "../core/mod.ts";
 /**
  * `_number` is a `number` type assertion function. If `value` is a `number`,
  * `_number` returns `value` as `number`. Otherwise, `_number` throws a
- * `TypeAssertionError`, including `name` in its `message`.
+ * `TypeAssertionError`, including `valueName` in its `message`.
  */
 export const _number = typeAsserter(
   "number",

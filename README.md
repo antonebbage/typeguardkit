@@ -99,7 +99,7 @@ An `Asserter` is a type assertion function.
 
 ```ts
 interface Asserter<Type> {
-  (value: unknown, name?: string): Type;
+  (value: unknown, valueName?: string): Type;
   readonly typeName: string;
 }
 ```

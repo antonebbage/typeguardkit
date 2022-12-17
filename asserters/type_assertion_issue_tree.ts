@@ -6,8 +6,8 @@ import { typeAsserter, TypeAssertionIssueTree } from "../core/mod.ts";
  * `_TypeAssertionIssueTree` is a `TypeAssertionIssueTree` type assertion
  * function. If `value` is a `TypeAssertionIssueTree`, `_TypeAssertionIssueTree`
  * returns `value` as `TypeAssertionIssueTree`. Otherwise,
- * `_TypeAssertionIssueTree` throws a `TypeAssertionError`, including `name` in
- * its `message`.
+ * `_TypeAssertionIssueTree` throws a `TypeAssertionError`, including
+ * `valueName` in its `message`.
  */
 export const _TypeAssertionIssueTree = typeAsserter(
   "TypeAssertionIssueTree",
