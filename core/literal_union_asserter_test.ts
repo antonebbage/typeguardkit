@@ -10,9 +10,11 @@ import { literalUnionAsserter } from "./literal_union_asserter.ts";
 describe("literalUnionAsserter", () => {
   const literalUnionName = "LiteralUnion";
 
+  const literalUnionValues = [0, 1, "", "a"] as const;
+
   const _LiteralUnion = literalUnionAsserter(
     literalUnionName,
-    [0, 1, "", "a"] as const,
+    literalUnionValues,
   );
 
   it("should return a `Function` with the provided `typeName` or the correct default if empty", () => {
@@ -29,6 +31,10 @@ describe("literalUnionAsserter", () => {
       assertInstanceOf(asserter, Function);
       assertStrictEquals(asserter.typeName, typeName);
     }
+  });
+
+  it("should return a `Function` with the provided `values` set to its `values` property", () => {
+    assertStrictEquals(_LiteralUnion.values, literalUnionValues);
   });
 
   it("should return a `Function` that returns `value` when it is equal to one of the `literals`", () => {

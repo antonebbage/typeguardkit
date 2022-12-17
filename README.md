@@ -240,21 +240,27 @@ function handleUnknown(x: unknown) {
 function handleDirection(x: Direction) {}
 ```
 
-### Literal union `Asserter`s
+### `LiteralUnionAsserter`s
 
-You can create an `Asserter` for a literal union type using the
-`literalUnionAsserter` function like this:
+You can use the `literalUnionAsserter` function to create a
+`LiteralUnionAsserter` for the union of the provided `values`.
+
+The provided `values` will be set to the `values` property of the returned
+`LiteralUnionAsserter`.
+
+You can use `literalUnionAsserter` like this:
 
 ```ts
 import { Asserter, is, literalUnionAsserter } from "./mod.ts";
 
 // types/direction.ts
 
-export const directionValues = ["up", "right", "down", "left"] as const;
+const asserter = literalUnionAsserter(
+  "Direction",
+  ["up", "right", "down", "left"] as const,
+);
 
-const asserter = literalUnionAsserter("Direction", directionValues);
-
-export type Direction = typeof directionValues[number];
+export type Direction = ReturnType<typeof asserter>;
 
 export const _Direction: Asserter<Direction> = asserter;
 
