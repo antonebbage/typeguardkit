@@ -18,11 +18,10 @@ export function unionOf<Asserters extends Array<Asserter<unknown>>>(
   asserters: Asserters,
   typeName?: string,
 ): Asserter<ReturnType<Asserters[number]>> {
-  const newTypeName = typeName ||
-    asserters.map((asserter) => asserter.typeName).join(" | ");
+  typeName ||= asserters.map((asserter) => asserter.typeName).join(" | ");
 
   return typeAsserter(
-    newTypeName,
+    typeName,
     (value): value is ReturnType<Asserters[number]> => {
       for (const asserter of asserters) {
         try {

@@ -52,8 +52,7 @@ export function objectIntersectionOf<
   asserterB: ObjectAsserter<TypeB>,
   typeName?: string,
 ): ObjectAsserter<TypeA & TypeB> {
-  const newTypeName = typeName ||
-    `${asserterA.typeName} & ${asserterB.typeName}`;
+  typeName ||= `${asserterA.typeName} & ${asserterB.typeName}`;
 
   const newPropertyAsserters: Record<string, Asserter<unknown>> = {};
 
@@ -89,7 +88,7 @@ export function objectIntersectionOf<
     }
   }
 
-  return objectAsserter(newTypeName, newPropertyAsserters) as ObjectAsserter<
+  return objectAsserter(typeName, newPropertyAsserters) as ObjectAsserter<
     TypeA & TypeB
   >;
 }

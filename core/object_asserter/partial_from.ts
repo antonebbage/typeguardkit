@@ -37,7 +37,7 @@ export function partialFrom<Type extends Record<string, unknown>>(
   asserter: ObjectAsserter<Type>,
   typeName?: string,
 ): ObjectAsserter<Partial<Type>> {
-  const newTypeName = typeName || `Partial<${asserter.typeName}>`;
+  typeName ||= `Partial<${asserter.typeName}>`;
 
   const newPropertyAsserters: Record<string, Asserter<unknown>> = {};
 
@@ -48,7 +48,7 @@ export function partialFrom<Type extends Record<string, unknown>>(
     ]);
   }
 
-  return objectAsserter(newTypeName, newPropertyAsserters) as ObjectAsserter<
+  return objectAsserter(typeName, newPropertyAsserters) as ObjectAsserter<
     Partial<Type>
   >;
 }
