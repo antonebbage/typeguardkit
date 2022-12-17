@@ -16,34 +16,38 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  * ```
  */
 export function arrayOf<Type>(
-  asserter: Asserter<Type>,
-  typeName?: string,
+  elementAsserter: Asserter<Type>,
+  arrayTypeName?: string,
 ): Asserter<Array<Type>> {
-  const newTypeName = typeName || `Array<${asserter.typeName}>`;
+  const definedArrayTypeName = arrayTypeName ||
+    `Array<${elementAsserter.typeName}>`;
 
-  const newAsserter = (value: unknown, valueName?: string) => {
+  const arrayAsserter = (value: unknown, valueName?: string) => {
     if (!Array.isArray(value)) {
-      throw new TypeAssertionError(newTypeName, value, { valueName });
+      throw new TypeAssertionError(definedArrayTypeName, value, { valueName });
     }
 
     const issues: TypeAssertionError[] = [];
 
     for (let i = 0; i < value.length; i++) {
       try {
-        asserter(value[i], `${i}`);
+        elementAsserter(value[i], `${i}`);
       } catch (error) {
         issues.push(error);
       }
     }
 
     if (issues.length) {
-      throw new TypeAssertionError(newTypeName, value, { valueName, issues });
+      throw new TypeAssertionError(definedArrayTypeName, value, {
+        valueName,
+        issues,
+      });
     }
 
     return value;
   };
 
-  newAsserter.typeName = newTypeName;
+  arrayAsserter.typeName = definedArrayTypeName;
 
-  return newAsserter;
+  return arrayAsserter;
 }
