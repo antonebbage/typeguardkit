@@ -1,3 +1,20 @@
+## [0.11.0](https://github.com/antonebbage/typeguardkit/compare/0.10.1...0.11.0) (2022-12-17)
+
+### ⚠ BREAKING CHANGES
+
+- make `NumberAsserter` readonly
+
+### Features
+
+- add `_NonNegativeNumber` `Asserter`
+  ([9786aa8](https://github.com/antonebbage/typeguardkit/commit/9786aa8294ba691dd88370cab98c7e98686955f1))
+- add `_PositiveNumber` `Asserter`
+  ([733c15a](https://github.com/antonebbage/typeguardkit/commit/733c15aa4fe54fc4688075ca44fcc164307dbdc5))
+- make `NumberAsserter` readonly
+  ([3e2d71b](https://github.com/antonebbage/typeguardkit/commit/3e2d71bd663999916ac7321a5fb3549961309577))
+- return `LiteralUnionAsserter` from `literalUnionAsserter`
+  ([ea81b9c](https://github.com/antonebbage/typeguardkit/commit/ea81b9c88d391dc19b738a0dbb4d6250e03836c1))
+
 ## [0.10.1](https://github.com/antonebbage/typeguardkit/compare/0.10.0...0.10.1) (2022-12-05)
 
 ### Bug Fixes
