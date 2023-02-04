@@ -1,3 +1,10 @@
+## [0.12.0](https://github.com/antonebbage/typeguardkit/compare/0.11.0...0.12.0) (2023-02-04)
+
+### Features
+
+- add `recordOf` function
+  ([d88f6f2](https://github.com/antonebbage/typeguardkit/commit/d88f6f2c2145699c98d5c9d803ba62836d1742a7))
+
 ## [0.11.0](https://github.com/antonebbage/typeguardkit/compare/0.10.1...0.11.0) (2022-12-17)
 
 ### ⚠ BREAKING CHANGES
