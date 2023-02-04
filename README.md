@@ -334,6 +334,30 @@ function handleUnknown(x: unknown) {
 function handleArrayOfString(x: string[]) {}
 ```
 
+#### `recordOf`
+
+`recordOf` returns an `Asserter<Record<Key, Value>>`, created using the provided
+`Asserter<Key>` and `Asserter<Value>`.
+
+You can use `recordOf` like this:
+
+```ts
+import { _string, is, recordOf } from "./mod.ts";
+
+const _recordOfString = recordOf(_string, _string);
+
+function handleUnknown(x: unknown) {
+  if (is(_recordOfString, x)) {
+    // `x` has now been narrowed to type `Record<string, string>`, so can be
+    // passed to `handleRecordOfString`.
+
+    handleRecordOfString(x);
+  }
+}
+
+function handleRecordOfString(x: Record<string, string>) {}
+```
+
 #### `numberAsserter`
 
 `numberAsserter` returns a `NumberAsserter` that asserts whether `value` is of
