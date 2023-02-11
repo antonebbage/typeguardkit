@@ -9,6 +9,10 @@ import { describe, it } from "testing/bdd.ts";
 import { TypeAssertionError } from "./type_assertion_error.ts";
 
 describe("TypeAssertionError", () => {
+  it("should extend `TypeError`", () => {
+    assert(new TypeAssertionError("", "") instanceof TypeError);
+  });
+
   it("should set correct `message` and `issueTree`", () => {
     let error = new TypeAssertionError("ExpectedType", "", {
       valueName: "name",

@@ -39,7 +39,7 @@ export type TypeAssertionIssueTree = TypeAssertionIssueTreeNode;
  * received from outside of the program by passing only that `issueTree` to
  * the constructor.
  */
-export class TypeAssertionError extends Error {
+export class TypeAssertionError extends TypeError {
   readonly issueTree: TypeAssertionIssueTree;
 
   constructor(issueTree: TypeAssertionIssueTree);
