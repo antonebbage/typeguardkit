@@ -320,10 +320,10 @@ You can use `arrayOf` like this:
 ```ts
 import { _string, arrayOf, is } from "./mod.ts";
 
-const _arrayOfString = arrayOf(_string);
+const _ArrayOfString = arrayOf(_string);
 
 function handleUnknown(x: unknown) {
-  if (is(_arrayOfString, x)) {
+  if (is(_ArrayOfString, x)) {
     // `x` has now been narrowed to type `Array<string>`, so can be passed to
     // `handleArrayOfString`.
 
@@ -344,10 +344,10 @@ You can use `recordOf` like this:
 ```ts
 import { _string, is, recordOf } from "./mod.ts";
 
-const _recordOfString = recordOf(_string, _string);
+const _RecordOfString = recordOf(_string, _string);
 
 function handleUnknown(x: unknown) {
-  if (is(_recordOfString, x)) {
+  if (is(_RecordOfString, x)) {
     // `x` has now been narrowed to type `Record<string, string>`, so can be
     // passed to `handleRecordOfString`.
 

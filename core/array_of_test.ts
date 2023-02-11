@@ -8,8 +8,8 @@ import { _number, _string, TypeAssertionError } from "../mod.ts";
 import { arrayOf } from "./array_of.ts";
 
 describe("arrayOf", () => {
-  const _arrayOfString = arrayOf(_string);
-  const _arrayOfNumber = arrayOf(_number);
+  const _ArrayOfString = arrayOf(_string);
+  const _ArrayOfNumber = arrayOf(_number);
 
   it("should return a `Function` with the provided `typeName` or the correct default if `undefined` or empty", () => {
     const testCases = [
@@ -19,12 +19,12 @@ describe("arrayOf", () => {
       },
 
       {
-        asserter: _arrayOfString,
+        asserter: _ArrayOfString,
         typeName: `Array<${_string.typeName}>`,
       },
 
       {
-        asserter: _arrayOfNumber,
+        asserter: _ArrayOfNumber,
         typeName: `Array<${_number.typeName}>`,
       },
 
@@ -42,8 +42,8 @@ describe("arrayOf", () => {
 
   it("should return a `Function` that returns `value` when it is an `Array` where `asserter` does not throw an error for any element", () => {
     const testCases = [
-      { asserter: _arrayOfString, values: [[], [""], ["a", "b", "c"]] },
-      { asserter: _arrayOfNumber, values: [[], [0], [0, 1, 2]] },
+      { asserter: _ArrayOfString, values: [[], [""], ["a", "b", "c"]] },
+      { asserter: _ArrayOfNumber, values: [[], [0], [0, 1, 2]] },
     ];
 
     for (const { asserter, values } of testCases) {
@@ -55,9 +55,9 @@ describe("arrayOf", () => {
 
   it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not an `Array` where `asserter` does not throw an error for any element", () => {
     assertThrows(
-      () => _arrayOfString([undefined, undefined], "name"),
+      () => _ArrayOfString([undefined, undefined], "name"),
       TypeAssertionError,
-      new TypeAssertionError(_arrayOfString.typeName, [undefined, undefined], {
+      new TypeAssertionError(_ArrayOfString.typeName, [undefined, undefined], {
         valueName: "name",
 
         issues: [
@@ -94,7 +94,7 @@ describe("arrayOf", () => {
 
     const testCases = [
       {
-        asserter: _arrayOfString,
+        asserter: _ArrayOfString,
 
         values: [
           undefined,
@@ -116,7 +116,7 @@ describe("arrayOf", () => {
       },
 
       {
-        asserter: _arrayOfNumber,
+        asserter: _ArrayOfNumber,
         values: [[undefined], [null], [false], [""], [[]], [{}]],
       },
     ];

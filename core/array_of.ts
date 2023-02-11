@@ -12,7 +12,7 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  * ```ts
  * import { _string, arrayOf } from "../mod.ts";
  *
- * const _arrayOfString = arrayOf(_string);
+ * const _ArrayOfString = arrayOf(_string);
  * ```
  */
 export function arrayOf<Type>(

@@ -13,7 +13,7 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  * ```ts
  * import { _string, recordOf } from "../mod.ts";
  *
- * const _recordOfString = recordOf(_string, _string);
+ * const _RecordOfString = recordOf(_string, _string);
  * ```
  */
 export function recordOf<Key extends string, Value>(

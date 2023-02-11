@@ -18,9 +18,9 @@ describe("recordOf", () => {
     ["a", "b", "c"] as const,
   );
 
-  const _recordOfStringByString = recordOf(_string, _string);
-  const _recordOfStringByLiteralUnion = recordOf(_LiteralUnion, _string);
-  const _recordOfNumberByString = recordOf(_string, _number);
+  const _RecordOfStringByString = recordOf(_string, _string);
+  const _RecordOfStringByLiteralUnion = recordOf(_LiteralUnion, _string);
+  const _RecordOfNumberByString = recordOf(_string, _number);
 
   it("should return a `Function` with the provided `typeName` or the correct default if `undefined` or empty", () => {
     const testCases = [
@@ -30,17 +30,17 @@ describe("recordOf", () => {
       },
 
       {
-        asserter: _recordOfStringByString,
+        asserter: _RecordOfStringByString,
         typeName: `Record<${_string.typeName}, ${_string.typeName}>`,
       },
 
       {
-        asserter: _recordOfStringByLiteralUnion,
+        asserter: _RecordOfStringByLiteralUnion,
         typeName: `Record<${_LiteralUnion.typeName}, ${_string.typeName}>`,
       },
 
       {
-        asserter: _recordOfNumberByString,
+        asserter: _RecordOfNumberByString,
         typeName: `Record<${_string.typeName}, ${_number.typeName}>`,
       },
     ];
@@ -54,17 +54,17 @@ describe("recordOf", () => {
   it("should return a `Function` that returns `value` when it is a `Record` where `asserter` does not throw an error for any key or value", () => {
     const testCases = [
       {
-        asserter: _recordOfStringByString,
+        asserter: _RecordOfStringByString,
         values: [{}, { "": "" }, { a: "a", b: "b", c: "c" }],
       },
 
       {
-        asserter: _recordOfStringByLiteralUnion,
+        asserter: _RecordOfStringByLiteralUnion,
         values: [{ a: "a", b: "b", c: "c" }],
       },
 
       {
-        asserter: _recordOfNumberByString,
+        asserter: _RecordOfNumberByString,
         values: [{}, { "": 0 }, { a: 1, b: 2, c: 3 }],
       },
     ];
@@ -78,9 +78,9 @@ describe("recordOf", () => {
 
   it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not a `Record` where `asserter` does not throw an error for any key or value", () => {
     assertThrows(
-      () => _recordOfStringByString({ a: undefined, b: undefined }, "name"),
+      () => _RecordOfStringByString({ a: undefined, b: undefined }, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_recordOfStringByString.typeName, {
+      new TypeAssertionError(_RecordOfStringByString.typeName, {
         a: undefined,
         b: undefined,
       }, {
@@ -123,7 +123,7 @@ describe("recordOf", () => {
 
     const testCases = [
       {
-        asserter: _recordOfStringByString,
+        asserter: _RecordOfStringByString,
 
         values: [
           undefined,
@@ -145,7 +145,7 @@ describe("recordOf", () => {
       },
 
       {
-        asserter: _recordOfStringByLiteralUnion,
+        asserter: _RecordOfStringByLiteralUnion,
 
         values: [
           {},
@@ -158,7 +158,7 @@ describe("recordOf", () => {
       },
 
       {
-        asserter: _recordOfNumberByString,
+        asserter: _RecordOfNumberByString,
 
         values: [
           { a: undefined },
