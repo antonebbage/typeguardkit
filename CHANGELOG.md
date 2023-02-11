@@ -1,3 +1,18 @@
+## [0.13.0](https://github.com/antonebbage/typeguardkit/compare/0.12.0...0.13.0) (2023-02-11)
+
+### ⚠ BREAKING CHANGES
+
+- rename `Asserter.typeName` to `assertedTypeName`
+
+### Features
+
+- add `Asserter.asserterTypeName`
+  ([0b4f33e](https://github.com/antonebbage/typeguardkit/commit/0b4f33ea1eab1d5ff3fa0333151adee78598acdf))
+- make `TypeAssertionError` extend `TypeError`
+  ([bc9fd08](https://github.com/antonebbage/typeguardkit/commit/bc9fd08ab01bf6564d7f53a8e2904bcb976de57b))
+- rename `Asserter.typeName` to `assertedTypeName`
+  ([89224a1](https://github.com/antonebbage/typeguardkit/commit/89224a1ba84fde2d78cf10900dc1fed31a5b3de7))
+
 ## [0.12.0](https://github.com/antonebbage/typeguardkit/compare/0.11.0...0.12.0) (2023-02-04)
 
 ### Features
