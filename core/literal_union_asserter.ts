@@ -34,10 +34,10 @@ export interface LiteralUnionAsserter<
 export function literalUnionAsserter<
   Values extends ReadonlyArray<number | string>,
 >(
-  typeName: string,
+  assertedTypeName: string,
   values: Values,
 ): LiteralUnionAsserter<Values> {
-  typeName ||= "UnnamedLiteralUnion";
+  assertedTypeName ||= "UnnamedLiteralUnion";
 
   const asserter = (value: unknown, valueName?: string) => {
     for (const literal of values) {
@@ -45,10 +45,10 @@ export function literalUnionAsserter<
         return value;
       }
     }
-    throw new TypeAssertionError(typeName, value, { valueName });
+    throw new TypeAssertionError(assertedTypeName, value, { valueName });
   };
 
-  asserter.typeName = typeName;
+  asserter.assertedTypeName = assertedTypeName;
   asserter.values = values;
 
   return asserter as LiteralUnionAsserter<Values>;

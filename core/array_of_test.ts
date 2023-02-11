@@ -11,32 +11,32 @@ describe("arrayOf", () => {
   const _ArrayOfString = arrayOf(_string);
   const _ArrayOfNumber = arrayOf(_number);
 
-  it("should return a `Function` with the provided `typeName` or the correct default if `undefined` or empty", () => {
+  it("should return a `Function` with the provided `assertedTypeName` or the correct default if `undefined` or empty", () => {
     const testCases = [
       {
         asserter: arrayOf(_string, "ArrayOfString"),
-        typeName: "ArrayOfString",
+        assertedTypeName: "ArrayOfString",
       },
 
       {
         asserter: _ArrayOfString,
-        typeName: `Array<${_string.typeName}>`,
+        assertedTypeName: `Array<${_string.assertedTypeName}>`,
       },
 
       {
         asserter: _ArrayOfNumber,
-        typeName: `Array<${_number.typeName}>`,
+        assertedTypeName: `Array<${_number.assertedTypeName}>`,
       },
 
       {
         asserter: arrayOf(_string, ""),
-        typeName: `Array<${_string.typeName}>`,
+        assertedTypeName: `Array<${_string.assertedTypeName}>`,
       },
     ];
 
-    for (const { asserter, typeName } of testCases) {
+    for (const { asserter, assertedTypeName } of testCases) {
       assertInstanceOf(asserter, Function);
-      assertStrictEquals(asserter.typeName, typeName);
+      assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
     }
   });
 
@@ -57,19 +57,23 @@ describe("arrayOf", () => {
     assertThrows(
       () => _ArrayOfString([undefined, undefined], "name"),
       TypeAssertionError,
-      new TypeAssertionError(_ArrayOfString.typeName, [undefined, undefined], {
-        valueName: "name",
+      new TypeAssertionError(
+        _ArrayOfString.assertedTypeName,
+        [undefined, undefined],
+        {
+          valueName: "name",
 
-        issues: [
-          new TypeAssertionError(_string.typeName, undefined, {
-            valueName: "0",
-          }),
+          issues: [
+            new TypeAssertionError(_string.assertedTypeName, undefined, {
+              valueName: "0",
+            }),
 
-          new TypeAssertionError(_string.typeName, undefined, {
-            valueName: "1",
-          }),
-        ],
-      })
+            new TypeAssertionError(_string.assertedTypeName, undefined, {
+              valueName: "1",
+            }),
+          ],
+        },
+      )
         .message,
     );
 
@@ -78,17 +82,21 @@ describe("arrayOf", () => {
     assertThrows(
       () => namedAsserter([undefined, undefined]),
       TypeAssertionError,
-      new TypeAssertionError(namedAsserter.typeName, [undefined, undefined], {
-        issues: [
-          new TypeAssertionError(_string.typeName, undefined, {
-            valueName: "0",
-          }),
+      new TypeAssertionError(
+        namedAsserter.assertedTypeName,
+        [undefined, undefined],
+        {
+          issues: [
+            new TypeAssertionError(_string.assertedTypeName, undefined, {
+              valueName: "0",
+            }),
 
-          new TypeAssertionError(_string.typeName, undefined, {
-            valueName: "1",
-          }),
-        ],
-      })
+            new TypeAssertionError(_string.assertedTypeName, undefined, {
+              valueName: "1",
+            }),
+          ],
+        },
+      )
         .message,
     );
 
@@ -126,7 +134,7 @@ describe("arrayOf", () => {
         assertThrows(
           () => asserter(value),
           TypeAssertionError,
-          new TypeAssertionError(asserter.typeName, value).message,
+          new TypeAssertionError(asserter.assertedTypeName, value).message,
         );
       }
     }

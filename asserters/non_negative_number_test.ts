@@ -4,8 +4,11 @@ import { TypeAssertionError } from "../mod.ts";
 import { _NonNegativeNumber } from "./non_negative_number.ts";
 
 describe("_NonNegativeNumber", () => {
-  it('should have a `typeName` of `"NonNegativeNumber"`', () => {
-    assertStrictEquals(_NonNegativeNumber.typeName, "NonNegativeNumber");
+  it('should have an `assertedTypeName` of `"NonNegativeNumber"`', () => {
+    assertStrictEquals(
+      _NonNegativeNumber.assertedTypeName,
+      "NonNegativeNumber",
+    );
   });
 
   it("should return `value` if it is a `number` >= 0", () => {
@@ -20,7 +23,7 @@ describe("_NonNegativeNumber", () => {
     assertThrows(
       () => _NonNegativeNumber(undefined, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_NonNegativeNumber.typeName, undefined, {
+      new TypeAssertionError(_NonNegativeNumber.assertedTypeName, undefined, {
         valueName: "name",
       })
         .message,
@@ -29,7 +32,8 @@ describe("_NonNegativeNumber", () => {
     assertThrows(
       () => _NonNegativeNumber(undefined),
       TypeAssertionError,
-      new TypeAssertionError(_NonNegativeNumber.typeName, undefined).message,
+      new TypeAssertionError(_NonNegativeNumber.assertedTypeName, undefined)
+        .message,
     );
 
     const testCases = [
@@ -50,7 +54,8 @@ describe("_NonNegativeNumber", () => {
       assertThrows(
         () => _NonNegativeNumber(value),
         TypeAssertionError,
-        new TypeAssertionError(_NonNegativeNumber.typeName, value).message,
+        new TypeAssertionError(_NonNegativeNumber.assertedTypeName, value)
+          .message,
       );
     }
   });

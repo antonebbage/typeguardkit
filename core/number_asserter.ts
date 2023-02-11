@@ -56,18 +56,18 @@ export interface NumberAsserterBound {
  * ```
  */
 export function numberAsserter(
-  typeName: string,
+  assertedTypeName: string,
   { disallowNaN = false, min, max, step, validate }: NumberAsserterOptions,
 ): NumberAsserter {
   if (step !== undefined && (step <= 0 || !isFinite(step))) {
     throw new Error("`step` must be positive and finite if defined");
   }
 
-  typeName ||= "UnnamedNumber";
+  assertedTypeName ||= "UnnamedNumber";
 
   const asserter = (value: unknown, valueName?: string) => {
     if (typeof value !== "number") {
-      throw new TypeAssertionError(typeName, value, {
+      throw new TypeAssertionError(assertedTypeName, value, {
         valueName,
         issues: "must be of type `number`",
       });
@@ -156,13 +156,16 @@ export function numberAsserter(
     }
 
     if (issues.length) {
-      throw new TypeAssertionError(typeName, value, { valueName, issues });
+      throw new TypeAssertionError(assertedTypeName, value, {
+        valueName,
+        issues,
+      });
     }
 
     return value;
   };
 
-  asserter.typeName = typeName;
+  asserter.assertedTypeName = assertedTypeName;
 
   asserter.disallowNaN = disallowNaN;
   asserter.min = min;

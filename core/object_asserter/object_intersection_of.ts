@@ -50,9 +50,10 @@ export function objectIntersectionOf<
 >(
   asserterA: ObjectAsserter<TypeA>,
   asserterB: ObjectAsserter<TypeB>,
-  typeName?: string,
+  assertedTypeName?: string,
 ): ObjectAsserter<TypeA & TypeB> {
-  typeName ||= `${asserterA.typeName} & ${asserterB.typeName}`;
+  assertedTypeName ||=
+    `${asserterA.assertedTypeName} & ${asserterB.assertedTypeName}`;
 
   const newPropertyAsserters: Record<string, Asserter<unknown>> = {};
 
@@ -64,11 +65,10 @@ export function objectIntersectionOf<
 
     if (propertyAsserterB && propertyAsserterB !== propertyAsserterA) {
       const newPropertyTypeName = [
-        propertyAsserterA.typeName,
-        propertyAsserterB.typeName,
-      ].map((name) => {
-        return isTypeNameOpen(name) ? `(${name})` : name;
-      })
+        propertyAsserterA.assertedTypeName,
+        propertyAsserterB.assertedTypeName,
+      ]
+        .map((name) => isTypeNameOpen(name) ? `(${name})` : name)
         .join(" & ");
 
       newPropertyAsserters[key] = typeAsserter(
@@ -88,7 +88,8 @@ export function objectIntersectionOf<
     }
   }
 
-  return objectAsserter(typeName, newPropertyAsserters) as ObjectAsserter<
-    TypeA & TypeB
-  >;
+  return objectAsserter(
+    assertedTypeName,
+    newPropertyAsserters,
+  ) as ObjectAsserter<TypeA & TypeB>;
 }

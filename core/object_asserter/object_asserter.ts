@@ -16,7 +16,7 @@ export interface ObjectAsserter<Type extends Record<string, unknown>>
 
 /**
  * `objectAsserter` returns an `ObjectAsserter` for the type defined by the
- * provided `typeName` and `propertyAsserters`.
+ * provided `assertedTypeName` and `propertyAsserters`.
  *
  * Example:
  *
@@ -41,16 +41,16 @@ export interface ObjectAsserter<Type extends Record<string, unknown>>
 export function objectAsserter<
   PropertyAsserters extends Record<string, Asserter<unknown>>,
 >(
-  typeName: string,
+  assertedTypeName: string,
   propertyAsserters: PropertyAsserters,
 ): ObjectAsserter<
   { [Key in keyof PropertyAsserters]: ReturnType<PropertyAsserters[Key]> }
 > {
-  typeName ||= "UnnamedObject";
+  assertedTypeName ||= "UnnamedObject";
 
   const asserter = (value: unknown, valueName?: string) => {
     if (typeof value !== "object" || value === null) {
-      throw new TypeAssertionError(typeName, value, { valueName });
+      throw new TypeAssertionError(assertedTypeName, value, { valueName });
     }
 
     const issues: TypeAssertionError[] = [];
@@ -65,13 +65,16 @@ export function objectAsserter<
     }
 
     if (issues.length) {
-      throw new TypeAssertionError(typeName, value, { valueName, issues });
+      throw new TypeAssertionError(assertedTypeName, value, {
+        valueName,
+        issues,
+      });
     }
 
     return value;
   };
 
-  asserter.typeName = typeName;
+  asserter.assertedTypeName = assertedTypeName;
   asserter.propertyAsserters = propertyAsserters as Required<PropertyAsserters>;
 
   return asserter as ObjectAsserter<

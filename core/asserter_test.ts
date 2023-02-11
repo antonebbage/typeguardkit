@@ -20,16 +20,16 @@ describe("typeAsserter", () => {
       typeof value === "object" && !Array.isArray(value) && value !== null,
   );
 
-  it("should return a `Function` with the provided `typeName` or the correct default if empty", () => {
+  it("should return a `Function` with the provided `assertedTypeName` or the correct default if empty", () => {
     const testCases = [
-      { asserter: _string, typeName: "string" },
-      { asserter: _object, typeName: "Record<string, unknown>" },
-      { asserter: typeAsserter("", isString), typeName: "UnnamedType" },
+      { asserter: _string, assertedTypeName: "string" },
+      { asserter: _object, assertedTypeName: "Record<string, unknown>" },
+      { asserter: typeAsserter("", isString), assertedTypeName: "UnnamedType" },
     ];
 
-    for (const { asserter, typeName } of testCases) {
+    for (const { asserter, assertedTypeName } of testCases) {
       assertInstanceOf(asserter, Function);
-      assertStrictEquals(asserter.typeName, typeName);
+      assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
     }
   });
 
@@ -50,7 +50,9 @@ describe("typeAsserter", () => {
     assertThrows(
       () => _string(undefined, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_string.typeName, undefined, { valueName: "name" })
+      new TypeAssertionError(_string.assertedTypeName, undefined, {
+        valueName: "name",
+      })
         .message,
     );
 
@@ -59,7 +61,8 @@ describe("typeAsserter", () => {
     assertThrows(
       () => unnamedAsserter(undefined),
       TypeAssertionError,
-      new TypeAssertionError(unnamedAsserter.typeName, undefined).message,
+      new TypeAssertionError(unnamedAsserter.assertedTypeName, undefined)
+        .message,
     );
 
     const testCases = [
@@ -72,7 +75,7 @@ describe("typeAsserter", () => {
         assertThrows(
           () => asserter(value),
           TypeAssertionError,
-          new TypeAssertionError(asserter.typeName, value).message,
+          new TypeAssertionError(asserter.assertedTypeName, value).message,
         );
       }
     }

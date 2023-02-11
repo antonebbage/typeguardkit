@@ -16,12 +16,13 @@ import { Asserter, typeAsserter } from "./asserter.ts";
  */
 export function unionOf<Asserters extends Array<Asserter<unknown>>>(
   asserters: Asserters,
-  typeName?: string,
+  assertedTypeName?: string,
 ): Asserter<ReturnType<Asserters[number]>> {
-  typeName ||= asserters.map((asserter) => asserter.typeName).join(" | ");
+  assertedTypeName ||= asserters.map((asserter) => asserter.assertedTypeName)
+    .join(" | ");
 
   return typeAsserter(
-    typeName,
+    assertedTypeName,
     (value): value is ReturnType<Asserters[number]> => {
       for (const asserter of asserters) {
         try {

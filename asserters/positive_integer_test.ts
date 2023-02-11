@@ -4,8 +4,8 @@ import { TypeAssertionError } from "../mod.ts";
 import { _PositiveInteger } from "./positive_integer.ts";
 
 describe("_PositiveInteger", () => {
-  it('should have a `typeName` of `"PositiveInteger"`', () => {
-    assertStrictEquals(_PositiveInteger.typeName, "PositiveInteger");
+  it('should have an `assertedTypeName` of `"PositiveInteger"`', () => {
+    assertStrictEquals(_PositiveInteger.assertedTypeName, "PositiveInteger");
   });
 
   it("should return `value` if it is a positive integer `number`", () => {
@@ -20,7 +20,7 @@ describe("_PositiveInteger", () => {
     assertThrows(
       () => _PositiveInteger(undefined, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_PositiveInteger.typeName, undefined, {
+      new TypeAssertionError(_PositiveInteger.assertedTypeName, undefined, {
         valueName: "name",
       })
         .message,
@@ -29,7 +29,8 @@ describe("_PositiveInteger", () => {
     assertThrows(
       () => _PositiveInteger(undefined),
       TypeAssertionError,
-      new TypeAssertionError(_PositiveInteger.typeName, undefined).message,
+      new TypeAssertionError(_PositiveInteger.assertedTypeName, undefined)
+        .message,
     );
 
     const testCases = [
@@ -53,7 +54,8 @@ describe("_PositiveInteger", () => {
       assertThrows(
         () => _PositiveInteger(value),
         TypeAssertionError,
-        new TypeAssertionError(_PositiveInteger.typeName, value).message,
+        new TypeAssertionError(_PositiveInteger.assertedTypeName, value)
+          .message,
       );
     }
   });

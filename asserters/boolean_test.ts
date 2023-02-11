@@ -4,8 +4,8 @@ import { TypeAssertionError } from "../mod.ts";
 import { _boolean } from "./boolean.ts";
 
 describe("_boolean", () => {
-  it('should have a `typeName` of `"boolean"`', () => {
-    assertStrictEquals(_boolean.typeName, "boolean");
+  it('should have an `assertedTypeName` of `"boolean"`', () => {
+    assertStrictEquals(_boolean.assertedTypeName, "boolean");
   });
 
   it("should return `value` if of type `boolean`", () => {
@@ -20,7 +20,7 @@ describe("_boolean", () => {
     assertThrows(
       () => _boolean(undefined, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_boolean.typeName, undefined, {
+      new TypeAssertionError(_boolean.assertedTypeName, undefined, {
         valueName: "name",
       })
         .message,
@@ -29,7 +29,7 @@ describe("_boolean", () => {
     assertThrows(
       () => _boolean(undefined),
       TypeAssertionError,
-      new TypeAssertionError(_boolean.typeName, undefined).message,
+      new TypeAssertionError(_boolean.assertedTypeName, undefined).message,
     );
 
     const testCases = [undefined, null, 0, "", [], {}];
@@ -38,7 +38,7 @@ describe("_boolean", () => {
       assertThrows(
         () => _boolean(value),
         TypeAssertionError,
-        new TypeAssertionError(_boolean.typeName, value).message,
+        new TypeAssertionError(_boolean.assertedTypeName, value).message,
       );
     }
   });

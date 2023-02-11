@@ -16,7 +16,9 @@ describe("assertIs", () => {
     assertThrows(
       () => assertIs(_string, undefined, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_string.typeName, undefined, { valueName: "name" })
+      new TypeAssertionError(_string.assertedTypeName, undefined, {
+        valueName: "name",
+      })
         .message,
     );
 
@@ -26,7 +28,7 @@ describe("assertIs", () => {
       assertThrows(
         () => assertIs(_string, value),
         TypeAssertionError,
-        new TypeAssertionError(_string.typeName, value).message,
+        new TypeAssertionError(_string.assertedTypeName, value).message,
       );
     }
   });

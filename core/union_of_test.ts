@@ -18,30 +18,30 @@ describe("unionOf", () => {
 
   const _stringOrNumberOrObject = unionOf(memberAsserters);
 
-  it("should return a `Function` with the provided `typeName` or the correct default if `undefined` or empty", () => {
+  it("should return a `Function` with the provided `assertedTypeName` or the correct default if `undefined` or empty", () => {
     const defaultTypeName =
-      `${_string.typeName} | ${_number.typeName} | ${_object.typeName}`;
+      `${_string.assertedTypeName} | ${_number.assertedTypeName} | ${_object.assertedTypeName}`;
 
     const testCases = [
       {
         asserter: unionOf([_string, _number], "StringOrNumber"),
-        typeName: "StringOrNumber",
+        assertedTypeName: "StringOrNumber",
       },
 
       {
         asserter: _stringOrNumberOrObject,
-        typeName: defaultTypeName,
+        assertedTypeName: defaultTypeName,
       },
 
       {
         asserter: unionOf(memberAsserters, ""),
-        typeName: defaultTypeName,
+        assertedTypeName: defaultTypeName,
       },
     ];
 
-    for (const { asserter, typeName } of testCases) {
+    for (const { asserter, assertedTypeName } of testCases) {
       assertInstanceOf(asserter, Function);
-      assertStrictEquals(asserter.typeName, typeName);
+      assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
     }
   });
 
@@ -57,9 +57,11 @@ describe("unionOf", () => {
     assertThrows(
       () => _stringOrNumberOrObject(undefined, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_stringOrNumberOrObject.typeName, undefined, {
-        valueName: "name",
-      })
+      new TypeAssertionError(
+        _stringOrNumberOrObject.assertedTypeName,
+        undefined,
+        { valueName: "name" },
+      )
         .message,
     );
 
@@ -68,7 +70,7 @@ describe("unionOf", () => {
     assertThrows(
       () => namedAsserter(undefined),
       TypeAssertionError,
-      new TypeAssertionError(namedAsserter.typeName, undefined).message,
+      new TypeAssertionError(namedAsserter.assertedTypeName, undefined).message,
     );
 
     const testCases = [undefined, null, false, []];
@@ -77,7 +79,8 @@ describe("unionOf", () => {
       assertThrows(
         () => _stringOrNumberOrObject(value),
         TypeAssertionError,
-        new TypeAssertionError(_stringOrNumberOrObject.typeName, value).message,
+        new TypeAssertionError(_stringOrNumberOrObject.assertedTypeName, value)
+          .message,
       );
     }
   });

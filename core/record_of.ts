@@ -22,7 +22,7 @@ export function recordOf<Key extends string, Value>(
   recordTypeName?: string,
 ): Asserter<Record<Key, Value>> {
   const definedRecordTypeName = recordTypeName ||
-    `Record<${keyAsserter.typeName}, ${valueAsserter.typeName}>`;
+    `Record<${keyAsserter.assertedTypeName}, ${valueAsserter.assertedTypeName}>`;
 
   const recordAsserter = (value: unknown, valueName?: string) => {
     if (typeof value !== "object" || Array.isArray(value) || value === null) {
@@ -63,7 +63,7 @@ export function recordOf<Key extends string, Value>(
     return value;
   };
 
-  recordAsserter.typeName = definedRecordTypeName;
+  recordAsserter.assertedTypeName = definedRecordTypeName;
 
   return recordAsserter as Asserter<Record<Key, Value>>;
 }

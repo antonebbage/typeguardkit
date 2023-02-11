@@ -24,29 +24,29 @@ describe("pickFrom", () => {
 
   const _PickedObjectType = pickFrom(_ObjectType, keys);
 
-  it("should return a `Function` with the provided `typeName` or the correct default if `undefined` or empty", () => {
-    const defaultTypeName = `Pick<${_ObjectType.typeName}, "b" | "c">`;
+  it("should return a `Function` with the provided `assertedTypeName` or the correct default if `undefined` or empty", () => {
+    const defaultTypeName = `Pick<${_ObjectType.assertedTypeName}, "b" | "c">`;
 
     const testCases = [
       {
         asserter: pickFrom(_ObjectType, ["a"], "PickedObjectType"),
-        typeName: "PickedObjectType",
+        assertedTypeName: "PickedObjectType",
       },
 
       {
         asserter: _PickedObjectType,
-        typeName: defaultTypeName,
+        assertedTypeName: defaultTypeName,
       },
 
       {
         asserter: pickFrom(_ObjectType, keys, ""),
-        typeName: defaultTypeName,
+        assertedTypeName: defaultTypeName,
       },
     ];
 
-    for (const { asserter, typeName } of testCases) {
+    for (const { asserter, assertedTypeName } of testCases) {
       assertInstanceOf(asserter, Function);
-      assertStrictEquals(asserter.typeName, typeName);
+      assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
     }
   });
 
@@ -70,18 +70,18 @@ describe("pickFrom", () => {
     assertThrows(
       () => _PickedObjectType(object, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_PickedObjectType.typeName, object, {
+      new TypeAssertionError(_PickedObjectType.assertedTypeName, object, {
         valueName: "name",
 
         issues: [
           new TypeAssertionError(
-            _PickedObjectType.propertyAsserters.b.typeName,
+            _PickedObjectType.propertyAsserters.b.assertedTypeName,
             object.b,
             { valueName: "b" },
           ),
 
           new TypeAssertionError(
-            _PickedObjectType.propertyAsserters.c.typeName,
+            _PickedObjectType.propertyAsserters.c.assertedTypeName,
             object.c,
             { valueName: "c" },
           ),
@@ -95,16 +95,16 @@ describe("pickFrom", () => {
     assertThrows(
       () => namedAsserter(object),
       TypeAssertionError,
-      new TypeAssertionError(namedAsserter.typeName, object, {
+      new TypeAssertionError(namedAsserter.assertedTypeName, object, {
         issues: [
           new TypeAssertionError(
-            _PickedObjectType.propertyAsserters.b.typeName,
+            _PickedObjectType.propertyAsserters.b.assertedTypeName,
             object.b,
             { valueName: "b" },
           ),
 
           new TypeAssertionError(
-            _PickedObjectType.propertyAsserters.c.typeName,
+            _PickedObjectType.propertyAsserters.c.assertedTypeName,
             object.c,
             { valueName: "c" },
           ),
@@ -127,7 +127,8 @@ describe("pickFrom", () => {
       assertThrows(
         () => _PickedObjectType(value),
         TypeAssertionError,
-        new TypeAssertionError(_PickedObjectType.typeName, value).message,
+        new TypeAssertionError(_PickedObjectType.assertedTypeName, value)
+          .message,
       );
     }
   });

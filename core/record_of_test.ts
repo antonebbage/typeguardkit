@@ -22,32 +22,38 @@ describe("recordOf", () => {
   const _RecordOfStringByLiteralUnion = recordOf(_LiteralUnion, _string);
   const _RecordOfNumberByString = recordOf(_string, _number);
 
-  it("should return a `Function` with the provided `typeName` or the correct default if `undefined` or empty", () => {
+  it("should return a `Function` with the provided `assertedTypeName` or the correct default if `undefined` or empty", () => {
     const testCases = [
       {
         asserter: recordOf(_string, _string, "RecordOfStringByString"),
-        typeName: "RecordOfStringByString",
+        assertedTypeName: "RecordOfStringByString",
       },
 
       {
         asserter: _RecordOfStringByString,
-        typeName: `Record<${_string.typeName}, ${_string.typeName}>`,
+
+        assertedTypeName:
+          `Record<${_string.assertedTypeName}, ${_string.assertedTypeName}>`,
       },
 
       {
         asserter: _RecordOfStringByLiteralUnion,
-        typeName: `Record<${_LiteralUnion.typeName}, ${_string.typeName}>`,
+
+        assertedTypeName:
+          `Record<${_LiteralUnion.assertedTypeName}, ${_string.assertedTypeName}>`,
       },
 
       {
         asserter: _RecordOfNumberByString,
-        typeName: `Record<${_string.typeName}, ${_number.typeName}>`,
+
+        assertedTypeName:
+          `Record<${_string.assertedTypeName}, ${_number.assertedTypeName}>`,
       },
     ];
 
-    for (const { asserter, typeName } of testCases) {
+    for (const { asserter, assertedTypeName } of testCases) {
       assertInstanceOf(asserter, Function);
-      assertStrictEquals(asserter.typeName, typeName);
+      assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
     }
   });
 
@@ -80,22 +86,23 @@ describe("recordOf", () => {
     assertThrows(
       () => _RecordOfStringByString({ a: undefined, b: undefined }, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_RecordOfStringByString.typeName, {
-        a: undefined,
-        b: undefined,
-      }, {
-        valueName: "name",
+      new TypeAssertionError(
+        _RecordOfStringByString.assertedTypeName,
+        { a: undefined, b: undefined },
+        {
+          valueName: "name",
 
-        issues: [
-          new TypeAssertionError(_string.typeName, undefined, {
-            valueName: "a",
-          }),
+          issues: [
+            new TypeAssertionError(_string.assertedTypeName, undefined, {
+              valueName: "a",
+            }),
 
-          new TypeAssertionError(_string.typeName, undefined, {
-            valueName: "b",
-          }),
-        ],
-      })
+            new TypeAssertionError(_string.assertedTypeName, undefined, {
+              valueName: "b",
+            }),
+          ],
+        },
+      )
         .message,
     );
 
@@ -104,20 +111,21 @@ describe("recordOf", () => {
     assertThrows(
       () => namedAsserter({ a: undefined, b: undefined }),
       TypeAssertionError,
-      new TypeAssertionError(namedAsserter.typeName, {
-        a: undefined,
-        b: undefined,
-      }, {
-        issues: [
-          new TypeAssertionError(_string.typeName, undefined, {
-            valueName: "a",
-          }),
+      new TypeAssertionError(
+        namedAsserter.assertedTypeName,
+        { a: undefined, b: undefined },
+        {
+          issues: [
+            new TypeAssertionError(_string.assertedTypeName, undefined, {
+              valueName: "a",
+            }),
 
-          new TypeAssertionError(_string.typeName, undefined, {
-            valueName: "b",
-          }),
-        ],
-      })
+            new TypeAssertionError(_string.assertedTypeName, undefined, {
+              valueName: "b",
+            }),
+          ],
+        },
+      )
         .message,
     );
 
@@ -178,7 +186,7 @@ describe("recordOf", () => {
         assertThrows(
           () => asserter(value),
           TypeAssertionError,
-          new TypeAssertionError(asserter.typeName, value).message,
+          new TypeAssertionError(asserter.assertedTypeName, value).message,
         );
       }
     }

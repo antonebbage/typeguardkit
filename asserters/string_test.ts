@@ -4,8 +4,8 @@ import { TypeAssertionError } from "../mod.ts";
 import { _string } from "./string.ts";
 
 describe("_string", () => {
-  it('should have a `typeName` of `"string"`', () => {
-    assertStrictEquals(_string.typeName, "string");
+  it('should have an `assertedTypeName` of `"string"`', () => {
+    assertStrictEquals(_string.assertedTypeName, "string");
   });
 
   it("should return `value` if of type `string`", () => {
@@ -20,14 +20,16 @@ describe("_string", () => {
     assertThrows(
       () => _string(undefined, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_string.typeName, undefined, { valueName: "name" })
+      new TypeAssertionError(_string.assertedTypeName, undefined, {
+        valueName: "name",
+      })
         .message,
     );
 
     assertThrows(
       () => _string(undefined),
       TypeAssertionError,
-      new TypeAssertionError(_string.typeName, undefined).message,
+      new TypeAssertionError(_string.assertedTypeName, undefined).message,
     );
 
     const testCases = [undefined, null, false, 0, [], {}];
@@ -36,7 +38,7 @@ describe("_string", () => {
       assertThrows(
         () => _string(value),
         TypeAssertionError,
-        new TypeAssertionError(_string.typeName, value).message,
+        new TypeAssertionError(_string.assertedTypeName, value).message,
       );
     }
   });

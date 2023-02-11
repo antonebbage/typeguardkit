@@ -22,29 +22,29 @@ describe("partialFrom", () => {
 
   const _PartialObjectType = partialFrom(_ObjectType);
 
-  it("should return a `Function` with the provided `typeName` or the correct default if `undefined` or empty", () => {
-    const defaultTypeName = `Partial<${_ObjectType.typeName}>`;
+  it("should return a `Function` with the provided `assertedTypeName` or the correct default if `undefined` or empty", () => {
+    const defaultTypeName = `Partial<${_ObjectType.assertedTypeName}>`;
 
     const testCases = [
       {
         asserter: partialFrom(_ObjectType, "PartialObjectType"),
-        typeName: "PartialObjectType",
+        assertedTypeName: "PartialObjectType",
       },
 
       {
         asserter: _PartialObjectType,
-        typeName: defaultTypeName,
+        assertedTypeName: defaultTypeName,
       },
 
       {
         asserter: partialFrom(_ObjectType, ""),
-        typeName: defaultTypeName,
+        assertedTypeName: defaultTypeName,
       },
     ];
 
-    for (const { asserter, typeName } of testCases) {
+    for (const { asserter, assertedTypeName } of testCases) {
       assertInstanceOf(asserter, Function);
-      assertStrictEquals(asserter.typeName, typeName);
+      assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
     }
   });
 
@@ -70,18 +70,18 @@ describe("partialFrom", () => {
     assertThrows(
       () => _PartialObjectType(object, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_PartialObjectType.typeName, object, {
+      new TypeAssertionError(_PartialObjectType.assertedTypeName, object, {
         valueName: "name",
 
         issues: [
           new TypeAssertionError(
-            _PartialObjectType.propertyAsserters.a.typeName,
+            _PartialObjectType.propertyAsserters.a.assertedTypeName,
             object.a,
             { valueName: "a" },
           ),
 
           new TypeAssertionError(
-            _PartialObjectType.propertyAsserters.b.typeName,
+            _PartialObjectType.propertyAsserters.b.assertedTypeName,
             object.b,
             { valueName: "b" },
           ),
@@ -95,16 +95,16 @@ describe("partialFrom", () => {
     assertThrows(
       () => namedAsserter(object),
       TypeAssertionError,
-      new TypeAssertionError(namedAsserter.typeName, object, {
+      new TypeAssertionError(namedAsserter.assertedTypeName, object, {
         issues: [
           new TypeAssertionError(
-            _PartialObjectType.propertyAsserters.a.typeName,
+            _PartialObjectType.propertyAsserters.a.assertedTypeName,
             object.a,
             { valueName: "a" },
           ),
 
           new TypeAssertionError(
-            _PartialObjectType.propertyAsserters.b.typeName,
+            _PartialObjectType.propertyAsserters.b.assertedTypeName,
             object.b,
             { valueName: "b" },
           ),
@@ -125,7 +125,8 @@ describe("partialFrom", () => {
       assertThrows(
         () => _PartialObjectType(value),
         TypeAssertionError,
-        new TypeAssertionError(_PartialObjectType.typeName, value).message,
+        new TypeAssertionError(_PartialObjectType.assertedTypeName, value)
+          .message,
       );
     }
   });

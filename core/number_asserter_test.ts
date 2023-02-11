@@ -81,15 +81,15 @@ describe("numberAsserter", () => {
 
   const unnamedAsserter = numberAsserter("", {});
 
-  it("should return a `Function` with the provided `typeName` or the correct default if empty", () => {
+  it("should return a `Function` with the provided `assertedTypeName` or the correct default if empty", () => {
     const testCases = [
-      { asserter: _AnyNumber, typeName: anyNumberTypeName },
-      { asserter: unnamedAsserter, typeName: "UnnamedNumber" },
+      { asserter: _AnyNumber, assertedTypeName: anyNumberTypeName },
+      { asserter: unnamedAsserter, assertedTypeName: "UnnamedNumber" },
     ];
 
-    for (const { asserter, typeName } of testCases) {
+    for (const { asserter, assertedTypeName } of testCases) {
       assertInstanceOf(asserter, Function);
-      assertStrictEquals(asserter.typeName, typeName);
+      assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
     }
   });
 
@@ -184,7 +184,7 @@ describe("numberAsserter", () => {
     assertThrows(
       () => _AnyNumber(undefined, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_AnyNumber.typeName, undefined, {
+      new TypeAssertionError(_AnyNumber.assertedTypeName, undefined, {
         valueName: "name",
         issues: [typeIssue],
       })
@@ -194,7 +194,7 @@ describe("numberAsserter", () => {
     assertThrows(
       () => unnamedAsserter(undefined),
       TypeAssertionError,
-      new TypeAssertionError(unnamedAsserter.typeName, undefined, {
+      new TypeAssertionError(unnamedAsserter.assertedTypeName, undefined, {
         issues: [typeIssue],
       })
         .message,
@@ -322,7 +322,8 @@ describe("numberAsserter", () => {
         assertThrows(
           () => asserter(value),
           TypeAssertionError,
-          new TypeAssertionError(asserter.typeName, value, { issues }).message,
+          new TypeAssertionError(asserter.assertedTypeName, value, { issues })
+            .message,
         );
       }
     }

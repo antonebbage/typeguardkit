@@ -35,9 +35,9 @@ import { ObjectAsserter, objectAsserter } from "./object_asserter.ts";
  */
 export function partialFrom<Type extends Record<string, unknown>>(
   asserter: ObjectAsserter<Type>,
-  typeName?: string,
+  assertedTypeName?: string,
 ): ObjectAsserter<Partial<Type>> {
-  typeName ||= `Partial<${asserter.typeName}>`;
+  assertedTypeName ||= `Partial<${asserter.assertedTypeName}>`;
 
   const newPropertyAsserters: Record<string, Asserter<unknown>> = {};
 
@@ -48,7 +48,8 @@ export function partialFrom<Type extends Record<string, unknown>>(
     ]);
   }
 
-  return objectAsserter(typeName, newPropertyAsserters) as ObjectAsserter<
-    Partial<Type>
-  >;
+  return objectAsserter(
+    assertedTypeName,
+    newPropertyAsserters,
+  ) as ObjectAsserter<Partial<Type>>;
 }

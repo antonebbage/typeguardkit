@@ -20,7 +20,7 @@ export function arrayOf<Type>(
   arrayTypeName?: string,
 ): Asserter<Array<Type>> {
   const definedArrayTypeName = arrayTypeName ||
-    `Array<${elementAsserter.typeName}>`;
+    `Array<${elementAsserter.assertedTypeName}>`;
 
   const arrayAsserter = (value: unknown, valueName?: string) => {
     if (!Array.isArray(value)) {
@@ -47,7 +47,7 @@ export function arrayOf<Type>(
     return value;
   };
 
-  arrayAsserter.typeName = definedArrayTypeName;
+  arrayAsserter.assertedTypeName = definedArrayTypeName;
 
   return arrayAsserter;
 }

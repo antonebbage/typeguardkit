@@ -41,17 +41,21 @@ describe("enumAsserter", () => {
     HeterogeneousEnum,
   );
 
-  it("should return a `Function` with the provided `typeName` or the correct default if empty", () => {
+  it("should return a `Function` with the provided `assertedTypeName` or the correct default if empty", () => {
     const testCases = [
-      { asserter: _NumericEnum, typeName: numericEnumName },
-      { asserter: _StringEnum, typeName: stringEnumName },
-      { asserter: _HeterogeneousEnum, typeName: heterogeneousEnumName },
-      { asserter: enumAsserter("", NumericEnum), typeName: "UnnamedEnum" },
+      { asserter: _NumericEnum, assertedTypeName: numericEnumName },
+      { asserter: _StringEnum, assertedTypeName: stringEnumName },
+      { asserter: _HeterogeneousEnum, assertedTypeName: heterogeneousEnumName },
+
+      {
+        asserter: enumAsserter("", NumericEnum),
+        assertedTypeName: "UnnamedEnum",
+      },
     ];
 
-    for (const { asserter, typeName } of testCases) {
+    for (const { asserter, assertedTypeName } of testCases) {
       assertInstanceOf(asserter, Function);
-      assertStrictEquals(asserter.typeName, typeName);
+      assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
     }
   });
 
@@ -84,7 +88,7 @@ describe("enumAsserter", () => {
     assertThrows(
       () => _NumericEnum(undefined, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_NumericEnum.typeName, undefined, {
+      new TypeAssertionError(_NumericEnum.assertedTypeName, undefined, {
         valueName: "name",
       })
         .message,
@@ -95,7 +99,8 @@ describe("enumAsserter", () => {
     assertThrows(
       () => unnamedAsserter(undefined),
       TypeAssertionError,
-      new TypeAssertionError(unnamedAsserter.typeName, undefined).message,
+      new TypeAssertionError(unnamedAsserter.assertedTypeName, undefined)
+        .message,
     );
 
     const testCases = [
@@ -113,7 +118,7 @@ describe("enumAsserter", () => {
         assertThrows(
           () => asserter(value),
           TypeAssertionError,
-          new TypeAssertionError(asserter.typeName, value).message,
+          new TypeAssertionError(asserter.assertedTypeName, value).message,
         );
       }
     }

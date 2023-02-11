@@ -9,7 +9,7 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  */
 export interface Asserter<Type> {
   (value: unknown, valueName?: string): Type;
-  readonly typeName: string;
+  readonly assertedTypeName: string;
 }
 
 /**
@@ -28,19 +28,19 @@ export interface Asserter<Type> {
  * ```
  */
 export function typeAsserter<Type>(
-  typeName: string,
+  assertedTypeName: string,
   typeGuard: (value: unknown) => value is Type,
 ): Asserter<Type> {
-  typeName ||= "UnnamedType";
+  assertedTypeName ||= "UnnamedType";
 
   const asserter = (value: unknown, valueName?: string) => {
     if (typeGuard(value)) {
       return value;
     }
-    throw new TypeAssertionError(typeName, value, { valueName });
+    throw new TypeAssertionError(assertedTypeName, value, { valueName });
   };
 
-  asserter.typeName = typeName;
+  asserter.assertedTypeName = assertedTypeName;
 
   return asserter;
 }

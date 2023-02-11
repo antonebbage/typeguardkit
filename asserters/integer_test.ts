@@ -4,8 +4,8 @@ import { TypeAssertionError } from "../mod.ts";
 import { _Integer } from "./integer.ts";
 
 describe("_Integer", () => {
-  it('should have a `typeName` of `"Integer"`', () => {
-    assertStrictEquals(_Integer.typeName, "Integer");
+  it('should have an `assertedTypeName` of `"Integer"`', () => {
+    assertStrictEquals(_Integer.assertedTypeName, "Integer");
   });
 
   it("should return `value` if it is an integer `number`", () => {
@@ -20,7 +20,7 @@ describe("_Integer", () => {
     assertThrows(
       () => _Integer(undefined, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_Integer.typeName, undefined, {
+      new TypeAssertionError(_Integer.assertedTypeName, undefined, {
         valueName: "name",
       })
         .message,
@@ -29,7 +29,7 @@ describe("_Integer", () => {
     assertThrows(
       () => _Integer(undefined),
       TypeAssertionError,
-      new TypeAssertionError(_Integer.typeName, undefined).message,
+      new TypeAssertionError(_Integer.assertedTypeName, undefined).message,
     );
 
     const testCases = [
@@ -51,7 +51,7 @@ describe("_Integer", () => {
       assertThrows(
         () => _Integer(value),
         TypeAssertionError,
-        new TypeAssertionError(_Integer.typeName, value).message,
+        new TypeAssertionError(_Integer.assertedTypeName, value).message,
       );
     }
   });

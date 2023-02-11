@@ -17,19 +17,19 @@ describe("literalUnionAsserter", () => {
     literalUnionValues,
   );
 
-  it("should return a `Function` with the provided `typeName` or the correct default if empty", () => {
+  it("should return a `Function` with the provided `assertedTypeName` or the correct default if empty", () => {
     const testCases = [
-      { asserter: _LiteralUnion, typeName: literalUnionName },
+      { asserter: _LiteralUnion, assertedTypeName: literalUnionName },
 
       {
         asserter: literalUnionAsserter("", [0, 1] as const),
-        typeName: "UnnamedLiteralUnion",
+        assertedTypeName: "UnnamedLiteralUnion",
       },
     ];
 
-    for (const { asserter, typeName } of testCases) {
+    for (const { asserter, assertedTypeName } of testCases) {
       assertInstanceOf(asserter, Function);
-      assertStrictEquals(asserter.typeName, typeName);
+      assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
     }
   });
 
@@ -49,7 +49,7 @@ describe("literalUnionAsserter", () => {
     assertThrows(
       () => _LiteralUnion(undefined, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_LiteralUnion.typeName, undefined, {
+      new TypeAssertionError(_LiteralUnion.assertedTypeName, undefined, {
         valueName: "name",
       })
         .message,
@@ -60,7 +60,8 @@ describe("literalUnionAsserter", () => {
     assertThrows(
       () => unnamedAsserter(undefined),
       TypeAssertionError,
-      new TypeAssertionError(unnamedAsserter.typeName, undefined).message,
+      new TypeAssertionError(unnamedAsserter.assertedTypeName, undefined)
+        .message,
     );
 
     const testCases = [undefined, null, false, [], {}, 2, "b"];
@@ -69,7 +70,7 @@ describe("literalUnionAsserter", () => {
       assertThrows(
         () => _LiteralUnion(value),
         TypeAssertionError,
-        new TypeAssertionError(_LiteralUnion.typeName, value).message,
+        new TypeAssertionError(_LiteralUnion.assertedTypeName, value).message,
       );
     }
   });

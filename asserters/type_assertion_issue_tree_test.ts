@@ -4,9 +4,9 @@ import { TypeAssertionError, TypeAssertionIssueTree } from "../mod.ts";
 import { _TypeAssertionIssueTree } from "./type_assertion_issue_tree.ts";
 
 describe("_TypeAssertionIssueTree", () => {
-  it('should have a `typeName` of `"TypeAssertionIssueTree"`', () => {
+  it('should have an `assertedTypeName` of `"TypeAssertionIssueTree"`', () => {
     assertStrictEquals(
-      _TypeAssertionIssueTree.typeName,
+      _TypeAssertionIssueTree.assertedTypeName,
       "TypeAssertionIssueTree",
     );
   });
@@ -110,16 +110,21 @@ describe("_TypeAssertionIssueTree", () => {
     assertThrows(
       () => _TypeAssertionIssueTree(undefined, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_TypeAssertionIssueTree.typeName, undefined, {
-        valueName: "name",
-      })
+      new TypeAssertionError(
+        _TypeAssertionIssueTree.assertedTypeName,
+        undefined,
+        { valueName: "name" },
+      )
         .message,
     );
 
     assertThrows(
       () => _TypeAssertionIssueTree(undefined),
       TypeAssertionError,
-      new TypeAssertionError(_TypeAssertionIssueTree.typeName, undefined)
+      new TypeAssertionError(
+        _TypeAssertionIssueTree.assertedTypeName,
+        undefined,
+      )
         .message,
     );
 
@@ -353,7 +358,8 @@ describe("_TypeAssertionIssueTree", () => {
       assertThrows(
         () => _TypeAssertionIssueTree(value),
         TypeAssertionError,
-        new TypeAssertionError(_TypeAssertionIssueTree.typeName, value).message,
+        new TypeAssertionError(_TypeAssertionIssueTree.assertedTypeName, value)
+          .message,
       );
     }
   });

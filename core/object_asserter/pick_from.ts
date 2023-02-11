@@ -44,9 +44,9 @@ export function pickFrom<
 >(
   asserter: ObjectAsserter<Type>,
   keys: Keys,
-  typeName?: string,
+  assertedTypeName?: string,
 ): ObjectAsserter<Pick<Type, Keys[number]>> {
-  typeName ||= `Pick<${asserter.typeName}, ${
+  assertedTypeName ||= `Pick<${asserter.assertedTypeName}, ${
     keys.map((key) => `"${String(key)}"`).join(" | ")
   }>`;
 
@@ -56,7 +56,8 @@ export function pickFrom<
     newPropertyAsserters[key] = asserter.propertyAsserters[key];
   }
 
-  return objectAsserter(typeName, newPropertyAsserters) as ObjectAsserter<
-    Pick<Type, Keys[number]>
-  >;
+  return objectAsserter(
+    assertedTypeName,
+    newPropertyAsserters,
+  ) as ObjectAsserter<Pick<Type, Keys[number]>>;
 }

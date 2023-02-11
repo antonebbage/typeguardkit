@@ -15,15 +15,15 @@ describe("objectAsserter", () => {
     numberValue: _number,
   });
 
-  it("should return a `Function` with the provided `typeName` or the correct default if empty", () => {
+  it("should return a `Function` with the provided `assertedTypeName` or the correct default if empty", () => {
     const testCases = [
-      { asserter: _ObjectType, typeName: objectTypeName },
-      { asserter: objectAsserter("", {}), typeName: "UnnamedObject" },
+      { asserter: _ObjectType, assertedTypeName: objectTypeName },
+      { asserter: objectAsserter("", {}), assertedTypeName: "UnnamedObject" },
     ];
 
-    for (const { asserter, typeName } of testCases) {
+    for (const { asserter, assertedTypeName } of testCases) {
       assertInstanceOf(asserter, Function);
-      assertStrictEquals(asserter.typeName, typeName);
+      assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
     }
   });
 
@@ -45,18 +45,18 @@ describe("objectAsserter", () => {
     assertThrows(
       () => _ObjectType(object, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_ObjectType.typeName, object, {
+      new TypeAssertionError(_ObjectType.assertedTypeName, object, {
         valueName: "name",
 
         issues: [
           new TypeAssertionError(
-            _ObjectType.propertyAsserters.stringValue.typeName,
+            _ObjectType.propertyAsserters.stringValue.assertedTypeName,
             object.stringValue,
             { valueName: "stringValue" },
           ),
 
           new TypeAssertionError(
-            _ObjectType.propertyAsserters.numberValue.typeName,
+            _ObjectType.propertyAsserters.numberValue.assertedTypeName,
             object.numberValue,
             { valueName: "numberValue" },
           ),
@@ -73,16 +73,16 @@ describe("objectAsserter", () => {
     assertThrows(
       () => unnamedAsserter(object),
       TypeAssertionError,
-      new TypeAssertionError(unnamedAsserter.typeName, object, {
+      new TypeAssertionError(unnamedAsserter.assertedTypeName, object, {
         issues: [
           new TypeAssertionError(
-            unnamedAsserter.propertyAsserters.stringValue.typeName,
+            unnamedAsserter.propertyAsserters.stringValue.assertedTypeName,
             object.stringValue,
             { valueName: "stringValue" },
           ),
 
           new TypeAssertionError(
-            unnamedAsserter.propertyAsserters.numberValue.typeName,
+            unnamedAsserter.propertyAsserters.numberValue.assertedTypeName,
             object.numberValue,
             { valueName: "numberValue" },
           ),
@@ -107,7 +107,7 @@ describe("objectAsserter", () => {
       assertThrows(
         () => _ObjectType(value),
         TypeAssertionError,
-        new TypeAssertionError(_ObjectType.typeName, value).message,
+        new TypeAssertionError(_ObjectType.assertedTypeName, value).message,
       );
     }
   });

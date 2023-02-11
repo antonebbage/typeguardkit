@@ -23,13 +23,13 @@ import { Asserter, typeAsserter } from "./asserter.ts";
  */
 export function enumAsserter<
   Enum extends Record<string, number | string>,
->(typeName: string, enumObject: Enum): Asserter<Enum[keyof Enum]> {
+>(assertedTypeName: string, enumObject: Enum): Asserter<Enum[keyof Enum]> {
   const nonNumericStringKeys = Object.keys(enumObject).filter((key) =>
     isNaN(Number(key))
   );
 
   return typeAsserter(
-    typeName || "UnnamedEnum",
+    assertedTypeName || "UnnamedEnum",
     (value): value is Enum[keyof Enum] => {
       for (const key of nonNumericStringKeys) {
         if (enumObject[key] === value) {
