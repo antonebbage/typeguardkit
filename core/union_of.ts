@@ -1,10 +1,11 @@
 // This module is browser-compatible.
 
-import { Asserter, typeAsserter } from "./asserter.ts";
+import { Asserter } from "./asserter.ts";
+import { TypeAsserter, typeAsserter } from "./type_asserter.ts";
 
 /**
- * `unionOf` returns an `Asserter` for the union of the `Type`s of the provided
- * `Asserter`s.
+ * `unionOf` returns a `TypeAsserter` for the union of the `Type`s of the
+ * provided `Asserter`s.
  *
  * Example:
  *
@@ -17,7 +18,7 @@ import { Asserter, typeAsserter } from "./asserter.ts";
 export function unionOf<Asserters extends Array<Asserter<unknown>>>(
   asserters: Asserters,
   assertedTypeName?: string,
-): Asserter<ReturnType<Asserters[number]>> {
+): TypeAsserter<ReturnType<Asserters[number]>> {
   assertedTypeName ||= asserters.map((asserter) => asserter.assertedTypeName)
     .join(" | ");
 

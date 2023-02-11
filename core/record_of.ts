@@ -2,10 +2,11 @@
 
 import { Asserter } from "./asserter.ts";
 import { LiteralUnionAsserter } from "./literal_union_asserter.ts";
+import { TypeAsserter, typeAsserterTypeName } from "./type_asserter.ts";
 import { TypeAssertionError } from "./type_assertion_error.ts";
 
 /**
- * `recordOf` returns an `Asserter<Record<Key, Value>>`, created using the
+ * `recordOf` returns a `TypeAsserter<Record<Key, Value>>`, created using the
  * provided `Asserter<Key>` and `Asserter<Value>`.
  *
  * Example:
@@ -17,10 +18,10 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  * ```
  */
 export function recordOf<Key extends string, Value>(
-  keyAsserter: Asserter<Key>,
+  keyAsserter: TypeAsserter<Key> | LiteralUnionAsserter<readonly Key[]>,
   valueAsserter: Asserter<Value>,
   recordTypeName?: string,
-): Asserter<Record<Key, Value>> {
+): TypeAsserter<Record<Key, Value>> {
   const definedRecordTypeName = recordTypeName ||
     `Record<${keyAsserter.assertedTypeName}, ${valueAsserter.assertedTypeName}>`;
 
@@ -33,8 +34,8 @@ export function recordOf<Key extends string, Value>(
 
     const keys = new Set(Object.keys(value));
 
-    if ((keyAsserter as LiteralUnionAsserter<Key[]>).values) {
-      for (const key of (keyAsserter as LiteralUnionAsserter<Key[]>).values) {
+    if (keyAsserter.asserterTypeName === "LiteralUnionAsserter") {
+      for (const key of keyAsserter.values) {
         keys.add(key);
       }
     }
@@ -63,7 +64,8 @@ export function recordOf<Key extends string, Value>(
     return value;
   };
 
+  recordAsserter.asserterTypeName = typeAsserterTypeName;
   recordAsserter.assertedTypeName = definedRecordTypeName;
 
-  return recordAsserter as Asserter<Record<Key, Value>>;
+  return recordAsserter as TypeAsserter<Record<Key, Value>>;
 }

@@ -5,7 +5,7 @@ import {
 } from "testing/asserts.ts";
 import { describe, it } from "testing/bdd.ts";
 import { TypeAssertionError } from "../mod.ts";
-import { typeAsserter } from "./asserter.ts";
+import { typeAsserter } from "./type_asserter.ts";
 
 describe("typeAsserter", () => {
   function isString(value: unknown): value is string {
@@ -20,6 +20,14 @@ describe("typeAsserter", () => {
       typeof value === "object" && !Array.isArray(value) && value !== null,
   );
 
+  it("should return a `Function`", () => {
+    assertInstanceOf(_string, Function);
+  });
+
+  it("should return a `Function` with the correct `asserterTypeName`", () => {
+    assertStrictEquals(_string.asserterTypeName, "TypeAsserter");
+  });
+
   it("should return a `Function` with the provided `assertedTypeName` or the correct default if empty", () => {
     const testCases = [
       { asserter: _string, assertedTypeName: "string" },
@@ -28,7 +36,6 @@ describe("typeAsserter", () => {
     ];
 
     for (const { asserter, assertedTypeName } of testCases) {
-      assertInstanceOf(asserter, Function);
       assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
     }
   });

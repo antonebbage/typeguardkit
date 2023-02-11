@@ -3,12 +3,16 @@
 import { Asserter } from "./asserter.ts";
 import { TypeAssertionError } from "./type_assertion_error.ts";
 
+export const numberAsserterTypeName = "NumberAsserter" as const;
+
 /**
  * A `NumberAsserter` is an `Asserter<number>` with any additional validation
  * defined by its `NumberAsserterOptions` properties.
  */
 export interface NumberAsserter
   extends Asserter<number>, NumberAsserterOptions {
+  readonly asserterTypeName: typeof numberAsserterTypeName;
+
   readonly disallowNaN: boolean;
 }
 
@@ -165,6 +169,7 @@ export function numberAsserter(
     return value;
   };
 
+  asserter.asserterTypeName = numberAsserterTypeName;
   asserter.assertedTypeName = assertedTypeName;
 
   asserter.disallowNaN = disallowNaN;

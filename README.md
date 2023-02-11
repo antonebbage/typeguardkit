@@ -100,6 +100,8 @@ An `Asserter` is a type assertion function.
 ```ts
 interface Asserter<Type> {
   (value: unknown, valueName?: string): Type;
+
+  readonly asserterTypeName: string;
   readonly assertedTypeName: string;
 }
 ```
@@ -257,7 +259,7 @@ The provided `values` will be set to the `values` property of the returned
 You can use `literalUnionAsserter` like this:
 
 ```ts
-import { Asserter, is, literalUnionAsserter } from "./mod.ts";
+import { is, LiteralUnionAsserter, literalUnionAsserter } from "./mod.ts";
 
 // types/direction.ts
 
@@ -268,7 +270,7 @@ const asserter = literalUnionAsserter(
 
 export type Direction = ReturnType<typeof asserter>;
 
-export const _Direction: Asserter<Direction> = asserter;
+export const _Direction: LiteralUnionAsserter<readonly Direction[]> = asserter;
 
 // elsewhere.ts
 
@@ -288,7 +290,7 @@ function handleDirection(x: Direction) {}
 
 #### `unionOf`
 
-`unionOf` returns an `Asserter` for the union of the `Type`s of the provided
+`unionOf` returns a `TypeAsserter` for the union of the `Type`s of the provided
 `Asserter`s.
 
 You can use `unionOf` like this:
@@ -312,7 +314,7 @@ function handleStringOrNull(x: string | null) {}
 
 #### `arrayOf`
 
-`arrayOf` returns an `Asserter<Array<Type>>`, created using the provided
+`arrayOf` returns a `TypeAsserter<Array<Type>>`, created using the provided
 `Asserter<Type>`.
 
 You can use `arrayOf` like this:
@@ -336,8 +338,8 @@ function handleArrayOfString(x: string[]) {}
 
 #### `recordOf`
 
-`recordOf` returns an `Asserter<Record<Key, Value>>`, created using the provided
-`Asserter<Key>` and `Asserter<Value>`.
+`recordOf` returns a `TypeAsserter<Record<Key, Value>>`, created using the
+provided `Asserter<Key>` and `Asserter<Value>`.
 
 You can use `recordOf` like this:
 
@@ -387,10 +389,12 @@ An `ObjectAsserter` is an `Asserter` for the object type defined by its
 `propertyAsserters`.
 
 ```ts
-import { Asserter } from "./mod.ts";
+import { Asserter, objectAsserterTypeName } from "./mod.ts";
 
 interface ObjectAsserter<Type extends Record<string, unknown>>
   extends Asserter<Type> {
+  readonly asserterTypeName: typeof objectAsserterTypeName;
+
   readonly propertyAsserters: Readonly<
     { [Key in keyof Type]-?: Asserter<Type[Key]> }
   >;

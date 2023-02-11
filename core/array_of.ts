@@ -1,10 +1,11 @@
 // This module is browser-compatible.
 
 import { Asserter } from "./asserter.ts";
+import { TypeAsserter, typeAsserterTypeName } from "./type_asserter.ts";
 import { TypeAssertionError } from "./type_assertion_error.ts";
 
 /**
- * `arrayOf` returns an `Asserter<Array<Type>>`, created using the provided
+ * `arrayOf` returns a `TypeAsserter<Array<Type>>`, created using the provided
  * `Asserter<Type>`.
  *
  * Example:
@@ -18,7 +19,7 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
 export function arrayOf<Type>(
   elementAsserter: Asserter<Type>,
   arrayTypeName?: string,
-): Asserter<Array<Type>> {
+): TypeAsserter<Array<Type>> {
   const definedArrayTypeName = arrayTypeName ||
     `Array<${elementAsserter.assertedTypeName}>`;
 
@@ -47,6 +48,7 @@ export function arrayOf<Type>(
     return value;
   };
 
+  arrayAsserter.asserterTypeName = typeAsserterTypeName;
   arrayAsserter.assertedTypeName = definedArrayTypeName;
 
   return arrayAsserter;

@@ -17,6 +17,14 @@ describe("literalUnionAsserter", () => {
     literalUnionValues,
   );
 
+  it("should return a `Function`", () => {
+    assertInstanceOf(_LiteralUnion, Function);
+  });
+
+  it("should return a `Function` with the correct `asserterTypeName`", () => {
+    assertStrictEquals(_LiteralUnion.asserterTypeName, "LiteralUnionAsserter");
+  });
+
   it("should return a `Function` with the provided `assertedTypeName` or the correct default if empty", () => {
     const testCases = [
       { asserter: _LiteralUnion, assertedTypeName: literalUnionName },
@@ -28,7 +36,6 @@ describe("literalUnionAsserter", () => {
     ];
 
     for (const { asserter, assertedTypeName } of testCases) {
-      assertInstanceOf(asserter, Function);
       assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
     }
   });

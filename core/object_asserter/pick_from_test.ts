@@ -9,6 +9,7 @@ import {
   _number,
   _string,
   objectAsserter,
+  objectAsserterTypeName,
   TypeAssertionError,
 } from "../../mod.ts";
 import { pickFrom } from "./pick_from.ts";
@@ -23,6 +24,17 @@ describe("pickFrom", () => {
   const keys: Array<keyof ReturnType<typeof _ObjectType>> = ["b", "c"];
 
   const _PickedObjectType = pickFrom(_ObjectType, keys);
+
+  it("should return a `Function`", () => {
+    assertInstanceOf(_PickedObjectType, Function);
+  });
+
+  it("should return a `Function` with the correct `asserterTypeName`", () => {
+    assertStrictEquals(
+      _PickedObjectType.asserterTypeName,
+      objectAsserterTypeName,
+    );
+  });
 
   it("should return a `Function` with the provided `assertedTypeName` or the correct default if `undefined` or empty", () => {
     const defaultTypeName = `Pick<${_ObjectType.assertedTypeName}, "b" | "c">`;
@@ -45,7 +57,6 @@ describe("pickFrom", () => {
     ];
 
     for (const { asserter, assertedTypeName } of testCases) {
-      assertInstanceOf(asserter, Function);
       assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
     }
   });

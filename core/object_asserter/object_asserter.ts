@@ -3,12 +3,16 @@
 import { Asserter } from "../asserter.ts";
 import { TypeAssertionError } from "../type_assertion_error.ts";
 
+export const objectAsserterTypeName = "ObjectAsserter" as const;
+
 /**
  * An `ObjectAsserter` is an `Asserter` for the object type defined by its
  * `propertyAsserters`.
  */
 export interface ObjectAsserter<Type extends Record<string, unknown>>
   extends Asserter<Type> {
+  readonly asserterTypeName: typeof objectAsserterTypeName;
+
   readonly propertyAsserters: Readonly<
     { [Key in keyof Type]-?: Asserter<Type[Key]> }
   >;
@@ -74,7 +78,9 @@ export function objectAsserter<
     return value;
   };
 
+  asserter.asserterTypeName = objectAsserterTypeName;
   asserter.assertedTypeName = assertedTypeName;
+
   asserter.propertyAsserters = propertyAsserters as Required<PropertyAsserters>;
 
   return asserter as ObjectAsserter<

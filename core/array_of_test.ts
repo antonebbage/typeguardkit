@@ -4,12 +4,25 @@ import {
   assertThrows,
 } from "testing/asserts.ts";
 import { describe, it } from "testing/bdd.ts";
-import { _number, _string, TypeAssertionError } from "../mod.ts";
+import {
+  _number,
+  _string,
+  typeAsserterTypeName,
+  TypeAssertionError,
+} from "../mod.ts";
 import { arrayOf } from "./array_of.ts";
 
 describe("arrayOf", () => {
   const _ArrayOfString = arrayOf(_string);
   const _ArrayOfNumber = arrayOf(_number);
+
+  it("should return a `Function`", () => {
+    assertInstanceOf(_ArrayOfString, Function);
+  });
+
+  it("should return a `Function` with the correct `asserterTypeName`", () => {
+    assertStrictEquals(_ArrayOfString.asserterTypeName, typeAsserterTypeName);
+  });
 
   it("should return a `Function` with the provided `assertedTypeName` or the correct default if `undefined` or empty", () => {
     const testCases = [
@@ -35,7 +48,6 @@ describe("arrayOf", () => {
     ];
 
     for (const { asserter, assertedTypeName } of testCases) {
-      assertInstanceOf(asserter, Function);
       assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
     }
   });

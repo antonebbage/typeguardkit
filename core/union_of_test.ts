@@ -4,7 +4,13 @@ import {
   assertThrows,
 } from "testing/asserts.ts";
 import { describe, it } from "testing/bdd.ts";
-import { _number, _string, typeAsserter, TypeAssertionError } from "../mod.ts";
+import {
+  _number,
+  _string,
+  typeAsserter,
+  typeAsserterTypeName,
+  TypeAssertionError,
+} from "../mod.ts";
 import { unionOf } from "./union_of.ts";
 
 describe("unionOf", () => {
@@ -17,6 +23,17 @@ describe("unionOf", () => {
   const memberAsserters = [_string, _number, _object];
 
   const _stringOrNumberOrObject = unionOf(memberAsserters);
+
+  it("should return a `Function`", () => {
+    assertInstanceOf(_stringOrNumberOrObject, Function);
+  });
+
+  it("should return a `Function` with the correct `asserterTypeName`", () => {
+    assertStrictEquals(
+      _stringOrNumberOrObject.asserterTypeName,
+      typeAsserterTypeName,
+    );
+  });
 
   it("should return a `Function` with the provided `assertedTypeName` or the correct default if `undefined` or empty", () => {
     const defaultTypeName =
@@ -40,7 +57,6 @@ describe("unionOf", () => {
     ];
 
     for (const { asserter, assertedTypeName } of testCases) {
-      assertInstanceOf(asserter, Function);
       assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
     }
   });

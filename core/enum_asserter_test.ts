@@ -4,7 +4,7 @@ import {
   assertThrows,
 } from "testing/asserts.ts";
 import { describe, it } from "testing/bdd.ts";
-import { TypeAssertionError } from "../mod.ts";
+import { typeAsserterTypeName, TypeAssertionError } from "../mod.ts";
 import { enumAsserter } from "./enum_asserter.ts";
 
 describe("enumAsserter", () => {
@@ -41,6 +41,14 @@ describe("enumAsserter", () => {
     HeterogeneousEnum,
   );
 
+  it("should return a `Function`", () => {
+    assertInstanceOf(_NumericEnum, Function);
+  });
+
+  it("should return a `Function` with the correct `asserterTypeName`", () => {
+    assertStrictEquals(_NumericEnum.asserterTypeName, typeAsserterTypeName);
+  });
+
   it("should return a `Function` with the provided `assertedTypeName` or the correct default if empty", () => {
     const testCases = [
       { asserter: _NumericEnum, assertedTypeName: numericEnumName },
@@ -54,7 +62,6 @@ describe("enumAsserter", () => {
     ];
 
     for (const { asserter, assertedTypeName } of testCases) {
-      assertInstanceOf(asserter, Function);
       assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
     }
   });

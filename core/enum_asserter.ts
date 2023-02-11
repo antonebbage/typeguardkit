@@ -1,10 +1,10 @@
 // This module is browser-compatible.
 
-import { Asserter, typeAsserter } from "./asserter.ts";
+import { TypeAsserter, typeAsserter } from "./type_asserter.ts";
 
 /**
- * `enumAsserter` returns an `Asserter` for the union of the member types of the
- * provided `enumObject`.
+ * `enumAsserter` returns a `TypeAsserter` for the union of the member types of
+ * the provided `enumObject`.
  *
  * Example:
  *
@@ -23,7 +23,7 @@ import { Asserter, typeAsserter } from "./asserter.ts";
  */
 export function enumAsserter<
   Enum extends Record<string, number | string>,
->(assertedTypeName: string, enumObject: Enum): Asserter<Enum[keyof Enum]> {
+>(assertedTypeName: string, enumObject: Enum): TypeAsserter<Enum[keyof Enum]> {
   const nonNumericStringKeys = Object.keys(enumObject).filter((key) =>
     isNaN(Number(key))
   );

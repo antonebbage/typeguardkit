@@ -1,7 +1,8 @@
 // This module is browser-compatible.
 
-import { Asserter, typeAsserter } from "../asserter.ts";
+import { Asserter } from "../asserter.ts";
 import { is } from "../is.ts";
+import { typeAsserter } from "../type_asserter.ts";
 import { ObjectAsserter, objectAsserter } from "./object_asserter.ts";
 import { isTypeNameOpen } from "./_is_type_name_open.ts";
 

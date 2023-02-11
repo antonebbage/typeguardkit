@@ -9,6 +9,7 @@ import {
   _number,
   _string,
   objectAsserter,
+  objectAsserterTypeName,
   TypeAssertionError,
 } from "../../mod.ts";
 import { partialFrom } from "./partial_from.ts";
@@ -21,6 +22,17 @@ describe("partialFrom", () => {
   });
 
   const _PartialObjectType = partialFrom(_ObjectType);
+
+  it("should return a `Function`", () => {
+    assertInstanceOf(_PartialObjectType, Function);
+  });
+
+  it("should return a `Function` with the correct `asserterTypeName`", () => {
+    assertStrictEquals(
+      _PartialObjectType.asserterTypeName,
+      objectAsserterTypeName,
+    );
+  });
 
   it("should return a `Function` with the provided `assertedTypeName` or the correct default if `undefined` or empty", () => {
     const defaultTypeName = `Partial<${_ObjectType.assertedTypeName}>`;
@@ -43,7 +55,6 @@ describe("partialFrom", () => {
     ];
 
     for (const { asserter, assertedTypeName } of testCases) {
-      assertInstanceOf(asserter, Function);
       assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
     }
   });

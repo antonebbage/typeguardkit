@@ -9,6 +9,7 @@ import {
   _number,
   _string,
   objectAsserter,
+  objectAsserterTypeName,
   TypeAssertionError,
   unionOf,
 } from "../../mod.ts";
@@ -38,6 +39,14 @@ describe("objectIntersectionOf", () => {
     intersectionName,
   );
 
+  it("should return a `Function`", () => {
+    assertInstanceOf(_Intersection, Function);
+  });
+
+  it("should return a `Function` with the correct `asserterTypeName`", () => {
+    assertStrictEquals(_Intersection.asserterTypeName, objectAsserterTypeName);
+  });
+
   it("should return a `Function` with the provided `assertedTypeName` or the correct default if `undefined` or empty", () => {
     const defaultTypeName =
       `${_ObjectType1.assertedTypeName} & ${_ObjectType2.assertedTypeName}`;
@@ -60,7 +69,6 @@ describe("objectIntersectionOf", () => {
     ];
 
     for (const { asserter, assertedTypeName } of testCases) {
-      assertInstanceOf(asserter, Function);
       assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
     }
   });

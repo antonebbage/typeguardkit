@@ -1,6 +1,6 @@
 // This module is browser-compatible.
 
-import { typeAsserter } from "./asserter.ts";
+import { typeAsserter } from "./type_asserter.ts";
 
 /**
  * `_undefined` is an `undefined` type assertion function. If `value` is

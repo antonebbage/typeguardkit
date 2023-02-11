@@ -8,6 +8,7 @@ import {
   _number,
   _string,
   literalUnionAsserter,
+  typeAsserterTypeName,
   TypeAssertionError,
 } from "../mod.ts";
 import { recordOf } from "./record_of.ts";
@@ -21,6 +22,17 @@ describe("recordOf", () => {
   const _RecordOfStringByString = recordOf(_string, _string);
   const _RecordOfStringByLiteralUnion = recordOf(_LiteralUnion, _string);
   const _RecordOfNumberByString = recordOf(_string, _number);
+
+  it("should return a `Function`", () => {
+    assertInstanceOf(_RecordOfStringByString, Function);
+  });
+
+  it("should return a `Function` with the correct `asserterTypeName`", () => {
+    assertStrictEquals(
+      _RecordOfStringByString.asserterTypeName,
+      typeAsserterTypeName,
+    );
+  });
 
   it("should return a `Function` with the provided `assertedTypeName` or the correct default if `undefined` or empty", () => {
     const testCases = [
@@ -52,7 +64,6 @@ describe("recordOf", () => {
     ];
 
     for (const { asserter, assertedTypeName } of testCases) {
-      assertInstanceOf(asserter, Function);
       assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
     }
   });

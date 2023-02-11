@@ -4,8 +4,12 @@ import {
   assertThrows,
 } from "testing/asserts.ts";
 import { describe, it } from "testing/bdd.ts";
-import { Asserter, TypeAssertionError } from "../mod.ts";
-import { numberAsserter, NumberAsserterOptions } from "./number_asserter.ts";
+import { TypeAssertionError } from "../mod.ts";
+import {
+  NumberAsserter,
+  numberAsserter,
+  NumberAsserterOptions,
+} from "./number_asserter.ts";
 
 describe("numberAsserter", () => {
   const anyNumberTypeName = "AnyNumber";
@@ -81,6 +85,14 @@ describe("numberAsserter", () => {
 
   const unnamedAsserter = numberAsserter("", {});
 
+  it("should return a `Function`", () => {
+    assertInstanceOf(_AnyNumber, Function);
+  });
+
+  it("should return a `Function` with the correct `asserterTypeName`", () => {
+    assertStrictEquals(_AnyNumber.asserterTypeName, "NumberAsserter");
+  });
+
   it("should return a `Function` with the provided `assertedTypeName` or the correct default if empty", () => {
     const testCases = [
       { asserter: _AnyNumber, assertedTypeName: anyNumberTypeName },
@@ -88,7 +100,6 @@ describe("numberAsserter", () => {
     ];
 
     for (const { asserter, assertedTypeName } of testCases) {
-      assertInstanceOf(asserter, Function);
       assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
     }
   });
@@ -213,7 +224,7 @@ describe("numberAsserter", () => {
     const exclusiveMinPositiveOddMinIssue = "must be > 1";
 
     const testCases: Array<{
-      asserter: Asserter<unknown>;
+      asserter: NumberAsserter;
       values: Array<[value: unknown, issues: string[]]>;
     }> = [
       {
