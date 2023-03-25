@@ -1,6 +1,6 @@
 # TypeGuardKit
 
-[![ci](https://github.com/antonebbage/typeguardkit/actions/workflows/ci.yml/badge.svg)](https://github.com/antonebbage/typeguardkit/actions/workflows/ci.yml)
+[![ci](https://github.com/antonebbage/typeguardkit/actions/workflows/ci.yml/badge.svg?event=push)](https://github.com/antonebbage/typeguardkit/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/antonebbage/typeguardkit/branch/main/graph/badge.svg?token=SL3A2OQ4W6)](https://codecov.io/gh/antonebbage/typeguardkit)
 [![deno doc](https://doc.deno.land/badge.svg)](https://deno.land/x/typeguardkit/mod.ts)
 
