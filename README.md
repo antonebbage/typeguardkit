@@ -383,6 +383,25 @@ export const _EvenNumberInRange = numberAsserter(
 );
 ```
 
+#### `stringAsserter`
+
+`stringAsserter` returns a `StringAsserter` that asserts whether `value` is of
+type `string` and valid according to the provided `StringAsserterOptions`.
+
+The provided `StringAsserterOptions` are made accessible as properties of the
+returned `StringAsserter`.
+
+You can use `stringAsserter` like this:
+
+```ts
+import { stringAsserter } from "./mod.ts";
+
+export const _NonEmptyString = stringAsserter(
+  "NonEmptyString",
+  { validate: (value) => value ? [] : ["must be non-empty"] },
+);
+```
+
 ### `ObjectAsserter`s
 
 An `ObjectAsserter` is an `Asserter` for the object type defined by its
