@@ -49,13 +49,7 @@ describe("numberAsserter", () => {
   const evenNumberInExclusiveRangeOptions: NumberAsserterOptions = {
     min: { value: minValue, inclusive: false },
     max: { value: maxValue, inclusive: false },
-
-    validate: (value) => {
-      if (value % 2 !== 0) {
-        return ["must be even"];
-      }
-      return [];
-    },
+    validate: (value) => value % 2 === 0 ? [] : ["must be even"],
   };
 
   const _EvenNumberInExclusiveRange = numberAsserter(
