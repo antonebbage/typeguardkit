@@ -1,3 +1,12 @@
+## [0.14.0](https://github.com/antonebbage/typeguardkit/compare/0.13.0...0.14.0) (2023-03-25)
+
+### Features
+
+- add `stringAsserter` function
+  ([448c5f2](https://github.com/antonebbage/typeguardkit/commit/448c5f2ba1635f791ce4eb9a71a507f1453fbce6))
+- return `UnionAsserter` from `unionOf`
+  ([c4e8cce](https://github.com/antonebbage/typeguardkit/commit/c4e8cce3ed166f376a3b88d9859f681c59c73981))
+
 ## [0.13.0](https://github.com/antonebbage/typeguardkit/compare/0.12.0...0.13.0) (2023-02-11)
 
 ### ⚠ BREAKING CHANGES
