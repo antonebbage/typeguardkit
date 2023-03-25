@@ -36,6 +36,7 @@ export function enumAsserter<
           return true;
         }
       }
+
       return false;
     },
   );

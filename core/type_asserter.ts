@@ -38,6 +38,7 @@ export function typeAsserter<Type>(
     if (typeGuard(value)) {
       return value;
     }
+
     throw new TypeAssertionError(assertedTypeName, value, { valueName });
   };
 

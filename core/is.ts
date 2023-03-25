@@ -30,5 +30,6 @@ export function is<Type>(
   } catch {
     return false;
   }
+
   return true;
 }

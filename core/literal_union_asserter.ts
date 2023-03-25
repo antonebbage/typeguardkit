@@ -51,6 +51,7 @@ export function literalUnionAsserter<
         return value;
       }
     }
+
     throw new TypeAssertionError(assertedTypeName, value, { valueName });
   };
 
