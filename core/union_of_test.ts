@@ -4,13 +4,7 @@ import {
   assertThrows,
 } from "testing/asserts.ts";
 import { describe, it } from "testing/bdd.ts";
-import {
-  _number,
-  _string,
-  typeAsserter,
-  typeAsserterTypeName,
-  TypeAssertionError,
-} from "../mod.ts";
+import { _number, _string, typeAsserter, TypeAssertionError } from "../mod.ts";
 import { unionOf } from "./union_of.ts";
 
 describe("unionOf", () => {
@@ -31,7 +25,7 @@ describe("unionOf", () => {
   it("should return a `Function` with the correct `asserterTypeName`", () => {
     assertStrictEquals(
       _stringOrNumberOrObject.asserterTypeName,
-      typeAsserterTypeName,
+      "UnionAsserter",
     );
   });
 
@@ -59,6 +53,13 @@ describe("unionOf", () => {
     for (const { asserter, assertedTypeName } of testCases) {
       assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
     }
+  });
+
+  it("should return a `Function` with the provided `memberAsserters` set to its `memberAsserters` property", () => {
+    assertStrictEquals(
+      _stringOrNumberOrObject.memberAsserters,
+      memberAsserters,
+    );
   });
 
   it("should return a `Function` that returns `value` when any of the `asserters` do not throw an error for it", () => {

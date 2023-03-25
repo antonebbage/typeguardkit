@@ -290,7 +290,7 @@ function handleDirection(x: Direction) {}
 
 #### `unionOf`
 
-`unionOf` returns a `TypeAsserter` for the union of the `Type`s of the provided
+`unionOf` returns a `UnionAsserter` for the union of the `Type`s of the provided
 `Asserter`s.
 
 You can use `unionOf` like this:
