@@ -16,14 +16,26 @@ describe("stringAsserter", () => {
   const anyStringOptions: StringAsserterOptions = {};
   const _AnyString = stringAsserter(anyStringTypeName, anyStringOptions);
 
-  const nonEmptyStringOptions: StringAsserterOptions = {
-    validate: (value) => value ? [] : ["must be non-empty"],
+  const minLength = 1;
+  const maxLength = 8;
+
+  const constrainedLengthStringOptions: StringAsserterOptions = {
+    minLength,
+    maxLength,
   };
 
-  const _NonEmptyString = stringAsserter(
-    "NonEmptyString",
-    nonEmptyStringOptions,
+  const _ConstrainedLengthString = stringAsserter(
+    "ConstrainedLengthString",
+    constrainedLengthStringOptions,
   );
+
+  const numericIssue = "must be numeric";
+
+  const numericStringOptions: StringAsserterOptions = {
+    validate: (value) => /^\d+$/.test(value) ? [] : [numericIssue],
+  };
+
+  const _NumericString = stringAsserter("NumericString", numericStringOptions);
 
   const unnamedAsserter = stringAsserter("", {});
 
@@ -46,13 +58,61 @@ describe("stringAsserter", () => {
     }
   });
 
+  it("should throw an `Error` with correct `message` if `minLength` is defined but not a positive integer", () => {
+    const testCases = [-Infinity, -1000, -1, -0.5, 0, 0.5];
+
+    for (const minLength of testCases) {
+      assertThrows(
+        () => stringAsserter("", { minLength }),
+        Error,
+        "`minLength` must be a positive integer if defined",
+      );
+    }
+  });
+
+  it("should throw an `Error` with correct `message` if `maxLength` is defined but not a positive integer", () => {
+    const testCases = [-Infinity, -1000, -1, -0.5, 0, 0.5];
+
+    for (const maxLength of testCases) {
+      assertThrows(
+        () => stringAsserter("", { maxLength }),
+        Error,
+        "`maxLength` must be a positive integer if defined",
+      );
+    }
+  });
+
+  it("should throw an `Error` with correct `message` if `minLength` and `maxLength` are defined but `minLength` > `maxLength`", () => {
+    const testCases = [
+      { minLength: 2, maxLength: 1 },
+      { minLength: 20, maxLength: 10 },
+      { minLength: 200, maxLength: 100 },
+    ];
+
+    for (const { minLength, maxLength } of testCases) {
+      assertThrows(
+        () => stringAsserter("", { minLength, maxLength }),
+        Error,
+        "`minLength` must be <= `maxLength` if both are defined",
+      );
+    }
+  });
+
   it("should return a `Function` with the provided `StringAsserterOptions` or correct defaults as properties", () => {
     const testCases = [
       { asserter: _AnyString, options: anyStringOptions },
-      { asserter: _NonEmptyString, options: nonEmptyStringOptions },
+
+      {
+        asserter: _ConstrainedLengthString,
+        options: constrainedLengthStringOptions,
+      },
+
+      { asserter: _NumericString, options: numericStringOptions },
     ];
 
     for (const { asserter, options } of testCases) {
+      assertStrictEquals(asserter.minLength, options.minLength);
+      assertStrictEquals(asserter.maxLength, options.maxLength);
       assertStrictEquals(asserter.validate, options.validate);
     }
   });
@@ -60,7 +120,8 @@ describe("stringAsserter", () => {
   it("should return a `Function` that returns `value` when `value` is of type `string` and valid according to the provided `StringAsserterOptions`", () => {
     const testCases = [
       { asserter: _AnyString, values: ["", "abc", "123"] },
-      { asserter: _NonEmptyString, values: ["abc", "123"] },
+      { asserter: _ConstrainedLengthString, values: ["a", "12345678"] },
+      { asserter: _NumericString, values: ["0123456789"] },
     ];
 
     for (const { asserter, values } of testCases) {
@@ -92,7 +153,8 @@ describe("stringAsserter", () => {
         .message,
     );
 
-    const nonEmptyIssue = "must be non-empty";
+    const minLengthIssue = `must have a minimum of ${minLength} characters`;
+    const maxLengthIssue = `must have a maximum of ${maxLength} characters`;
 
     const testCases: Array<{
       asserter: StringAsserter;
@@ -112,7 +174,7 @@ describe("stringAsserter", () => {
       },
 
       {
-        asserter: _NonEmptyString,
+        asserter: _ConstrainedLengthString,
 
         values: [
           [undefined, [typeIssue]],
@@ -122,7 +184,24 @@ describe("stringAsserter", () => {
           [[], [typeIssue]],
           [{}, [typeIssue]],
 
-          ["", [nonEmptyIssue]],
+          ["", [minLengthIssue]],
+          ["123456789", [maxLengthIssue]],
+        ],
+      },
+
+      {
+        asserter: _NumericString,
+
+        values: [
+          [undefined, [typeIssue]],
+          [null, [typeIssue]],
+          [false, [typeIssue]],
+          [0, [typeIssue]],
+          [[], [typeIssue]],
+          [{}, [typeIssue]],
+
+          ["", [numericIssue]],
+          ["abc", [numericIssue]],
         ],
       },
     ];

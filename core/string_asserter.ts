@@ -16,12 +16,17 @@ export interface StringAsserter
 
 /** `StringAsserterOptions` can be passed to the `stringAsserter` function. */
 export interface StringAsserterOptions {
+  readonly minLength?: number;
+  readonly maxLength?: number;
   readonly validate?: (value: string) => string[];
 }
 
 /**
  * `stringAsserter` returns a `StringAsserter` that asserts whether `value` is
  * of type `string` and valid according to the provided `StringAsserterOptions`.
+ *
+ * The `minLength` and `maxLength` `StringAsserterOptions` can be used to set
+ * the minimum and maximum number of characters (as UTF-16 code units) allowed.
  *
  * If defined, the `StringAsserterOptions` `validate` function should return an
  * empty array if `value` is valid, or an array of issues if `value` is invalid.
@@ -36,14 +41,33 @@ export interface StringAsserterOptions {
  *
  * export const _NonEmptyString = stringAsserter(
  *   "NonEmptyString",
- *   { validate: (value) => value ? [] : ["must be non-empty"] },
+ *   { minLength: 1 },
  * );
  * ```
  */
 export function stringAsserter(
   assertedTypeName: string,
-  { validate }: StringAsserterOptions,
+  { minLength, maxLength, validate }: StringAsserterOptions,
 ): StringAsserter {
+  if (
+    minLength !== undefined && (minLength < 1 || !Number.isInteger(minLength))
+  ) {
+    throw new Error("`minLength` must be a positive integer if defined");
+  }
+
+  if (
+    maxLength !== undefined && (maxLength < 1 || !Number.isInteger(maxLength))
+  ) {
+    throw new Error("`maxLength` must be a positive integer if defined");
+  }
+
+  if (
+    minLength !== undefined && maxLength !== undefined &&
+    minLength > maxLength
+  ) {
+    throw new Error("`minLength` must be <= `maxLength` if both are defined");
+  }
+
   assertedTypeName ||= "UnnamedString";
 
   const asserter = (value: unknown, valueName?: string) => {
@@ -55,6 +79,14 @@ export function stringAsserter(
     }
 
     const issues: string[] = [];
+
+    if (minLength !== undefined && value.length < minLength) {
+      issues.push(`must have a minimum of ${minLength} characters`);
+    }
+
+    if (maxLength !== undefined && value.length > maxLength) {
+      issues.push(`must have a maximum of ${maxLength} characters`);
+    }
 
     if (validate) {
       issues.push(...validate(value));
@@ -73,6 +105,8 @@ export function stringAsserter(
   asserter.asserterTypeName = stringAsserterTypeName;
   asserter.assertedTypeName = assertedTypeName;
 
+  asserter.minLength = minLength;
+  asserter.maxLength = maxLength;
   asserter.validate = validate;
 
   return asserter;

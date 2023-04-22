@@ -398,7 +398,7 @@ import { stringAsserter } from "./mod.ts";
 
 export const _NonEmptyString = stringAsserter(
   "NonEmptyString",
-  { validate: (value) => value ? [] : ["must be non-empty"] },
+  { minLength: 1 },
 );
 ```
 
