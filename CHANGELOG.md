@@ -1,3 +1,10 @@
+## [0.15.0](https://github.com/antonebbage/typeguardkit/compare/0.14.0...0.15.0) (2023-04-22)
+
+### Features
+
+- add `StringAsserter.minLength` + `maxLength`
+  ([b041645](https://github.com/antonebbage/typeguardkit/commit/b041645c0f854298a3cd7a970702f113945ddeea))
+
 ## [0.14.0](https://github.com/antonebbage/typeguardkit/compare/0.13.0...0.14.0) (2023-03-25)
 
 ### Features
