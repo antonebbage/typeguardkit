@@ -46,10 +46,12 @@ describe("numberAsserter", () => {
     numberInInclusiveRangeOptions,
   );
 
+  const evenIssue = "must be even";
+
   const evenNumberInExclusiveRangeOptions: NumberAsserterOptions = {
     min: { value: minValue, inclusive: false },
     max: { value: maxValue, inclusive: false },
-    validate: (value) => value % 2 === 0 ? [] : ["must be even"],
+    validate: (value) => value % 2 === 0 ? [] : [evenIssue],
   };
 
   const _EvenNumberInExclusiveRange = numberAsserter(
@@ -212,7 +214,6 @@ describe("numberAsserter", () => {
     const inclusiveMaxIssue = `must be <= ${maxValue}`;
     const exclusiveMinIssue = `must be > ${minValue}`;
     const exclusiveMaxIssue = `must be < ${maxValue}`;
-    const evenIssue = "must be even";
     const positiveOddMinIssue = "must be >= 1";
     const positiveOddStepIssue = "must be a multiple of 2 from 1";
     const exclusiveMinPositiveOddMinIssue = "must be > 1";
