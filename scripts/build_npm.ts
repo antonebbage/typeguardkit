@@ -29,7 +29,9 @@ await build({
       url: "https://github.com/antonebbage/typeguardkit/issues",
     },
   },
-});
 
-Deno.copyFileSync("LICENSE", "npm/LICENSE");
-Deno.copyFileSync("README.md", "npm/README.md");
+  postBuild() {
+    Deno.copyFileSync("LICENSE", "npm/LICENSE");
+    Deno.copyFileSync("README.md", "npm/README.md");
+  },
+});
