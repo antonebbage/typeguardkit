@@ -39,10 +39,9 @@ export interface StringAsserterOptions {
  * ```ts
  * import { stringAsserter } from "./mod.ts";
  *
- * export const _NonEmptyString = stringAsserter(
- *   "NonEmptyString",
- *   { minLength: 1 },
- * );
+ * export const _NonEmptyString = stringAsserter("NonEmptyString", {
+ *   minLength: 1,
+ * });
  * ```
  */
 export function stringAsserter(

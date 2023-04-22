@@ -49,14 +49,11 @@ export interface NumberAsserterBound {
  * ```ts
  * import { numberAsserter } from "../mod.ts";
  *
- * export const _EvenNumberInRange = numberAsserter(
- *   "EvenNumberInRange",
- *   {
- *     min: { value: 0, inclusive: true },
- *     max: { value: 100, inclusive: true },
- *     step: 2,
- *   },
- * );
+ * export const _EvenNumberInRange = numberAsserter("EvenNumberInRange", {
+ *   min: { value: 0, inclusive: true },
+ *   max: { value: 100, inclusive: true },
+ *   step: 2,
+ * });
  * ```
  */
 export function numberAsserter(

@@ -373,14 +373,11 @@ You can use `numberAsserter` like this:
 ```ts
 import { numberAsserter } from "./mod.ts";
 
-export const _EvenNumberInRange = numberAsserter(
-  "EvenNumberInRange",
-  {
-    min: { value: 0, inclusive: true },
-    max: { value: 100, inclusive: true },
-    step: 2,
-  },
-);
+export const _EvenNumberInRange = numberAsserter("EvenNumberInRange", {
+  min: { value: 0, inclusive: true },
+  max: { value: 100, inclusive: true },
+  step: 2,
+});
 ```
 
 #### `stringAsserter`
@@ -396,10 +393,9 @@ You can use `stringAsserter` like this:
 ```ts
 import { stringAsserter } from "./mod.ts";
 
-export const _NonEmptyString = stringAsserter(
-  "NonEmptyString",
-  { minLength: 1 },
-);
+export const _NonEmptyString = stringAsserter("NonEmptyString", {
+  minLength: 1,
+});
 ```
 
 ### `ObjectAsserter`s
