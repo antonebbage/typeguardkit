@@ -81,9 +81,7 @@ export function stringAsserter(
 
     if (minLength !== undefined && value.length < minLength) {
       issues.push(`must have a minimum of ${minLength} characters`);
-    }
-
-    if (maxLength !== undefined && value.length > maxLength) {
+    } else if (maxLength !== undefined && value.length > maxLength) {
       issues.push(`must have a maximum of ${maxLength} characters`);
     }
 
