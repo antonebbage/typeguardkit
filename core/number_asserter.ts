@@ -26,7 +26,7 @@ export interface NumberAsserterOptions {
 }
 
 /**
- * A `NumberAsserterBound` can be set for the `min` and `max`
+ * A `NumberAsserterBound` can be assigned to the `min` and `max`
  * `NumberAsserterOptions`.
  */
 export interface NumberAsserterBound {
