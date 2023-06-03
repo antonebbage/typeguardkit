@@ -153,7 +153,6 @@ describe("stringAsserter", () => {
       },
 
       { asserter: _NumericString, options: numericStringOptions },
-
       { asserter: _Palindrome, options: palindromeOptions },
     ];
 
