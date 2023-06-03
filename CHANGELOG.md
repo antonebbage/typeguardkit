@@ -1,3 +1,15 @@
+## [0.16.0](https://github.com/antonebbage/typeguardkit/compare/0.15.0...0.16.0) (2023-06-03)
+
+### Features
+
+- add `StringAsserterOptions` `regex` property
+  ([bda8c73](https://github.com/antonebbage/typeguardkit/commit/bda8c7362d3cd66f093e80bcbf512da1beae478b))
+
+### Performance Improvements
+
+- prevent redundant condition check
+  ([be7e2f6](https://github.com/antonebbage/typeguardkit/commit/be7e2f6209ce34f8b42a9f0de5e019ced23f1d7d))
+
 ## [0.15.0](https://github.com/antonebbage/typeguardkit/compare/0.14.0...0.15.0) (2023-04-22)
 
 ### Features
