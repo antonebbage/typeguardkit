@@ -32,10 +32,27 @@ describe("stringAsserter", () => {
   const numericIssue = "must be numeric";
 
   const numericStringOptions: StringAsserterOptions = {
-    validate: (value) => /^\d+$/.test(value) ? [] : [numericIssue],
+    regex: { pattern: "\\d+", requirements: [numericIssue] },
   };
 
   const _NumericString = stringAsserter("NumericString", numericStringOptions);
+
+  const palindromeIssue = "must be a palindrome";
+
+  const palindromeOptions: StringAsserterOptions = {
+    validate(value) {
+      if (value.length < 2) {
+        return [];
+      }
+
+      const forwardValue = value.replace(/[^0-9a-z]/gi, "");
+      const backwardValue = forwardValue.split("").reverse().join("");
+
+      return forwardValue === backwardValue ? [] : [palindromeIssue];
+    },
+  };
+
+  const _Palindrome = stringAsserter("Palindrome", palindromeOptions);
 
   const unnamedAsserter = stringAsserter("", {});
 
@@ -98,6 +115,34 @@ describe("stringAsserter", () => {
     }
   });
 
+  it("should throw a `SyntaxError` if `regex.pattern` is invalid", () => {
+    assertThrows(
+      () =>
+        stringAsserter("", {
+          regex: { pattern: "(", requirements: ["requirement"] },
+        }),
+      SyntaxError,
+    );
+  });
+
+  it("should throw an `Error` with correct `message` if `regex` is defined but `regex.requirements` is empty or contains any blank `string`s", () => {
+    const testCases = [
+      [],
+      [""],
+      [" "],
+      ["", "requirement"],
+      ["requirement", ""],
+    ];
+
+    for (const requirements of testCases) {
+      assertThrows(
+        () => stringAsserter("", { regex: { pattern: "", requirements } }),
+        Error,
+        "`regex.requirements` must not be empty or contain any blank `string`s if `regex` is defined",
+      );
+    }
+  });
+
   it("should return a `Function` with the provided `StringAsserterOptions` or correct defaults as properties", () => {
     const testCases = [
       { asserter: _AnyString, options: anyStringOptions },
@@ -108,11 +153,14 @@ describe("stringAsserter", () => {
       },
 
       { asserter: _NumericString, options: numericStringOptions },
+
+      { asserter: _Palindrome, options: palindromeOptions },
     ];
 
     for (const { asserter, options } of testCases) {
       assertStrictEquals(asserter.minLength, options.minLength);
       assertStrictEquals(asserter.maxLength, options.maxLength);
+      assertStrictEquals(asserter.regex, options.regex);
       assertStrictEquals(asserter.validate, options.validate);
     }
   });
@@ -122,6 +170,7 @@ describe("stringAsserter", () => {
       { asserter: _AnyString, values: ["", "abc", "123"] },
       { asserter: _ConstrainedLengthString, values: ["a", "12345678"] },
       { asserter: _NumericString, values: ["0123456789"] },
+      { asserter: _Palindrome, values: ["", "a", "aa", "aba"] },
     ];
 
     for (const { asserter, values } of testCases) {
@@ -202,6 +251,22 @@ describe("stringAsserter", () => {
 
           ["", [numericIssue]],
           ["abc", [numericIssue]],
+        ],
+      },
+
+      {
+        asserter: _Palindrome,
+
+        values: [
+          [undefined, [typeIssue]],
+          [null, [typeIssue]],
+          [false, [typeIssue]],
+          [0, [typeIssue]],
+          [[], [typeIssue]],
+          [{}, [typeIssue]],
+
+          ["ab", [palindromeIssue]],
+          ["abc", [palindromeIssue]],
         ],
       },
     ];

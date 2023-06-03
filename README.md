@@ -396,6 +396,23 @@ import { stringAsserter } from "./mod.ts";
 export const _NonEmptyString = stringAsserter("NonEmptyString", {
   minLength: 1,
 });
+
+export const _NumericString = stringAsserter("NumericString", {
+  regex: { pattern: "\\d+", requirements: ["must be numeric"] },
+});
+
+export const _Palindrome = stringAsserter("Palindrome", {
+  validate(value) {
+    if (value.length < 2) {
+      return [];
+    }
+
+    const forwardValue = value.replace(/[^0-9a-z]/gi, "");
+    const backwardValue = forwardValue.split("").reverse().join("");
+
+    return forwardValue === backwardValue ? [] : ["must be a palindrome"];
+  },
+});
 ```
 
 ### `ObjectAsserter`s
