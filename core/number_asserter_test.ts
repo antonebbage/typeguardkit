@@ -245,6 +245,7 @@ describe("numberAsserter", () => {
           ["", [typeIssue]],
           [[], [typeIssue]],
           [{}, [typeIssue]],
+
           [NaN, [validIssue]],
         ],
       },
