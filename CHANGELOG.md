@@ -1,3 +1,14 @@
+## [0.17.0](https://github.com/antonebbage/typeguardkit/compare/0.16.0...0.17.0) (2023-06-17)
+
+### Features
+
+- add `optionOf` function
+  ([0c79be9](https://github.com/antonebbage/typeguardkit/commit/0c79be9700c186284ea2c5c31f522ff6eac56e41))
+- allow optional `ObjectAsserter` `Type` properties
+  ([a44c3eb](https://github.com/antonebbage/typeguardkit/commit/a44c3ebd6b85f5fbb251c17774eb8eb08301b5b9))
+- make `partialFrom` set `propertyAsserters` to `OptionAsserter`s
+  ([1d3a732](https://github.com/antonebbage/typeguardkit/commit/1d3a73209758f234191c1d114bba760157bcacbd))
+
 ## [0.16.0](https://github.com/antonebbage/typeguardkit/compare/0.15.0...0.16.0) (2023-06-03)
 
 ### Features
