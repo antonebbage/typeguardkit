@@ -451,18 +451,18 @@ like this:
 
 ```ts
 import {
-  _NonNegativeInteger,
   _string,
   is,
   ObjectAsserter,
   objectAsserter,
+  optionOf,
 } from "./mod.ts";
 
 // types/user.ts
 
 const asserter = objectAsserter("User", {
   name: _string,
-  age: _NonNegativeInteger,
+  emailAddress: optionOf(_string),
 });
 
 export type User = ReturnType<typeof asserter>;

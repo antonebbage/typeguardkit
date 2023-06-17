@@ -1,6 +1,7 @@
 // This module is browser-compatible.
 
 import { Asserter } from "../asserter.ts";
+import { OptionAsserter } from "../option_of.ts";
 import { TypeAssertionError } from "../type_assertion_error.ts";
 
 export const objectAsserterTypeName = "ObjectAsserter" as const;
@@ -26,15 +27,15 @@ export interface ObjectAsserter<Type extends Record<string, unknown>>
  *
  * ```ts
  * import {
- *   _NonNegativeInteger,
  *   _string,
  *   ObjectAsserter,
  *   objectAsserter,
+ *   optionOf,
  * } from "../../mod.ts";
  *
  * const asserter = objectAsserter("User", {
  *   name: _string,
- *   age: _NonNegativeInteger,
+ *   emailAddress: optionOf(_string),
  * });
  *
  * export type User = ReturnType<typeof asserter>;
@@ -48,7 +49,18 @@ export function objectAsserter<
   assertedTypeName: string,
   propertyAsserters: PropertyAsserters,
 ): ObjectAsserter<
-  { [Key in keyof PropertyAsserters]: ReturnType<PropertyAsserters[Key]> }
+  & {
+    [
+      Key in keyof PropertyAsserters as PropertyAsserters[Key] extends
+        OptionAsserter<unknown> ? never : Key
+    ]: ReturnType<PropertyAsserters[Key]>;
+  }
+  & {
+    [
+      Key in keyof PropertyAsserters as PropertyAsserters[Key] extends
+        OptionAsserter<unknown> ? Key : never
+    ]?: ReturnType<PropertyAsserters[Key]>;
+  }
 > {
   assertedTypeName ||= "UnnamedObject";
 
@@ -81,9 +93,8 @@ export function objectAsserter<
   asserter.asserterTypeName = objectAsserterTypeName;
   asserter.assertedTypeName = assertedTypeName;
 
-  asserter.propertyAsserters = propertyAsserters as Required<PropertyAsserters>;
+  asserter.propertyAsserters = propertyAsserters;
 
-  return asserter as ObjectAsserter<
-    { [Key in keyof PropertyAsserters]: ReturnType<PropertyAsserters[Key]> }
-  >;
+  // deno-lint-ignore no-explicit-any
+  return asserter as any;
 }
