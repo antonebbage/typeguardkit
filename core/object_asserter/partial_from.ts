@@ -1,8 +1,7 @@
 // This module is browser-compatible.
 
 import { Asserter } from "../asserter.ts";
-import { _undefined } from "../undefined.ts";
-import { unionOf } from "../union_of.ts";
+import { optionAsserterTypeName, optionOf } from "../option_of.ts";
 import { ObjectAsserter, objectAsserter } from "./object_asserter.ts";
 
 /**
@@ -42,10 +41,12 @@ export function partialFrom<Type extends Record<string, unknown>>(
   const newPropertyAsserters: Record<string, Asserter<unknown>> = {};
 
   for (const key in asserter.propertyAsserters) {
-    newPropertyAsserters[key] = unionOf([
-      asserter.propertyAsserters[key],
-      _undefined,
-    ]);
+    const oldPropertyAsserter = asserter.propertyAsserters[key];
+
+    newPropertyAsserters[key] = oldPropertyAsserter.asserterTypeName !==
+        optionAsserterTypeName
+      ? optionOf(oldPropertyAsserter)
+      : oldPropertyAsserter;
   }
 
   return objectAsserter(

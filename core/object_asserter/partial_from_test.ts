@@ -12,6 +12,7 @@ import {
   objectAsserterTypeName,
   TypeAssertionError,
 } from "../../mod.ts";
+import { optionAsserterTypeName } from "../option_of.ts";
 import { partialFrom } from "./partial_from.ts";
 
 describe("partialFrom", () => {
@@ -56,6 +57,16 @@ describe("partialFrom", () => {
 
     for (const { asserter, assertedTypeName } of testCases) {
       assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
+    }
+  });
+
+  it("should return a `Function` whose `propertyAsserters` all have the correct `asserterTypeName`", () => {
+    for (
+      const { asserterTypeName } of Object.values(
+        _PartialObjectType.propertyAsserters,
+      )
+    ) {
+      assertStrictEquals(asserterTypeName, optionAsserterTypeName);
     }
   });
 
