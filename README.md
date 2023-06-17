@@ -312,6 +312,19 @@ function handleUnknown(x: unknown) {
 function handleStringOrNull(x: string | null) {}
 ```
 
+#### `optionOf`
+
+`optionOf` returns an `OptionAsserter` for the union of the `DefinedType` of the
+provided `definedTypeAsserter` with `undefined`.
+
+Example:
+
+```ts
+import { _string, optionOf } from "./mod.ts";
+
+const _OptionalString = optionOf(_string);
+```
+
 #### `arrayOf`
 
 `arrayOf` returns a `TypeAsserter<Array<Type>>`, created using the provided
