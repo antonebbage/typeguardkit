@@ -18,7 +18,7 @@ export interface UnionAsserter<
 }
 
 /**
- * `unionOf` returns a `TypeAsserter` for the union of the `Type`s of the
+ * `unionOf` returns a `UnionAsserter` for the union of the `Type`s of the
  * provided `Asserter`s.
  *
  * Example:
