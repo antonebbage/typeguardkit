@@ -1,3 +1,14 @@
+## [0.18.0](https://github.com/antonebbage/typeguardkit/compare/0.17.0...0.18.0) (2024-01-06)
+
+### ⚠ BREAKING CHANGES
+
+- requires TypeScript version >= 5.0 (Deno version >= 1.32)
+
+### Features
+
+- add `const` modifier to `literalUnionAsserter` `Values` parameter
+  ([e023c0a](https://github.com/antonebbage/typeguardkit/commit/e023c0acb2f1f462634959439f934305ddf6ab78))
+
 ## [0.17.0](https://github.com/antonebbage/typeguardkit/compare/0.16.0...0.17.0) (2023-06-17)
 
 ### Features
