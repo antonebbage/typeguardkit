@@ -4,6 +4,8 @@
 [![codecov](https://codecov.io/gh/antonebbage/typeguardkit/branch/main/graph/badge.svg?token=SL3A2OQ4W6)](https://codecov.io/gh/antonebbage/typeguardkit)
 [![deno doc](https://doc.deno.land/badge.svg)](https://deno.land/x/typeguardkit/mod.ts)
 
+**⚠️ API not yet stable**
+
 A TypeScript module to help construct type assertion functions and type guards.
 
 The included functions can be used to create types and their assertion functions
