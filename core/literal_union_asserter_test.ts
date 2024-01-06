@@ -30,7 +30,7 @@ describe("literalUnionAsserter", () => {
       { asserter: _LiteralUnion, assertedTypeName: literalUnionName },
 
       {
-        asserter: literalUnionAsserter("", [0, 1] as const),
+        asserter: literalUnionAsserter("", [0, 1]),
         assertedTypeName: "UnnamedLiteralUnion",
       },
     ];
@@ -62,7 +62,7 @@ describe("literalUnionAsserter", () => {
         .message,
     );
 
-    const unnamedAsserter = literalUnionAsserter("", [0, 1, "", "a"] as const);
+    const unnamedAsserter = literalUnionAsserter("", [0, 1, "", "a"]);
 
     assertThrows(
       () => unnamedAsserter(undefined),

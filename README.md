@@ -252,8 +252,10 @@ function handleDirection(x: Direction) {}
 ### `LiteralUnionAsserter`s
 
 You can use the `literalUnionAsserter` function to create a
-`LiteralUnionAsserter` for the union of the provided `values`. The `values`
-array should be asserted `as const`.
+`LiteralUnionAsserter` for the union of the provided `values`.
+
+The `values` array should be asserted `as const` if defined outside the
+`literalUnionAsserter` call.
 
 The provided `values` will be set to the `values` property of the returned
 `LiteralUnionAsserter`.
@@ -267,7 +269,7 @@ import { is, LiteralUnionAsserter, literalUnionAsserter } from "./mod.ts";
 
 const asserter = literalUnionAsserter(
   "Direction",
-  ["up", "right", "down", "left"] as const,
+  ["up", "right", "down", "left"],
 );
 
 export type Direction = ReturnType<typeof asserter>;

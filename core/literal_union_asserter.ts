@@ -16,7 +16,10 @@ export interface LiteralUnionAsserter<
 
 /**
  * `literalUnionAsserter` returns a `LiteralUnionAsserter` for the union of the
- * provided `values`. The `values` array should be asserted `as const`.
+ * provided `values`.
+ *
+ * The `values` array should be asserted `as const` if defined outside the
+ * `literalUnionAsserter` call.
  *
  * The provided `values` will be set to the `values` property of the returned
  * `LiteralUnionAsserter`.
@@ -28,7 +31,7 @@ export interface LiteralUnionAsserter<
  *
  * const asserter = literalUnionAsserter(
  *   "Direction",
- *   ["up", "right", "down", "left"] as const,
+ *   ["up", "right", "down", "left"],
  * );
  *
  * export type Direction = ReturnType<typeof asserter>;
@@ -38,7 +41,7 @@ export interface LiteralUnionAsserter<
  * ```
  */
 export function literalUnionAsserter<
-  Values extends ReadonlyArray<number | string>,
+  const Values extends ReadonlyArray<number | string>,
 >(
   assertedTypeName: string,
   values: Values,

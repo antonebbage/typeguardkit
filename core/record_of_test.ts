@@ -14,10 +14,7 @@ import {
 import { recordOf } from "./record_of.ts";
 
 describe("recordOf", () => {
-  const _LiteralUnion = literalUnionAsserter(
-    "LiteralUnion",
-    ["a", "b", "c"] as const,
-  );
+  const _LiteralUnion = literalUnionAsserter("LiteralUnion", ["a", "b", "c"]);
 
   const _RecordOfStringByString = recordOf(_string, _string);
   const _RecordOfStringByLiteralUnion = recordOf(_LiteralUnion, _string);
