@@ -86,20 +86,20 @@ export function numberAsserter(
 
     if (min) {
       if (min.inclusive) {
-        if (!(value >= min.value)) {
+        if (value < min.value) {
           issues.push(`must be >= ${min.value}`);
         }
-      } else if (!(value > min.value)) {
+      } else if (value <= min.value) {
         issues.push(`must be > ${min.value}`);
       }
     }
 
     if (max) {
       if (max.inclusive) {
-        if (!(value <= max.value)) {
+        if (value > max.value) {
           issues.push(`must be <= ${max.value}`);
         }
-      } else if (!(value < max.value)) {
+      } else if (value >= max.value) {
         issues.push(`must be < ${max.value}`);
       }
     }
