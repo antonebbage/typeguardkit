@@ -29,13 +29,13 @@ describe("stringAsserter", () => {
     constrainedLengthStringOptions,
   );
 
-  const numericIssue = "must be numeric";
+  const lettersIssue = "must contain one or more letters";
 
-  const numericStringOptions: StringAsserterOptions = {
-    regex: { pattern: "\\d+", requirements: [numericIssue] },
+  const letterStringOptions: StringAsserterOptions = {
+    regex: { pattern: "\\p{Letter}+", requirements: [lettersIssue] },
   };
 
-  const _NumericString = stringAsserter("NumericString", numericStringOptions);
+  const _LetterString = stringAsserter("LetterString", letterStringOptions);
 
   const palindromeIssue = "must be a palindrome";
 
@@ -116,13 +116,17 @@ describe("stringAsserter", () => {
   });
 
   it("should throw a `SyntaxError` if `regex.pattern` is invalid", () => {
-    assertThrows(
-      () =>
-        stringAsserter("", {
-          regex: { pattern: "(", requirements: ["requirement"] },
-        }),
-      SyntaxError,
-    );
+    const testCases = ["(", "[(]"];
+
+    for (const value of testCases) {
+      assertThrows(
+        () =>
+          stringAsserter("", {
+            regex: { pattern: value, requirements: ["requirement"] },
+          }),
+        SyntaxError,
+      );
+    }
   });
 
   it("should throw an `Error` with correct `message` if `regex` is defined but `regex.requirements` is empty or contains any blank `string`s", () => {
@@ -152,7 +156,7 @@ describe("stringAsserter", () => {
         options: constrainedLengthStringOptions,
       },
 
-      { asserter: _NumericString, options: numericStringOptions },
+      { asserter: _LetterString, options: letterStringOptions },
       { asserter: _Palindrome, options: palindromeOptions },
     ];
 
@@ -168,7 +172,7 @@ describe("stringAsserter", () => {
     const testCases = [
       { asserter: _AnyString, values: ["", "abc", "123"] },
       { asserter: _ConstrainedLengthString, values: ["a", "12345678"] },
-      { asserter: _NumericString, values: ["0123456789"] },
+      { asserter: _LetterString, values: ["AaÉé中に"] },
       { asserter: _Palindrome, values: ["", "a", "aa", "aba"] },
     ];
 
@@ -238,7 +242,7 @@ describe("stringAsserter", () => {
       },
 
       {
-        asserter: _NumericString,
+        asserter: _LetterString,
 
         values: [
           [undefined, [typeIssue]],
@@ -248,8 +252,10 @@ describe("stringAsserter", () => {
           [[], [typeIssue]],
           [{}, [typeIssue]],
 
-          ["", [numericIssue]],
-          ["abc", [numericIssue]],
+          ["", [lettersIssue]],
+          [" ", [lettersIssue]],
+          [".", [lettersIssue]],
+          ["0", [lettersIssue]],
         ],
       },
 

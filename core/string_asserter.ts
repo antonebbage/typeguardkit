@@ -40,8 +40,9 @@ export interface StringAsserterRegex {
  *
  * The `StringAsserterOptions` `regex` can be used to specify a regular
  * expression to match against. `regex.pattern` must be a valid HTML `<input>`
- * `pattern` attribute value. `regex.requirements` must not be empty or contain
- * any blank `string`s.
+ * `pattern` attribute value. It is compiled with `^(?:` at the start, `)$` at
+ * the end, and with the `v` flag. `regex.requirements` must not be empty or
+ * contain any blank `string`s.
  *
  * If defined, the `StringAsserterOptions` `validate` function should return an
  * empty array if `value` is valid, or an array of issues if `value` is invalid.
@@ -99,7 +100,7 @@ export function stringAsserter(
     throw new Error("`minLength` must be <= `maxLength` if both are defined");
   }
 
-  const regExp = regex ? new RegExp(`^(?:${regex.pattern})$`) : undefined;
+  const regExp = regex ? new RegExp(`^(?:${regex.pattern})$`, "v") : undefined;
 
   if (
     regex &&
