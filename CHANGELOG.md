@@ -1,3 +1,19 @@
+## [0.19.0](https://github.com/antonebbage/typeguardkit/compare/0.18.0...0.19.0) (2024-01-13)
+
+### ⚠ BREAKING CHANGES
+
+- compile `StringAsserter` `regex` with `v` flag
+
+### Features
+
+- compile `StringAsserter` `regex` with `v` flag
+  ([bdd80d8](https://github.com/antonebbage/typeguardkit/commit/bdd80d8da794053a9876870f8fd484203866fe5a))
+
+### Performance Improvements
+
+- simplify `NumberAsserter` expressions
+  ([a60f58c](https://github.com/antonebbage/typeguardkit/commit/a60f58c135bb6154a91f3c2be27cdb1d74ba4203))
+
 ## [0.18.0](https://github.com/antonebbage/typeguardkit/compare/0.17.0...0.18.0) (2024-01-06)
 
 ### ⚠ BREAKING CHANGES
