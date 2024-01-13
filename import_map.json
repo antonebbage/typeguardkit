@@ -1,7 +1,7 @@
 {
   "imports": {
-    "assert": "https://deno.land/std@0.211.0/assert/mod.ts",
+    "assert": "https://deno.land/std@0.212.0/assert/mod.ts",
     "dnt": "https://deno.land/x/dnt@0.39.0/mod.ts",
-    "testing/": "https://deno.land/std@0.211.0/testing/"
+    "testing/": "https://deno.land/std@0.212.0/testing/"
   }
 }
