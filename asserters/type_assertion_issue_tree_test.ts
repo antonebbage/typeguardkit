@@ -1,4 +1,4 @@
-import { assertStrictEquals, assertThrows } from "testing/asserts.ts";
+import { assertStrictEquals, assertThrows } from "assert";
 import { describe, it } from "testing/bdd.ts";
 import { TypeAssertionError, TypeAssertionIssueTree } from "../mod.ts";
 import { _TypeAssertionIssueTree } from "./type_assertion_issue_tree.ts";

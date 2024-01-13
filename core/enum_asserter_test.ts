@@ -1,8 +1,4 @@
-import {
-  assertInstanceOf,
-  assertStrictEquals,
-  assertThrows,
-} from "testing/asserts.ts";
+import { assertInstanceOf, assertStrictEquals, assertThrows } from "assert";
 import { describe, it } from "testing/bdd.ts";
 import { typeAsserterTypeName, TypeAssertionError } from "../mod.ts";
 import { enumAsserter } from "./enum_asserter.ts";

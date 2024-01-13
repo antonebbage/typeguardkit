@@ -1,4 +1,4 @@
-import { assertStrictEquals } from "testing/asserts.ts";
+import { assertStrictEquals } from "assert";
 import { describe, it } from "testing/bdd.ts";
 import { isTypeNameOpen } from "./_is_type_name_open.ts";
 

@@ -1,4 +1,4 @@
-import { assertStrictEquals, assertThrows } from "testing/asserts.ts";
+import { assertStrictEquals, assertThrows } from "assert";
 import { describe, it } from "testing/bdd.ts";
 import { TypeAssertionError } from "../mod.ts";
 import { _PositiveInteger } from "./positive_integer.ts";

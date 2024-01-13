@@ -1,8 +1,4 @@
-import {
-  assertInstanceOf,
-  assertStrictEquals,
-  assertThrows,
-} from "testing/asserts.ts";
+import { assertInstanceOf, assertStrictEquals, assertThrows } from "assert";
 import { describe, it } from "testing/bdd.ts";
 import { _number, _string, TypeAssertionError } from "../../mod.ts";
 import { objectAsserter } from "./object_asserter.ts";

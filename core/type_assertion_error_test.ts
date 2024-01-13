@@ -4,7 +4,7 @@ import {
   assertObjectMatch,
   assertStrictEquals,
   assertStringIncludes,
-} from "testing/asserts.ts";
+} from "assert";
 import { describe, it } from "testing/bdd.ts";
 import { TypeAssertionError } from "./type_assertion_error.ts";
 
