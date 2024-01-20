@@ -8,10 +8,9 @@ export interface TypeAssertionErrorOptions {
   readonly valueName?: string;
 
   readonly issues?:
-    | TypeAssertionError
-    | readonly TypeAssertionError[]
     | string
-    | readonly string[];
+    | TypeAssertionError
+    | ReadonlyArray<string | TypeAssertionError>;
 }
 
 /**
@@ -22,7 +21,7 @@ export interface TypeAssertionIssueTreeNode {
   readonly valueName: string;
   readonly actualTypeName: string;
   readonly expectedTypeName: string;
-  readonly issues?: ReadonlyArray<TypeAssertionIssueTreeNode | string>;
+  readonly issues?: ReadonlyArray<string | TypeAssertionIssueTreeNode>;
 }
 
 /**
@@ -68,7 +67,7 @@ export class TypeAssertionError extends TypeError {
 
       const valueName = options.valueName || "value";
 
-      let issues: Array<TypeAssertionIssueTreeNode | string> | undefined;
+      let issues: Array<string | TypeAssertionIssueTreeNode> | undefined;
 
       if (options.issues) {
         issues = [];

@@ -293,6 +293,48 @@ describe("TypeAssertionError", () => {
     assertStrictEquals(issue.issues[1], "issue 3.2");
     assertStrictEquals(issue.issues[2], "issue 3.3");
 
+    error = new TypeAssertionError("ExpectedOuterType", {}, {
+      valueName: "outerValue",
+
+      issues: [
+        "issue 1",
+
+        new TypeAssertionError("ExpectedInnerType", "", {
+          valueName: "innerValue",
+        }),
+      ],
+    });
+
+    assertStrictEquals(
+      error.message,
+      "`outerValue` is of type `Object`; expected type of `ExpectedOuterType`:\n" +
+        "  - issue 1\n" +
+        "  - `.innerValue` is of type `string`; expected type of `ExpectedInnerType`",
+    );
+
+    issueTree = error.issueTree;
+
+    assertObjectMatch(issueTree, {
+      valueName: "outerValue",
+      actualTypeName: "Object",
+      expectedTypeName: "ExpectedOuterType",
+    });
+
+    assertStrictEquals(issueTree.issues?.length, 2);
+
+    assertStrictEquals(issueTree.issues[0], "issue 1");
+
+    issue = issueTree.issues[1];
+
+    assert(typeof issue === "object");
+
+    assertObjectMatch(issue, {
+      valueName: "innerValue",
+      actualTypeName: "string",
+      expectedTypeName: "ExpectedInnerType",
+      issues: undefined,
+    });
+
     const valueTypeTestCases = [
       { value: undefined, expectedMessage: "is of type `undefined`" },
       { value: null, expectedMessage: "is of type `null`" },
