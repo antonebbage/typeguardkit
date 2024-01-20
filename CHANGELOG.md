@@ -1,3 +1,17 @@
+## [0.20.0](https://github.com/antonebbage/typeguardkit/compare/0.19.0...0.20.0) (2024-01-20)
+
+### ⚠ BREAKING CHANGES
+
+- the `arrayOf` `arrayTypeName` parameter has moved up a position.
+
+### Features
+
+- allow `Array<string | TypeAssertionError>` for
+  `TypeAssertionErrorOptions.issues`
+  ([b5aed3b](https://github.com/antonebbage/typeguardkit/commit/b5aed3b9c1d770f1783d091a547059e59eae2ec1))
+- allow specifying `arrayOf` `minLength` + `maxLength`
+  ([5240896](https://github.com/antonebbage/typeguardkit/commit/5240896ab3845d315531c9e386fccb2fa335bf99))
+
 ## [0.19.0](https://github.com/antonebbage/typeguardkit/compare/0.18.0...0.19.0) (2024-01-13)
 
 ### ⚠ BREAKING CHANGES
