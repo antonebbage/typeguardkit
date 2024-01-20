@@ -252,6 +252,7 @@ describe("stringAsserter", () => {
           [" ", [lettersIssue]],
           [".", [lettersIssue]],
           ["0", [lettersIssue]],
+          ["a0", [lettersIssue]],
         ],
       },
 
