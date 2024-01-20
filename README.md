@@ -332,25 +332,21 @@ const _OptionalString = optionOf(_string);
 #### `arrayOf`
 
 `arrayOf` returns a `TypeAsserter<Array<Type>>`, created using the provided
-`Asserter<Type>`.
+`Asserter<Type>`, that asserts whether `value` is of type `Array<Type>` and
+valid according to any provided `ArrayOfOptions`.
 
 You can use `arrayOf` like this:
 
 ```ts
-import { _string, arrayOf, is } from "./mod.ts";
+import { _string, arrayOf } from "./mod.ts";
 
-const _ArrayOfString = arrayOf(_string);
+export const _ArrayOfString = arrayOf(_string);
 
-function handleUnknown(x: unknown) {
-  if (is(_ArrayOfString, x)) {
-    // `x` has now been narrowed to type `Array<string>`, so can be passed to
-    // `handleArrayOfString`.
-
-    handleArrayOfString(x);
-  }
-}
-
-function handleArrayOfString(x: string[]) {}
+export const _NonEmptyArrayOfString = arrayOf(
+  _string,
+  { minLength: 1 },
+  "NonEmptyArrayOfString",
+);
 ```
 
 #### `recordOf`
