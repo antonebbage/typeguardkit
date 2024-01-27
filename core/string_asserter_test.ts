@@ -68,6 +68,27 @@ describe("stringAsserter", () => {
     }
   });
 
+  it("should return a `Function` with the provided `StringAsserterOptions` or correct defaults as properties", () => {
+    const testCases = [
+      { asserter: _AnyString, options: anyStringOptions },
+
+      {
+        asserter: _ConstrainedLengthString,
+        options: constrainedLengthStringOptions,
+      },
+
+      { asserter: _LetterString, options: letterStringOptions },
+      { asserter: _Palindrome, options: palindromeOptions },
+    ];
+
+    for (const { asserter, options } of testCases) {
+      assertStrictEquals(asserter.minLength, options.minLength);
+      assertStrictEquals(asserter.maxLength, options.maxLength);
+      assertStrictEquals(asserter.regex, options.regex);
+      assertStrictEquals(asserter.validate, options.validate);
+    }
+  });
+
   it("should throw an `Error` with correct `message` if `minLength` is defined but not a positive integer", () => {
     const testCases = [-Infinity, -1000, -1, -0.5, 0, 0.5];
 
@@ -137,27 +158,6 @@ describe("stringAsserter", () => {
         Error,
         "`regex.requirements` must not be empty or contain any blank `string`s if `regex` is defined",
       );
-    }
-  });
-
-  it("should return a `Function` with the provided `StringAsserterOptions` or correct defaults as properties", () => {
-    const testCases = [
-      { asserter: _AnyString, options: anyStringOptions },
-
-      {
-        asserter: _ConstrainedLengthString,
-        options: constrainedLengthStringOptions,
-      },
-
-      { asserter: _LetterString, options: letterStringOptions },
-      { asserter: _Palindrome, options: palindromeOptions },
-    ];
-
-    for (const { asserter, options } of testCases) {
-      assertStrictEquals(asserter.minLength, options.minLength);
-      assertStrictEquals(asserter.maxLength, options.maxLength);
-      assertStrictEquals(asserter.regex, options.regex);
-      assertStrictEquals(asserter.validate, options.validate);
     }
   });
 

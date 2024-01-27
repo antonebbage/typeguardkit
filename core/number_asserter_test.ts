@@ -96,18 +96,6 @@ describe("numberAsserter", () => {
     }
   });
 
-  it("should throw an `Error` with correct `message` if `step` is defined but not a positive finite number", () => {
-    const testCases = [-Infinity, -1000, -1, 0, Infinity];
-
-    for (const step of testCases) {
-      assertThrows(
-        () => numberAsserter("", { step }),
-        Error,
-        "`step` must be positive and finite if defined",
-      );
-    }
-  });
-
   it("should return a `Function` with the provided `NumberAsserterOptions` or correct defaults as properties", () => {
     const testCases = [
       { asserter: _AnyNumber, options: anyNumberOptions },
@@ -139,6 +127,18 @@ describe("numberAsserter", () => {
       assertStrictEquals(asserter.max, options.max);
       assertStrictEquals(asserter.step, options.step);
       assertStrictEquals(asserter.validate, options.validate);
+    }
+  });
+
+  it("should throw an `Error` with correct `message` if `step` is defined but not a positive finite number", () => {
+    const testCases = [-Infinity, -1000, -1, 0, Infinity];
+
+    for (const step of testCases) {
+      assertThrows(
+        () => numberAsserter("", { step }),
+        Error,
+        "`step` must be positive and finite if defined",
+      );
     }
   });
 
