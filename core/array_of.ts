@@ -1,22 +1,38 @@
 // This module is browser-compatible.
 
 import { Asserter } from "./asserter.ts";
-import { TypeAsserter, typeAsserterTypeName } from "./type_asserter.ts";
 import { TypeAssertionError } from "./type_assertion_error.ts";
 
-/** `ArrayOfOptions` can be passed to the `arrayOf` function. */
-export interface ArrayOfOptions {
+export const arrayAsserterTypeName = "ArrayAsserter" as const;
+
+/**
+ * An `ArrayAsserter` is an `Asserter` for the array type defined by its
+ * `elementAsserter` with any additional validation defined by its
+ * `ArrayAsserterOptions` properties.
+ */
+export interface ArrayAsserter<Element>
+  extends Asserter<Array<Element>>, ArrayAsserterOptions {
+  readonly asserterTypeName: typeof arrayAsserterTypeName;
+
+  readonly elementAsserter: Asserter<Element>;
+}
+
+/** `ArrayAsserterOptions` can be passed to the `arrayOf` function. */
+export interface ArrayAsserterOptions {
   readonly minLength?: number;
   readonly maxLength?: number;
 }
 
 /**
- * `arrayOf` returns a `TypeAsserter<Array<Type>>`, created using the provided
- * `Asserter<Type>`, that asserts whether `value` is of type `Array<Type>` and
- * valid according to any provided `ArrayOfOptions`.
+ * `arrayOf` returns an `ArrayAsserter<Element>` that asserts whether `value` is
+ * of type `Array<Element>` and valid according to any provided
+ * `ArrayAsserterOptions`.
  *
- * The `minLength` and `maxLength` `ArrayOfOptions` can be used to set the
+ * The `minLength` and `maxLength` `ArrayAsserterOptions` can be used to set the
  * minimum and maximum number of elements allowed.
+ *
+ * The provided `ArrayAsserterOptions` are made accessible as properties of the
+ * returned `ArrayAsserter`.
  *
  * Example:
  *
@@ -32,11 +48,11 @@ export interface ArrayOfOptions {
  * );
  * ```
  */
-export function arrayOf<Type>(
-  elementAsserter: Asserter<Type>,
-  { minLength, maxLength }: ArrayOfOptions = {},
+export function arrayOf<Element>(
+  elementAsserter: Asserter<Element>,
+  { minLength, maxLength }: ArrayAsserterOptions = {},
   arrayTypeName?: string,
-): TypeAsserter<Array<Type>> {
+): ArrayAsserter<Element> {
   if (
     minLength !== undefined && (minLength < 1 || !Number.isInteger(minLength))
   ) {
@@ -95,8 +111,12 @@ export function arrayOf<Type>(
     return value;
   };
 
-  arrayAsserter.asserterTypeName = typeAsserterTypeName;
+  arrayAsserter.asserterTypeName = arrayAsserterTypeName;
   arrayAsserter.assertedTypeName = definedArrayTypeName;
+
+  arrayAsserter.elementAsserter = elementAsserter;
+  arrayAsserter.minLength = minLength;
+  arrayAsserter.maxLength = maxLength;
 
   return arrayAsserter;
 }

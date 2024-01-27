@@ -331,9 +331,12 @@ const _OptionalString = optionOf(_string);
 
 #### `arrayOf`
 
-`arrayOf` returns a `TypeAsserter<Array<Type>>`, created using the provided
-`Asserter<Type>`, that asserts whether `value` is of type `Array<Type>` and
-valid according to any provided `ArrayOfOptions`.
+`arrayOf` returns an `ArrayAsserter<Element>` that asserts whether `value` is of
+type `Array<Element>` and valid according to any provided
+`ArrayAsserterOptions`.
+
+The provided `ArrayAsserterOptions` are made accessible as properties of the
+returned `ArrayAsserter`.
 
 You can use `arrayOf` like this:
 

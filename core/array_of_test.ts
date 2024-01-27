@@ -1,27 +1,18 @@
 import { assertInstanceOf, assertStrictEquals, assertThrows } from "assert";
 import { describe, it } from "testing/bdd.ts";
-import {
-  _number,
-  _string,
-  TypeAsserter,
-  typeAsserterTypeName,
-  TypeAssertionError,
-} from "../mod.ts";
-import { arrayOf, ArrayOfOptions } from "./array_of.ts";
+import { _number, _string, TypeAssertionError } from "../mod.ts";
+import { ArrayAsserter, ArrayAsserterOptions, arrayOf } from "./array_of.ts";
 
 describe("arrayOf", () => {
   const _ArrayOfString = arrayOf(_string);
   const _ArrayOfNumber = arrayOf(_number);
 
-  const minLength = 1;
-  const maxLength = 8;
-
   const constrainedLengthArrayOfStringTypeName =
     "ConstrainedLengthArrayOfString";
 
-  const constrainedLengthArrayOfStringOptions: ArrayOfOptions = {
-    minLength,
-    maxLength,
+  const constrainedLengthArrayOfStringOptions: ArrayAsserterOptions = {
+    minLength: 1,
+    maxLength: 8,
   };
 
   const _ConstrainedLengthArrayOfString = arrayOf(
@@ -35,7 +26,7 @@ describe("arrayOf", () => {
   });
 
   it("should return a `Function` with the correct `asserterTypeName`", () => {
-    assertStrictEquals(_ArrayOfString.asserterTypeName, typeAsserterTypeName);
+    assertStrictEquals(_ArrayOfString.asserterTypeName, "ArrayAsserter");
   });
 
   it("should return a `Function` with the provided `assertedTypeName` or the correct default if `undefined` or empty", () => {
@@ -63,6 +54,38 @@ describe("arrayOf", () => {
 
     for (const { asserter, assertedTypeName } of testCases) {
       assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
+    }
+  });
+
+  it("should return a `Function` with the provided `elementAsserter` set to its `elementAsserter` property", () => {
+    const testCases = [
+      { arrayAsserter: _ArrayOfString, elementAsserter: _string },
+      { arrayAsserter: _ArrayOfNumber, elementAsserter: _number },
+
+      {
+        arrayAsserter: _ConstrainedLengthArrayOfString,
+        elementAsserter: _string,
+      },
+    ];
+
+    for (const { arrayAsserter, elementAsserter } of testCases) {
+      assertStrictEquals(arrayAsserter.elementAsserter, elementAsserter);
+    }
+  });
+
+  it("should return a `Function` with the provided `ArrayAsserterOptions` or correct defaults as properties", () => {
+    const testCases = [
+      { asserter: _ArrayOfString, options: {} },
+
+      {
+        asserter: _ConstrainedLengthArrayOfString,
+        options: constrainedLengthArrayOfStringOptions,
+      },
+    ];
+
+    for (const { asserter, options } of testCases) {
+      assertStrictEquals(asserter.minLength, options.minLength);
+      assertStrictEquals(asserter.maxLength, options.maxLength);
     }
   });
 
@@ -172,7 +195,7 @@ describe("arrayOf", () => {
     );
 
     const testCases: Array<{
-      asserter: TypeAsserter<unknown>;
+      asserter: ArrayAsserter<unknown>;
       values: Array<[value: unknown, issues?: string[]]>;
     }> = [
       {
@@ -206,10 +229,12 @@ describe("arrayOf", () => {
         asserter: _ConstrainedLengthArrayOfString,
 
         values: [
-          [[], [`must have a minimum of ${minLength}`]],
+          [[], [
+            `must have a minimum of ${_ConstrainedLengthArrayOfString.minLength}`,
+          ]],
 
           [["", "", "", "", "", "", "", "", ""], [
-            `must have a maximum of ${maxLength}`,
+            `must have a maximum of ${_ConstrainedLengthArrayOfString.maxLength}`,
           ]],
         ],
       },
