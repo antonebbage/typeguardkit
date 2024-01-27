@@ -171,9 +171,6 @@ describe("arrayOf", () => {
         .message,
     );
 
-    const minLengthIssue = `must have a minimum of ${minLength} elements`;
-    const maxLengthIssue = `must have a maximum of ${maxLength} elements`;
-
     const testCases: Array<{
       asserter: TypeAsserter<unknown>;
       values: Array<[value: unknown, issues?: string[]]>;
@@ -209,9 +206,17 @@ describe("arrayOf", () => {
         asserter: _ConstrainedLengthArrayOfString,
 
         values: [
-          [[], [minLengthIssue]],
-          [["", "", "", "", "", "", "", "", ""], [maxLengthIssue]],
+          [[], [`must have a minimum of ${minLength}`]],
+
+          [["", "", "", "", "", "", "", "", ""], [
+            `must have a maximum of ${maxLength}`,
+          ]],
         ],
+      },
+
+      {
+        asserter: arrayOf(_string, { minLength: 1, maxLength: 1 }),
+        values: [[[], ["must have 1"]], [["", ""], ["must have 1"]]],
       },
     ];
 

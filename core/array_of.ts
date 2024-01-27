@@ -66,10 +66,15 @@ export function arrayOf<Type>(
 
     const issues: Array<string | TypeAssertionError> = [];
 
-    if (minLength !== undefined && value.length < minLength) {
-      issues.push(`must have a minimum of ${minLength} elements`);
+    if (
+      minLength !== undefined && minLength === maxLength &&
+      value.length !== minLength
+    ) {
+      issues.push(`must have ${minLength}`);
+    } else if (minLength !== undefined && value.length < minLength) {
+      issues.push(`must have a minimum of ${minLength}`);
     } else if (maxLength !== undefined && value.length > maxLength) {
-      issues.push(`must have a maximum of ${maxLength} elements`);
+      issues.push(`must have a maximum of ${maxLength}`);
     }
 
     for (let i = 0; i < value.length; i++) {
