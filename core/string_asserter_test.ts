@@ -12,12 +12,9 @@ describe("stringAsserter", () => {
   const anyStringOptions: StringAsserterOptions = {};
   const _AnyString = stringAsserter(anyStringTypeName, anyStringOptions);
 
-  const minLength = 1;
-  const maxLength = 8;
-
   const constrainedLengthStringOptions: StringAsserterOptions = {
-    minLength,
-    maxLength,
+    minLength: 1,
+    maxLength: 8,
   };
 
   const _ConstrainedLengthString = stringAsserter(
@@ -201,9 +198,6 @@ describe("stringAsserter", () => {
         .message,
     );
 
-    const minLengthIssue = `must have a minimum of ${minLength} characters`;
-    const maxLengthIssue = `must have a maximum of ${maxLength} characters`;
-
     const testCases: Array<{
       asserter: StringAsserter;
       values: Array<[value: unknown, issues: string[]]>;
@@ -232,9 +226,42 @@ describe("stringAsserter", () => {
           [[], [typeIssue]],
           [{}, [typeIssue]],
 
-          ["", [minLengthIssue]],
-          ["123456789", [maxLengthIssue]],
+          ["", [
+            `must have a minimum of ${_ConstrainedLengthString.minLength} character`,
+          ]],
+
+          ["123456789", [
+            `must have a maximum of ${_ConstrainedLengthString.maxLength} characters`,
+          ]],
         ],
+      },
+
+      {
+        asserter: stringAsserter("", { minLength: 1, maxLength: 1 }),
+
+        values: [
+          ["", ["must have 1 character"]],
+          ["ab", ["must have 1 character"]],
+        ],
+      },
+
+      {
+        asserter: stringAsserter("", { minLength: 2, maxLength: 2 }),
+
+        values: [
+          ["a", ["must have 2 characters"]],
+          ["abc", ["must have 2 characters"]],
+        ],
+      },
+
+      {
+        asserter: stringAsserter("", { minLength: 2 }),
+        values: [["a", ["must have a minimum of 2 characters"]]],
+      },
+
+      {
+        asserter: stringAsserter("", { maxLength: 1 }),
+        values: [["ab", ["must have a maximum of 1 character"]]],
       },
 
       {

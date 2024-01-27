@@ -124,10 +124,25 @@ export function stringAsserter(
 
     const issues: string[] = [];
 
-    if (minLength !== undefined && value.length < minLength) {
-      issues.push(`must have a minimum of ${minLength} characters`);
+    if (
+      minLength !== undefined && minLength === maxLength &&
+      value.length !== minLength
+    ) {
+      issues.push(
+        `must have ${minLength} character${minLength > 0 ? "s" : ""}`,
+      );
+    } else if (minLength !== undefined && value.length < minLength) {
+      issues.push(
+        `must have a minimum of ${minLength} character${
+          minLength > 0 ? "s" : ""
+        }`,
+      );
     } else if (maxLength !== undefined && value.length > maxLength) {
-      issues.push(`must have a maximum of ${maxLength} characters`);
+      issues.push(
+        `must have a maximum of ${maxLength} character${
+          maxLength > 0 ? "s" : ""
+        }`,
+      );
     }
 
     if (regex && !regExp!.test(value)) {
