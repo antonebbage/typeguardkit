@@ -1,3 +1,18 @@
+## [0.21.0](https://github.com/antonebbage/typeguardkit/compare/0.20.0...0.21.0) (2024-01-27)
+
+### ⚠ BREAKING CHANGES
+
+- return `ArrayAsserter` from `arrayOf`
+
+### Features
+
+- change `arrayOf` length error messages
+  ([c59d4ea](https://github.com/antonebbage/typeguardkit/commit/c59d4ea0d7f6577d83a6b57cfde545b02c276b37))
+- change `StringAsserter` length error messages
+  ([2e80cfc](https://github.com/antonebbage/typeguardkit/commit/2e80cfc8d899e6881f1bec32a4db5325c3b2fe4e))
+- return `ArrayAsserter` from `arrayOf`
+  ([afe619b](https://github.com/antonebbage/typeguardkit/commit/afe619b9d39ea4219f119b1fee83e0e6d4fdd0d5))
+
 ## [0.20.0](https://github.com/antonebbage/typeguardkit/compare/0.19.0...0.20.0) (2024-01-20)
 
 ### ⚠ BREAKING CHANGES
