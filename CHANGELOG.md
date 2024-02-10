@@ -1,3 +1,25 @@
+## [0.22.0](https://github.com/antonebbage/typeguardkit/compare/0.21.0...0.22.0) (2024-02-10)
+
+### ⚠ BREAKING CHANGES
+
+- `Asserter.asserterTypeName` removed (use `instanceof` instead); `Asserter`
+  type name `string`s removed; `Asserter.assertedTypeName` renamed to
+  `typeName`; `Asserter`s no longer functions (call their `assert` method
+  instead); `typeAsserter`, `numberAsserter`, `stringAsserter`,
+  `literalUnionAsserter`, `enumAsserter`, and `objectAsserter` functions removed
+  (use corresponding PascalCase class constructors instead); `unionOf` only
+  accepts the `memberAsserters` rest parameter (use `UnionAsserter` constructor
+  to specify a `typeName`); `arrayOf` only accepts the `elementAsserter`
+  parameter (use `ArrayAsserter` constructor to specify a `typeName` and
+  `ArrayAsserterOptions`); `recordOf` only accepts the `keyAsserter` and
+  `valueAsserter` parameters (use `RecordAsserter` constructor to specify a
+  `typeName`).
+
+### Features
+
+- implement `Asserter`s using classes
+  ([7998ff7](https://github.com/antonebbage/typeguardkit/commit/7998ff774597b2e67abf6c431ae93df3dfd94c82))
+
 ## [0.21.0](https://github.com/antonebbage/typeguardkit/compare/0.20.0...0.21.0) (2024-01-27)
 
 ### ⚠ BREAKING CHANGES
