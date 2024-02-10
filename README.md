@@ -54,7 +54,7 @@ import {
 
 // types/book.ts
 
-const asserter = new ObjectAsserter("Book", {
+export const _Book = new ObjectAsserter("Book", {
   isbn: _string,
   title: _string,
   authors: arrayOf(_string),
@@ -63,9 +63,7 @@ const asserter = new ObjectAsserter("Book", {
   recommended: _boolean,
 });
 
-export type Book = ReturnType<typeof asserter.assert>;
-
-export const _Book: ObjectAsserter<Book> = asserter;
+export type Book = ReturnType<typeof _Book.assert>;
 
 // api/get_book.ts
 
@@ -284,14 +282,12 @@ Example:
 ```ts
 import { LiteralUnionAsserter } from "./mod.ts";
 
-const asserter = new LiteralUnionAsserter(
+export const _Direction = new LiteralUnionAsserter(
   "Direction",
   ["up", "right", "down", "left"],
 );
 
-export type Direction = ReturnType<typeof asserter.assert>;
-
-export const _Direction: LiteralUnionAsserter<readonly Direction[]> = asserter;
+export type Direction = ReturnType<typeof _Direction.assert>;
 ```
 
 ### `EnumAsserter`
@@ -428,14 +424,12 @@ Example:
 ```ts
 import { _string, ObjectAsserter, optionOf } from "./mod.ts";
 
-const asserter = new ObjectAsserter("User", {
+export const _User = new ObjectAsserter("User", {
   name: _string,
   emailAddress: optionOf(_string),
 });
 
-export type User = ReturnType<typeof asserter.assert>;
-
-export const _User: ObjectAsserter<User> = asserter;
+export type User = ReturnType<typeof _User.assert>;
 ```
 
 #### `objectIntersectionOf`
@@ -450,17 +444,15 @@ import { _string, ObjectAsserter, objectIntersectionOf } from "./mod.ts";
 
 // types/entity.ts
 
-const entityAsserter = new ObjectAsserter("Entity", {
+export const _Entity = new ObjectAsserter("Entity", {
   id: _string,
 });
 
-export type Entity = ReturnType<typeof entityAsserter.assert>;
-
-export const _Entity: ObjectAsserter<Entity> = entityAsserter;
+export type Entity = ReturnType<typeof _Entity.assert>;
 
 // types/user.ts
 
-const userAsserter = objectIntersectionOf(
+export const _User = objectIntersectionOf(
   _Entity,
   new ObjectAsserter("", {
     name: _string,
@@ -468,9 +460,7 @@ const userAsserter = objectIntersectionOf(
   "User",
 );
 
-export type User = ReturnType<typeof userAsserter.assert>;
-
-export const _User: ObjectAsserter<User> = userAsserter;
+export type User = ReturnType<typeof _User.assert>;
 ```
 
 #### `partialFrom`
@@ -487,7 +477,7 @@ Example:
 ```ts
 import { _string, ObjectAsserter, partialFrom } from "./mod.ts";
 
-const asserter = partialFrom(
+export const _Options = partialFrom(
   new ObjectAsserter("", {
     option1: _string,
     option2: _string,
@@ -496,9 +486,7 @@ const asserter = partialFrom(
   "Options",
 );
 
-export type Options = ReturnType<typeof asserter.assert>;
-
-export const _Options: ObjectAsserter<Options> = asserter;
+export type Options = ReturnType<typeof _Options.assert>;
 ```
 
 #### `pickFrom`
@@ -517,23 +505,19 @@ import { _string, ObjectAsserter, pickFrom } from "./mod.ts";
 
 // types/user.ts
 
-const userAsserter = new ObjectAsserter("User", {
+export const _User = new ObjectAsserter("User", {
   id: _string,
   firstName: _string,
   lastName: _string,
 });
 
-export type User = ReturnType<typeof userAsserter.assert>;
-
-export const _User: ObjectAsserter<User> = userAsserter;
+export type User = ReturnType<typeof _User.assert>;
 
 // types/user_name.ts
 
-const userNameAsserter = pickFrom(_User, ["firstName", "lastName"]);
+export const _UserName = pickFrom(_User, ["firstName", "lastName"]);
 
-export type UserName = ReturnType<typeof userNameAsserter.assert>;
-
-export const _UserName: ObjectAsserter<UserName> = userNameAsserter;
+export type UserName = ReturnType<typeof _UserName.assert>;
 ```
 
 ### The `TypeAssertionError` issue tree
@@ -564,23 +548,19 @@ import {
 
 // types/item.ts
 
-const itemAsserter = new ObjectAsserter("Item", {
+export const _Item = new ObjectAsserter("Item", {
   quantity: _NonNegativeInteger,
 });
 
-export type Item = ReturnType<typeof itemAsserter.assert>;
-
-export const _Item: ObjectAsserter<Item> = itemAsserter;
+export type Item = ReturnType<typeof _Item.assert>;
 
 // types/form.ts
 
-const formAsserter = new ObjectAsserter("Form", {
+export const _Form = new ObjectAsserter("Form", {
   item: _Item,
 });
 
-export type Form = ReturnType<typeof formAsserter.assert>;
-
-export const _Form: ObjectAsserter<Form> = formAsserter;
+export type Form = ReturnType<typeof _Form.assert>;
 
 // elsewhere.ts
 

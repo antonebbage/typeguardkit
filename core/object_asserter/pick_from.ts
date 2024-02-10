@@ -14,23 +14,19 @@ import { ObjectAsserter } from "./object_asserter.ts";
  *
  * // types/user.ts
  *
- * const userAsserter = new ObjectAsserter("User", {
+ * export const _User = new ObjectAsserter("User", {
  *   id: _string,
  *   firstName: _string,
  *   lastName: _string,
  * });
  *
- * export type User = ReturnType<typeof userAsserter.assert>;
- *
- * export const _User: ObjectAsserter<User> = userAsserter;
+ * export type User = ReturnType<typeof _User.assert>;
  *
  * // types/user_name.ts
  *
- * const userNameAsserter = pickFrom(_User, ["firstName", "lastName"]);
+ * export const _UserName = pickFrom(_User, ["firstName", "lastName"]);
  *
- * export type UserName = ReturnType<typeof userNameAsserter.assert>;
- *
- * export const _UserName: ObjectAsserter<UserName> = userNameAsserter;
+ * export type UserName = ReturnType<typeof _UserName.assert>;
  * ```
  */
 export function pickFrom<

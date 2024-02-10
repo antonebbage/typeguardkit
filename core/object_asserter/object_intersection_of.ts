@@ -17,17 +17,15 @@ import { ObjectAsserter } from "./object_asserter.ts";
  *
  * // types/entity.ts
  *
- * const entityAsserter = new ObjectAsserter("Entity", {
+ * export const _Entity = new ObjectAsserter("Entity", {
  *   id: _string,
  * });
  *
- * export type Entity = ReturnType<typeof entityAsserter.assert>;
- *
- * export const _Entity: ObjectAsserter<Entity> = entityAsserter;
+ * export type Entity = ReturnType<typeof _Entity.assert>;
  *
  * // types/user.ts
  *
- * const userAsserter = objectIntersectionOf(
+ * export const _User = objectIntersectionOf(
  *   _Entity,
  *   new ObjectAsserter("", {
  *     name: _string,
@@ -35,9 +33,7 @@ import { ObjectAsserter } from "./object_asserter.ts";
  *   "User",
  * );
  *
- * export type User = ReturnType<typeof userAsserter.assert>;
- *
- * export const _User: ObjectAsserter<User> = userAsserter;
+ * export type User = ReturnType<typeof _User.assert>;
  * ```
  */
 export function objectIntersectionOf<

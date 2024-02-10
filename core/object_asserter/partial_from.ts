@@ -14,7 +14,7 @@ import { ObjectAsserter } from "./object_asserter.ts";
  * ```ts
  * import { _string, ObjectAsserter, partialFrom } from "../../mod.ts";
  *
- * const asserter = partialFrom(
+ * export const _Options = partialFrom(
  *   new ObjectAsserter("", {
  *     option1: _string,
  *     option2: _string,
@@ -23,9 +23,7 @@ import { ObjectAsserter } from "./object_asserter.ts";
  *   "Options",
  * );
  *
- * export type Options = ReturnType<typeof asserter.assert>;
- *
- * export const _Options: ObjectAsserter<Options> = asserter;
+ * export type Options = ReturnType<typeof _Options.assert>;
  * ```
  */
 export function partialFrom<Type extends Record<string, unknown>>(

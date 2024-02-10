@@ -17,15 +17,12 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  * ```ts
  * import { LiteralUnionAsserter } from "../mod.ts";
  *
- * const asserter = new LiteralUnionAsserter(
+ * export const _Direction = new LiteralUnionAsserter(
  *   "Direction",
  *   ["up", "right", "down", "left"],
  * );
  *
- * export type Direction = ReturnType<typeof asserter.assert>;
- *
- * export const _Direction: LiteralUnionAsserter<readonly Direction[]> =
- *   asserter;
+ * export type Direction = ReturnType<typeof _Direction.assert>;
  * ```
  */
 export class LiteralUnionAsserter<

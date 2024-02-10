@@ -15,14 +15,12 @@ import { TypeAssertionError } from "../type_assertion_error.ts";
  * ```ts
  * import { _string, ObjectAsserter, optionOf } from "../../mod.ts";
  *
- * const asserter = new ObjectAsserter("User", {
+ * export const _User = new ObjectAsserter("User", {
  *   name: _string,
  *   emailAddress: optionOf(_string),
  * });
  *
- * export type User = ReturnType<typeof asserter.assert>;
- *
- * export const _User: ObjectAsserter<User> = asserter;
+ * export type User = ReturnType<typeof _User.assert>;
  * ```
  */
 export class ObjectAsserter<Type extends Record<string, unknown>>
