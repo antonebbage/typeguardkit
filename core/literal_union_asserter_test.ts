@@ -1,79 +1,71 @@
-import { assertInstanceOf, assertStrictEquals, assertThrows } from "assert";
+import { assertStrictEquals, assertThrows } from "assert";
 import { describe, it } from "testing/bdd.ts";
 import { TypeAssertionError } from "../mod.ts";
-import { literalUnionAsserter } from "./literal_union_asserter.ts";
+import { LiteralUnionAsserter } from "./literal_union_asserter.ts";
 
-describe("literalUnionAsserter", () => {
-  const literalUnionName = "LiteralUnion";
+const literalUnionName = "LiteralUnion";
+const literalUnionValues = [0, 1, "", "a"] as const;
 
-  const literalUnionValues = [0, 1, "", "a"] as const;
+const _LiteralUnion = new LiteralUnionAsserter(
+  literalUnionName,
+  literalUnionValues,
+);
 
-  const _LiteralUnion = literalUnionAsserter(
-    literalUnionName,
-    literalUnionValues,
-  );
-
-  it("should return a `Function`", () => {
-    assertInstanceOf(_LiteralUnion, Function);
-  });
-
-  it("should return a `Function` with the correct `asserterTypeName`", () => {
-    assertStrictEquals(_LiteralUnion.asserterTypeName, "LiteralUnionAsserter");
-  });
-
-  it("should return a `Function` with the provided `assertedTypeName` or the correct default if empty", () => {
+describe("LiteralUnionAsserter", () => {
+  it("should have the provided `typeName` or the correct default if empty", () => {
     const testCases = [
-      { asserter: _LiteralUnion, assertedTypeName: literalUnionName },
+      { asserter: _LiteralUnion, typeName: literalUnionName },
 
       {
-        asserter: literalUnionAsserter("", [0, 1]),
-        assertedTypeName: "UnnamedLiteralUnion",
+        asserter: new LiteralUnionAsserter("", [0, 1]),
+        typeName: "UnnamedLiteralUnion",
       },
     ];
 
-    for (const { asserter, assertedTypeName } of testCases) {
-      assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
+    for (const { asserter, typeName } of testCases) {
+      assertStrictEquals(asserter.typeName, typeName);
     }
   });
 
-  it("should return a `Function` with the provided `values` set to its `values` property", () => {
+  it("should have the provided `values` set to its `values` property", () => {
     assertStrictEquals(_LiteralUnion.values, literalUnionValues);
   });
+});
 
-  it("should return a `Function` that returns `value` when it is equal to one of the `literals`", () => {
+describe("LiteralUnionAsserter.assert", () => {
+  it("should return `value` when it is equal to one of the `values`", () => {
     const testCases = [0, 1, "", "a"];
 
     for (const value of testCases) {
-      assertStrictEquals(_LiteralUnion(value), value);
+      assertStrictEquals(_LiteralUnion.assert(value), value);
     }
   });
 
-  it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not equal to any of the `literals`", () => {
+  it("should throw a `TypeAssertionError` with correct `message` when `value` is not equal to any of the `values`", () => {
     assertThrows(
-      () => _LiteralUnion(undefined, "name"),
+      () => _LiteralUnion.assert(undefined, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_LiteralUnion.assertedTypeName, undefined, {
+      new TypeAssertionError(_LiteralUnion.typeName, undefined, {
         valueName: "name",
       })
         .message,
     );
 
-    const unnamedAsserter = literalUnionAsserter("", [0, 1, "", "a"]);
+    const unnamedAsserter = new LiteralUnionAsserter("", [0, 1, "", "a"]);
 
     assertThrows(
-      () => unnamedAsserter(undefined),
+      () => unnamedAsserter.assert(undefined),
       TypeAssertionError,
-      new TypeAssertionError(unnamedAsserter.assertedTypeName, undefined)
-        .message,
+      new TypeAssertionError(unnamedAsserter.typeName, undefined).message,
     );
 
     const testCases = [undefined, null, false, [], {}, 2, "b"];
 
     for (const value of testCases) {
       assertThrows(
-        () => _LiteralUnion(value),
+        () => _LiteralUnion.assert(value),
         TypeAssertionError,
-        new TypeAssertionError(_LiteralUnion.assertedTypeName, value).message,
+        new TypeAssertionError(_LiteralUnion.typeName, value).message,
       );
     }
   });

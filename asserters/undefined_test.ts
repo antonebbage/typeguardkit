@@ -4,37 +4,35 @@ import { TypeAssertionError } from "../mod.ts";
 import { _undefined } from "./undefined.ts";
 
 describe("_undefined", () => {
-  it('should have an `assertedTypeName` of `"undefined"`', () => {
-    assertStrictEquals(_undefined.assertedTypeName, "undefined");
+  it('should have a `typeName` of `"undefined"`', () => {
+    assertStrictEquals(_undefined.typeName, "undefined");
   });
 
-  it("should return `value` if `undefined`", () => {
-    assertStrictEquals(_undefined(undefined), undefined);
+  it("`assert` should return `value` if `undefined`", () => {
+    assertStrictEquals(_undefined.assert(undefined), undefined);
   });
 
-  it("should throw a `TypeAssertionError` with correct `message` if `value` not `undefined`", () => {
+  it("`assert` should throw a `TypeAssertionError` with correct `message` if `value` not `undefined`", () => {
     assertThrows(
-      () => _undefined(null, "name"),
+      () => _undefined.assert(null, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_undefined.assertedTypeName, null, {
-        valueName: "name",
-      })
+      new TypeAssertionError(_undefined.typeName, null, { valueName: "name" })
         .message,
     );
 
     assertThrows(
-      () => _undefined(null),
+      () => _undefined.assert(null),
       TypeAssertionError,
-      new TypeAssertionError(_undefined.assertedTypeName, null).message,
+      new TypeAssertionError(_undefined.typeName, null).message,
     );
 
     const testCases = [null, false, 0, "", [], {}];
 
     for (const value of testCases) {
       assertThrows(
-        () => _undefined(value),
+        () => _undefined.assert(value),
         TypeAssertionError,
-        new TypeAssertionError(_undefined.assertedTypeName, value).message,
+        new TypeAssertionError(_undefined.typeName, value).message,
       );
     }
   });

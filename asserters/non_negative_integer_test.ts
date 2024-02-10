@@ -4,36 +4,32 @@ import { TypeAssertionError } from "../mod.ts";
 import { _NonNegativeInteger } from "./non_negative_integer.ts";
 
 describe("_NonNegativeInteger", () => {
-  it('should have an `assertedTypeName` of `"NonNegativeInteger"`', () => {
-    assertStrictEquals(
-      _NonNegativeInteger.assertedTypeName,
-      "NonNegativeInteger",
-    );
+  it('should have a `typeName` of `"NonNegativeInteger"`', () => {
+    assertStrictEquals(_NonNegativeInteger.typeName, "NonNegativeInteger");
   });
 
-  it("should return `value` if it is a non-negative integer `number`", () => {
+  it("`assert` should return `value` if it is a non-negative integer `number`", () => {
     const testCases = [0, 1, 10, 1000];
 
     for (const value of testCases) {
-      assertStrictEquals(_NonNegativeInteger(value), value);
+      assertStrictEquals(_NonNegativeInteger.assert(value), value);
     }
   });
 
-  it("should throw a `TypeAssertionError` with correct `message` if `value` is not a non-negative integer `number`", () => {
+  it("`assert` should throw a `TypeAssertionError` with correct `message` if `value` is not a non-negative integer `number`", () => {
     assertThrows(
-      () => _NonNegativeInteger(undefined, "name"),
+      () => _NonNegativeInteger.assert(undefined, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_NonNegativeInteger.assertedTypeName, undefined, {
+      new TypeAssertionError(_NonNegativeInteger.typeName, undefined, {
         valueName: "name",
       })
         .message,
     );
 
     assertThrows(
-      () => _NonNegativeInteger(undefined),
+      () => _NonNegativeInteger.assert(undefined),
       TypeAssertionError,
-      new TypeAssertionError(_NonNegativeInteger.assertedTypeName, undefined)
-        .message,
+      new TypeAssertionError(_NonNegativeInteger.typeName, undefined).message,
     );
 
     const testCases = [
@@ -54,10 +50,9 @@ describe("_NonNegativeInteger", () => {
 
     for (const value of testCases) {
       assertThrows(
-        () => _NonNegativeInteger(value),
+        () => _NonNegativeInteger.assert(value),
         TypeAssertionError,
-        new TypeAssertionError(_NonNegativeInteger.assertedTypeName, value)
-          .message,
+        new TypeAssertionError(_NonNegativeInteger.typeName, value).message,
       );
     }
   });

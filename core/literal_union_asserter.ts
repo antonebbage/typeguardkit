@@ -3,65 +3,50 @@
 import { Asserter } from "./asserter.ts";
 import { TypeAssertionError } from "./type_assertion_error.ts";
 
-export const literalUnionAsserterTypeName = "LiteralUnionAsserter" as const;
-
-/** A `LiteralUnionAsserter` is an `Asserter` for the union of its `values`. */
-export interface LiteralUnionAsserter<
-  Values extends ReadonlyArray<number | string>,
-> extends Asserter<Values[number]> {
-  readonly asserterTypeName: typeof literalUnionAsserterTypeName;
-
-  readonly values: Values;
-}
-
 /**
- * `literalUnionAsserter` returns a `LiteralUnionAsserter` for the union of the
- * provided `values`.
+ * A `LiteralUnionAsserter` is an `Asserter` for the union of its `values`.
+ *
+ * The provided `values` are made accessible as a property of the created
+ * `LiteralUnionAsserter`.
  *
  * The `values` array should be asserted `as const` if defined outside the
- * `literalUnionAsserter` call.
- *
- * The provided `values` will be set to the `values` property of the returned
- * `LiteralUnionAsserter`.
+ * constructor call.
  *
  * Example:
  *
  * ```ts
- * import { LiteralUnionAsserter, literalUnionAsserter } from "../mod.ts";
+ * import { LiteralUnionAsserter } from "../mod.ts";
  *
- * const asserter = literalUnionAsserter(
+ * const asserter = new LiteralUnionAsserter(
  *   "Direction",
  *   ["up", "right", "down", "left"],
  * );
  *
- * export type Direction = ReturnType<typeof asserter>;
+ * export type Direction = ReturnType<typeof asserter.assert>;
  *
  * export const _Direction: LiteralUnionAsserter<readonly Direction[]> =
  *   asserter;
  * ```
  */
-export function literalUnionAsserter<
+export class LiteralUnionAsserter<
   const Values extends ReadonlyArray<number | string>,
->(
-  assertedTypeName: string,
-  values: Values,
-): LiteralUnionAsserter<Values> {
-  assertedTypeName ||= "UnnamedLiteralUnion";
+> implements Asserter<Values[number]> {
+  readonly typeName: string;
 
-  const asserter = (value: unknown, valueName?: string) => {
-    for (const literal of values) {
+  constructor(
+    typeName: string,
+    readonly values: Values,
+  ) {
+    this.typeName = typeName || "UnnamedLiteralUnion";
+  }
+
+  assert(value: unknown, valueName?: string): Values[number] {
+    for (const literal of this.values) {
       if (literal === value) {
-        return value;
+        return value as Values[number];
       }
     }
 
-    throw new TypeAssertionError(assertedTypeName, value, { valueName });
-  };
-
-  asserter.asserterTypeName = literalUnionAsserterTypeName;
-  asserter.assertedTypeName = assertedTypeName;
-
-  asserter.values = values;
-
-  return asserter as LiteralUnionAsserter<Values>;
+    throw new TypeAssertionError(this.typeName, value, { valueName });
+  }
 }

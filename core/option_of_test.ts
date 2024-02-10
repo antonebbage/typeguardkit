@@ -1,47 +1,41 @@
 import { assertInstanceOf, assertStrictEquals, assertThrows } from "assert";
 import { describe, it } from "testing/bdd.ts";
-import { _string, TypeAssertionError } from "../mod.ts";
+import { _string, OptionAsserter, TypeAssertionError } from "../mod.ts";
 import { optionOf } from "./option_of.ts";
 
 describe("optionOf", () => {
   const _OptionalString = optionOf(_string);
 
-  it("should return a `Function`", () => {
-    assertInstanceOf(_OptionalString, Function);
+  it("should return an `OptionAsserter`", () => {
+    assertInstanceOf(_OptionalString, OptionAsserter);
   });
 
-  it("should return a `Function` with the correct `asserterTypeName`", () => {
-    assertStrictEquals(_OptionalString.asserterTypeName, "OptionAsserter");
-  });
-
-  it("should return a `Function` with the correct `assertedTypeName`", () => {
+  it("should return an `OptionAsserter` with the correct `typeName`", () => {
     assertStrictEquals(
-      _OptionalString.assertedTypeName,
-      `${_string.assertedTypeName} | undefined`,
+      _OptionalString.typeName,
+      `${_string.typeName} | undefined`,
     );
   });
 
-  it("should return a `Function` with the provided `definedTypeAsserter` set to its `definedTypeAsserter` property", () => {
+  it("should return an `OptionAsserter` with the provided `definedTypeAsserter` set to its `definedTypeAsserter` property", () => {
     assertStrictEquals(_OptionalString.definedTypeAsserter, _string);
   });
 
-  it("should return a `Function` that returns `value` when `undefined` or `definedTypeAsserter` does not throw an error for it", () => {
+  it("should return an `OptionAsserter` whose `assert` method returns `value` when `undefined` or `definedTypeAsserter` does not throw an error for it", () => {
     const testCases = ["", "a", undefined];
 
     for (const value of testCases) {
-      assertStrictEquals(_OptionalString(value), value);
+      assertStrictEquals(_OptionalString.assert(value), value);
     }
   });
 
-  it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` defined and `definedTypeAsserter` throws an error for it", () => {
+  it("should return an `OptionAsserter` whose `assert` method throws a `TypeAssertionError` with correct `message` when `value` defined and `definedTypeAsserter` throws an error for it", () => {
     assertThrows(
-      () => _OptionalString(null, "name"),
+      () => _OptionalString.assert(null, "name"),
       TypeAssertionError,
-      new TypeAssertionError(
-        _OptionalString.assertedTypeName,
-        null,
-        { valueName: "name" },
-      )
+      new TypeAssertionError(_OptionalString.typeName, null, {
+        valueName: "name",
+      })
         .message,
     );
 
@@ -49,9 +43,9 @@ describe("optionOf", () => {
 
     for (const value of testCases) {
       assertThrows(
-        () => _OptionalString(value),
+        () => _OptionalString.assert(value),
         TypeAssertionError,
-        new TypeAssertionError(_OptionalString.assertedTypeName, value).message,
+        new TypeAssertionError(_OptionalString.typeName, value).message,
       );
     }
   });

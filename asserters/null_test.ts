@@ -4,37 +4,35 @@ import { TypeAssertionError } from "../mod.ts";
 import { _null } from "./null.ts";
 
 describe("_null", () => {
-  it('should have an `assertedTypeName` of `"null"`', () => {
-    assertStrictEquals(_null.assertedTypeName, "null");
+  it('should have a `typeName` of `"null"`', () => {
+    assertStrictEquals(_null.typeName, "null");
   });
 
-  it("should return `value` if `null`", () => {
-    assertStrictEquals(_null(null), null);
+  it("`assert` should return `value` if `null`", () => {
+    assertStrictEquals(_null.assert(null), null);
   });
 
-  it("should throw a `TypeAssertionError` with correct `message` if `value` not `null`", () => {
+  it("`assert` should throw a `TypeAssertionError` with correct `message` if `value` not `null`", () => {
     assertThrows(
-      () => _null(undefined, "name"),
+      () => _null.assert(undefined, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_null.assertedTypeName, undefined, {
-        valueName: "name",
-      })
+      new TypeAssertionError(_null.typeName, undefined, { valueName: "name" })
         .message,
     );
 
     assertThrows(
-      () => _null(undefined),
+      () => _null.assert(undefined),
       TypeAssertionError,
-      new TypeAssertionError(_null.assertedTypeName, undefined).message,
+      new TypeAssertionError(_null.typeName, undefined).message,
     );
 
     const testCases = [undefined, false, 0, "", [], {}];
 
     for (const value of testCases) {
       assertThrows(
-        () => _null(value),
+        () => _null.assert(value),
         TypeAssertionError,
-        new TypeAssertionError(_null.assertedTypeName, value).message,
+        new TypeAssertionError(_null.typeName, value).message,
       );
     }
   });

@@ -2,9 +2,9 @@
 
 import { Asserter } from "../asserter.ts";
 import { is } from "../is.ts";
-import { typeAsserter } from "../type_asserter.ts";
-import { ObjectAsserter, objectAsserter } from "./object_asserter.ts";
+import { TypeAsserter } from "../type_asserter.ts";
 import { isTypeNameOpen } from "./_is_type_name_open.ts";
+import { ObjectAsserter } from "./object_asserter.ts";
 
 /**
  * `objectIntersectionOf` returns an `ObjectAsserter` for the intersection of
@@ -13,20 +13,15 @@ import { isTypeNameOpen } from "./_is_type_name_open.ts";
  * Example:
  *
  * ```ts
- * import {
- *   _string,
- *   ObjectAsserter,
- *   objectAsserter,
- *   objectIntersectionOf,
- * } from "../../mod.ts";
+ * import { _string, ObjectAsserter, objectIntersectionOf } from "../../mod.ts";
  *
  * // types/entity.ts
  *
- * const entityAsserter = objectAsserter("Entity", {
+ * const entityAsserter = new ObjectAsserter("Entity", {
  *   id: _string,
  * });
  *
- * export type Entity = ReturnType<typeof entityAsserter>;
+ * export type Entity = ReturnType<typeof entityAsserter.assert>;
  *
  * export const _Entity: ObjectAsserter<Entity> = entityAsserter;
  *
@@ -34,13 +29,13 @@ import { isTypeNameOpen } from "./_is_type_name_open.ts";
  *
  * const userAsserter = objectIntersectionOf(
  *   _Entity,
- *   objectAsserter("", {
+ *   new ObjectAsserter("", {
  *     name: _string,
  *   }),
  *   "User",
  * );
  *
- * export type User = ReturnType<typeof userAsserter>;
+ * export type User = ReturnType<typeof userAsserter.assert>;
  *
  * export const _User: ObjectAsserter<User> = userAsserter;
  * ```
@@ -53,8 +48,7 @@ export function objectIntersectionOf<
   asserterB: ObjectAsserter<TypeB>,
   assertedTypeName?: string,
 ): ObjectAsserter<TypeA & TypeB> {
-  assertedTypeName ||=
-    `${asserterA.assertedTypeName} & ${asserterB.assertedTypeName}`;
+  assertedTypeName ||= `${asserterA.typeName} & ${asserterB.typeName}`;
 
   const newPropertyAsserters: Record<string, Asserter<unknown>> = {};
 
@@ -66,13 +60,13 @@ export function objectIntersectionOf<
 
     if (propertyAsserterB && propertyAsserterB !== propertyAsserterA) {
       const newPropertyTypeName = [
-        propertyAsserterA.assertedTypeName,
-        propertyAsserterB.assertedTypeName,
+        propertyAsserterA.typeName,
+        propertyAsserterB.typeName,
       ]
         .map((name) => isTypeNameOpen(name) ? `(${name})` : name)
         .join(" & ");
 
-      newPropertyAsserters[key] = typeAsserter(
+      newPropertyAsserters[key] = new TypeAsserter(
         newPropertyTypeName,
         (value): value is unknown => {
           return is(propertyAsserterA, value) && is(propertyAsserterB, value);
@@ -89,7 +83,7 @@ export function objectIntersectionOf<
     }
   }
 
-  return objectAsserter(
+  return new ObjectAsserter(
     assertedTypeName,
     newPropertyAsserters,
   ) as ObjectAsserter<TypeA & TypeB>;

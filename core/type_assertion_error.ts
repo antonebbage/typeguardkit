@@ -118,27 +118,26 @@ export class TypeAssertionError extends TypeError {
    *   assertIs,
    *   is,
    *   ObjectAsserter,
-   *   objectAsserter,
    *   TypeAssertionError,
    * } from "../mod.ts";
    *
    * // types/item.ts
    *
-   * const itemAsserter = objectAsserter("Item", {
+   * const itemAsserter = new ObjectAsserter("Item", {
    *   quantity: _NonNegativeInteger,
    * });
    *
-   * export type Item = ReturnType<typeof itemAsserter>;
+   * export type Item = ReturnType<typeof itemAsserter.assert>;
    *
    * export const _Item: ObjectAsserter<Item> = itemAsserter;
    *
    * // types/form.ts
    *
-   * const formAsserter = objectAsserter("Form", {
+   * const formAsserter = new ObjectAsserter("Form", {
    *   item: _Item,
    * });
    *
-   * export type Form = ReturnType<typeof formAsserter>;
+   * export type Form = ReturnType<typeof formAsserter.assert>;
    *
    * export const _Form: ObjectAsserter<Form> = formAsserter;
    *

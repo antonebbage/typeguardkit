@@ -1,15 +1,19 @@
 // This module is browser-compatible.
 
-import { TypeAsserter, typeAsserter } from "./type_asserter.ts";
+import { Asserter } from "./asserter.ts";
+import { TypeAssertionError } from "./type_assertion_error.ts";
 
 /**
- * `enumAsserter` returns a `TypeAsserter` for the union of the member types of
- * the provided `enumObject`.
+ * An `EnumAsserter` is an `Asserter` for the union of the member types of the
+ * provided `enumObject`.
+ *
+ * The provided `enumObject` is made accessible as a property of the created
+ * `EnumAsserter`.
  *
  * Example:
  *
  * ```ts
- * import { enumAsserter } from "../mod.ts";
+ * import { EnumAsserter } from "../mod.ts";
  *
  * export enum Direction {
  *   Up,
@@ -18,26 +22,31 @@ import { TypeAsserter, typeAsserter } from "./type_asserter.ts";
  *   Left,
  * }
  *
- * export const _Direction = enumAsserter("Direction", Direction);
+ * export const _Direction = new EnumAsserter("Direction", Direction);
  * ```
  */
-export function enumAsserter<
+export class EnumAsserter<
   Enum extends Record<string, number | string>,
->(assertedTypeName: string, enumObject: Enum): TypeAsserter<Enum[keyof Enum]> {
-  const nonNumericStringKeys = Object.keys(enumObject).filter((key) =>
-    isNaN(Number(key))
-  );
+> implements Asserter<Enum[keyof Enum]> {
+  readonly typeName: string;
 
-  return typeAsserter(
-    assertedTypeName || "UnnamedEnum",
-    (value): value is Enum[keyof Enum] => {
-      for (const key of nonNumericStringKeys) {
-        if (enumObject[key] === value) {
-          return true;
-        }
+  readonly #nonNumericStringKeys: string[];
+
+  constructor(typeName: string, readonly enumObject: Enum) {
+    this.typeName = typeName || "UnnamedEnum";
+
+    this.#nonNumericStringKeys = Object.keys(this.enumObject).filter((key) =>
+      isNaN(Number(key))
+    );
+  }
+
+  assert(value: unknown, valueName?: string): Enum[keyof Enum] {
+    for (const key of this.#nonNumericStringKeys) {
+      if (this.enumObject[key] === value) {
+        return value as Enum[keyof Enum];
       }
+    }
 
-      return false;
-    },
-  );
+    throw new TypeAssertionError(this.typeName, value, { valueName });
+  }
 }

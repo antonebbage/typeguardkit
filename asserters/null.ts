@@ -1,13 +1,9 @@
 // This module is browser-compatible.
 
-import { typeAsserter } from "../core/mod.ts";
+import { TypeAsserter } from "../core/mod.ts";
 
-/**
- * `_null` is a `null` type assertion function. If `value` is `null`, `_null`
- * returns `value` as `null`. Otherwise, `_null` throws a `TypeAssertionError`,
- * including `valueName` in its `message`.
- */
-export const _null = typeAsserter(
+/** `_null` is a `TypeAsserter<null>`. */
+export const _null = new TypeAsserter(
   "null",
   (value): value is null => value === null,
 );

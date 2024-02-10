@@ -3,20 +3,7 @@
 import { Asserter } from "./asserter.ts";
 import { TypeAssertionError } from "./type_assertion_error.ts";
 
-export const numberAsserterTypeName = "NumberAsserter" as const;
-
-/**
- * A `NumberAsserter` is an `Asserter<number>` with any additional validation
- * defined by its `NumberAsserterOptions` properties.
- */
-export interface NumberAsserter
-  extends Asserter<number>, NumberAsserterOptions {
-  readonly asserterTypeName: typeof numberAsserterTypeName;
-
-  readonly disallowNaN: boolean;
-}
-
-/** `NumberAsserterOptions` can be passed to the `numberAsserter` function. */
+/** `NumberAsserterOptions` are passed to the `NumberAsserter` constructor. */
 export interface NumberAsserterOptions {
   readonly disallowNaN?: boolean;
   readonly min?: NumberAsserterBound;
@@ -35,40 +22,56 @@ export interface NumberAsserterBound {
 }
 
 /**
- * `numberAsserter` returns a `NumberAsserter` that asserts whether `value` is
- * of type `number` and valid according to the provided `NumberAsserterOptions`.
+ * A `NumberAsserter` is an `Asserter<number>`, with any additional validation
+ * defined by its `NumberAsserterOptions` properties.
  *
  * If defined, the `NumberAsserterOptions` `validate` function should return an
  * empty array if `value` is valid, or an array of issues if `value` is invalid.
  *
  * The provided `NumberAsserterOptions` are made accessible as properties of the
- * returned `NumberAsserter`.
+ * created `NumberAsserter`.
  *
  * Example:
  *
  * ```ts
- * import { numberAsserter } from "../mod.ts";
+ * import { NumberAsserter } from "../mod.ts";
  *
- * export const _EvenNumberInRange = numberAsserter("EvenNumberInRange", {
+ * export const _EvenNumberInRange = new NumberAsserter("EvenNumberInRange", {
  *   min: { value: 0, inclusive: true },
  *   max: { value: 100, inclusive: true },
  *   step: 2,
  * });
  * ```
  */
-export function numberAsserter(
-  assertedTypeName: string,
-  { disallowNaN = false, min, max, step, validate }: NumberAsserterOptions,
-): NumberAsserter {
-  if (step !== undefined && (step <= 0 || !isFinite(step))) {
-    throw new Error("`step` must be positive and finite if defined");
+export class NumberAsserter implements Asserter<number> {
+  readonly typeName: string;
+
+  readonly disallowNaN: boolean;
+  readonly min?: NumberAsserterBound;
+  readonly max?: NumberAsserterBound;
+  readonly step?: number;
+  readonly validate?: (value: number) => string[];
+
+  constructor(
+    typeName: string,
+    { disallowNaN = false, min, max, step, validate }: NumberAsserterOptions,
+  ) {
+    if (step !== undefined && (step <= 0 || !isFinite(step))) {
+      throw new Error("`step` must be positive and finite if defined");
+    }
+
+    this.typeName = typeName || "UnnamedNumber";
+
+    this.disallowNaN = disallowNaN;
+    this.min = min;
+    this.max = max;
+    this.step = step;
+    this.validate = validate;
   }
 
-  assertedTypeName ||= "UnnamedNumber";
-
-  const asserter = (value: unknown, valueName?: string) => {
+  assert(value: unknown, valueName?: string): number {
     if (typeof value !== "number") {
-      throw new TypeAssertionError(assertedTypeName, value, {
+      throw new TypeAssertionError(this.typeName, value, {
         valueName,
         issues: "must be of type `number`",
       });
@@ -76,13 +79,15 @@ export function numberAsserter(
 
     const issues: string[] = [];
 
-    if (disallowNaN) {
+    if (this.disallowNaN) {
       if (isNaN(value)) {
         issues.push("must be a valid number");
       }
     } else if (isNaN(value)) {
       return value;
     }
+
+    const min = this.min;
 
     if (min) {
       if (min.inclusive) {
@@ -94,6 +99,8 @@ export function numberAsserter(
       }
     }
 
+    const max = this.max;
+
     if (max) {
       if (max.inclusive) {
         if (value > max.value) {
@@ -103,6 +110,8 @@ export function numberAsserter(
         issues.push(`must be < ${max.value}`);
       }
     }
+
+    const step = this.step;
 
     if (step !== undefined) {
       let isStepMismatch = false;
@@ -152,28 +161,14 @@ export function numberAsserter(
       }
     }
 
-    if (validate) {
-      issues.push(...validate(value));
+    if (this.validate) {
+      issues.push(...this.validate(value));
     }
 
     if (issues.length) {
-      throw new TypeAssertionError(assertedTypeName, value, {
-        valueName,
-        issues,
-      });
+      throw new TypeAssertionError(this.typeName, value, { valueName, issues });
     }
 
     return value;
-  };
-
-  asserter.asserterTypeName = numberAsserterTypeName;
-  asserter.assertedTypeName = assertedTypeName;
-
-  asserter.disallowNaN = disallowNaN;
-  asserter.min = min;
-  asserter.max = max;
-  asserter.step = step;
-  asserter.validate = validate;
-
-  return asserter;
+  }
 }

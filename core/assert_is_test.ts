@@ -4,7 +4,7 @@ import { _string, TypeAssertionError } from "../mod.ts";
 import { assertIs } from "./assert_is.ts";
 
 describe("assertIs", () => {
-  it("should return `undefined` if `asserter` does not throw an error for `value`", () => {
+  it("should return `undefined` if `asserter.assert` does not throw an error for `value`", () => {
     const testCases = ["", "a"];
 
     for (const value of testCases) {
@@ -12,13 +12,11 @@ describe("assertIs", () => {
     }
   });
 
-  it("should allow an error thrown by `asserter` for `value` to bubble up", () => {
+  it("should allow an error thrown by `asserter.assert` for `value` to bubble up", () => {
     assertThrows(
       () => assertIs(_string, undefined, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_string.assertedTypeName, undefined, {
-        valueName: "name",
-      })
+      new TypeAssertionError(_string.typeName, undefined, { valueName: "name" })
         .message,
     );
 
@@ -28,7 +26,7 @@ describe("assertIs", () => {
       assertThrows(
         () => assertIs(_string, value),
         TypeAssertionError,
-        new TypeAssertionError(_string.assertedTypeName, value).message,
+        new TypeAssertionError(_string.typeName, value).message,
       );
     }
   });

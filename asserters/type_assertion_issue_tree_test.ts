@@ -4,14 +4,14 @@ import { TypeAssertionError, TypeAssertionIssueTree } from "../mod.ts";
 import { _TypeAssertionIssueTree } from "./type_assertion_issue_tree.ts";
 
 describe("_TypeAssertionIssueTree", () => {
-  it('should have an `assertedTypeName` of `"TypeAssertionIssueTree"`', () => {
+  it('should have a `typeName` of `"TypeAssertionIssueTree"`', () => {
     assertStrictEquals(
-      _TypeAssertionIssueTree.assertedTypeName,
+      _TypeAssertionIssueTree.typeName,
       "TypeAssertionIssueTree",
     );
   });
 
-  it("should return `value` if of type `TypeAssertionIssueTree`", () => {
+  it("`assert` should return `value` if of type `TypeAssertionIssueTree`", () => {
     const testCases: TypeAssertionIssueTree[] = [
       {
         valueName: "value",
@@ -102,29 +102,24 @@ describe("_TypeAssertionIssueTree", () => {
     ];
 
     for (const value of testCases) {
-      assertStrictEquals(_TypeAssertionIssueTree(value), value);
+      assertStrictEquals(_TypeAssertionIssueTree.assert(value), value);
     }
   });
 
-  it("should throw a `TypeAssertionError` with correct `message` if `value` not of type `TypeAssertionIssueTree`", () => {
+  it("`assert` should throw a `TypeAssertionError` with correct `message` if `value` not of type `TypeAssertionIssueTree`", () => {
     assertThrows(
-      () => _TypeAssertionIssueTree(undefined, "name"),
+      () => _TypeAssertionIssueTree.assert(undefined, "name"),
       TypeAssertionError,
-      new TypeAssertionError(
-        _TypeAssertionIssueTree.assertedTypeName,
-        undefined,
-        { valueName: "name" },
-      )
+      new TypeAssertionError(_TypeAssertionIssueTree.typeName, undefined, {
+        valueName: "name",
+      })
         .message,
     );
 
     assertThrows(
-      () => _TypeAssertionIssueTree(undefined),
+      () => _TypeAssertionIssueTree.assert(undefined),
       TypeAssertionError,
-      new TypeAssertionError(
-        _TypeAssertionIssueTree.assertedTypeName,
-        undefined,
-      )
+      new TypeAssertionError(_TypeAssertionIssueTree.typeName, undefined)
         .message,
     );
 
@@ -356,10 +351,9 @@ describe("_TypeAssertionIssueTree", () => {
 
     for (const value of testCases) {
       assertThrows(
-        () => _TypeAssertionIssueTree(value),
+        () => _TypeAssertionIssueTree.assert(value),
         TypeAssertionError,
-        new TypeAssertionError(_TypeAssertionIssueTree.assertedTypeName, value)
-          .message,
+        new TypeAssertionError(_TypeAssertionIssueTree.typeName, value).message,
       );
     }
   });

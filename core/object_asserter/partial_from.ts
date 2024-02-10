@@ -1,8 +1,9 @@
 // This module is browser-compatible.
 
 import { Asserter } from "../asserter.ts";
-import { optionAsserterTypeName, optionOf } from "../option_of.ts";
-import { ObjectAsserter, objectAsserter } from "./object_asserter.ts";
+import { OptionAsserter } from "../option_asserter.ts";
+import { optionOf } from "../option_of.ts";
+import { ObjectAsserter } from "./object_asserter.ts";
 
 /**
  * `partialFrom` returns an `ObjectAsserter<Partial<Type>>`, created using the
@@ -11,15 +12,10 @@ import { ObjectAsserter, objectAsserter } from "./object_asserter.ts";
  * Example:
  *
  * ```ts
- * import {
- *   _string,
- *   ObjectAsserter,
- *   objectAsserter,
- *   partialFrom,
- * } from "../../mod.ts";
+ * import { _string, ObjectAsserter, partialFrom } from "../../mod.ts";
  *
  * const asserter = partialFrom(
- *   objectAsserter("", {
+ *   new ObjectAsserter("", {
  *     option1: _string,
  *     option2: _string,
  *     option3: _string,
@@ -27,7 +23,7 @@ import { ObjectAsserter, objectAsserter } from "./object_asserter.ts";
  *   "Options",
  * );
  *
- * export type Options = ReturnType<typeof asserter>;
+ * export type Options = ReturnType<typeof asserter.assert>;
  *
  * export const _Options: ObjectAsserter<Options> = asserter;
  * ```
@@ -36,20 +32,19 @@ export function partialFrom<Type extends Record<string, unknown>>(
   asserter: ObjectAsserter<Type>,
   assertedTypeName?: string,
 ): ObjectAsserter<Partial<Type>> {
-  assertedTypeName ||= `Partial<${asserter.assertedTypeName}>`;
+  assertedTypeName ||= `Partial<${asserter.typeName}>`;
 
   const newPropertyAsserters: Record<string, Asserter<unknown>> = {};
 
   for (const key in asserter.propertyAsserters) {
     const oldPropertyAsserter = asserter.propertyAsserters[key];
 
-    newPropertyAsserters[key] = oldPropertyAsserter.asserterTypeName !==
-        optionAsserterTypeName
-      ? optionOf(oldPropertyAsserter)
-      : oldPropertyAsserter;
+    newPropertyAsserters[key] = oldPropertyAsserter instanceof OptionAsserter
+      ? oldPropertyAsserter
+      : optionOf(oldPropertyAsserter);
   }
 
-  return objectAsserter(
+  return new ObjectAsserter(
     assertedTypeName,
     newPropertyAsserters,
   ) as ObjectAsserter<Partial<Type>>;

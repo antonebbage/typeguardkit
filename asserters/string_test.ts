@@ -4,41 +4,39 @@ import { TypeAssertionError } from "../mod.ts";
 import { _string } from "./string.ts";
 
 describe("_string", () => {
-  it('should have an `assertedTypeName` of `"string"`', () => {
-    assertStrictEquals(_string.assertedTypeName, "string");
+  it('should have a `typeName` of `"string"`', () => {
+    assertStrictEquals(_string.typeName, "string");
   });
 
-  it("should return `value` if of type `string`", () => {
+  it("`assert` should return `value` if of type `string`", () => {
     const testCases = ["", "a"];
 
     for (const value of testCases) {
-      assertStrictEquals(_string(value), value);
+      assertStrictEquals(_string.assert(value), value);
     }
   });
 
-  it("should throw a `TypeAssertionError` with correct `message` if `value` not of type `string`", () => {
+  it("`assert` should throw a `TypeAssertionError` with correct `message` if `value` not of type `string`", () => {
     assertThrows(
-      () => _string(undefined, "name"),
+      () => _string.assert(undefined, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_string.assertedTypeName, undefined, {
-        valueName: "name",
-      })
+      new TypeAssertionError(_string.typeName, undefined, { valueName: "name" })
         .message,
     );
 
     assertThrows(
-      () => _string(undefined),
+      () => _string.assert(undefined),
       TypeAssertionError,
-      new TypeAssertionError(_string.assertedTypeName, undefined).message,
+      new TypeAssertionError(_string.typeName, undefined).message,
     );
 
     const testCases = [undefined, null, false, 0, [], {}];
 
     for (const value of testCases) {
       assertThrows(
-        () => _string(value),
+        () => _string.assert(value),
         TypeAssertionError,
-        new TypeAssertionError(_string.assertedTypeName, value).message,
+        new TypeAssertionError(_string.typeName, value).message,
       );
     }
   });

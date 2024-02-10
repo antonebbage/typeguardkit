@@ -4,8 +4,7 @@ import {
   _boolean,
   _number,
   _string,
-  objectAsserter,
-  objectAsserterTypeName,
+  ObjectAsserter,
   TypeAssertionError,
   unionOf,
 } from "../../mod.ts";
@@ -14,16 +13,16 @@ import { objectIntersectionOf } from "./object_intersection_of.ts";
 describe("objectIntersectionOf", () => {
   const objectType1Name = "ObjectType1";
 
-  const _ObjectType1 = objectAsserter(objectType1Name, {
+  const _ObjectType1 = new ObjectAsserter(objectType1Name, {
     a: _string,
-    b: unionOf([_string, _number]),
+    b: unionOf(_string, _number),
   });
 
   const objectType2Name = "ObjectType2";
 
-  const _ObjectType2 = objectAsserter(objectType2Name, {
+  const _ObjectType2 = new ObjectAsserter(objectType2Name, {
     a: _string,
-    b: unionOf([_string, _boolean]),
+    b: unionOf(_string, _boolean),
     c: _string,
   });
 
@@ -35,41 +34,34 @@ describe("objectIntersectionOf", () => {
     intersectionName,
   );
 
-  it("should return a `Function`", () => {
-    assertInstanceOf(_Intersection, Function);
+  it("should return an `ObjectAsserter`", () => {
+    assertInstanceOf(_Intersection, ObjectAsserter);
   });
 
-  it("should return a `Function` with the correct `asserterTypeName`", () => {
-    assertStrictEquals(_Intersection.asserterTypeName, objectAsserterTypeName);
-  });
-
-  it("should return a `Function` with the provided `assertedTypeName` or the correct default if `undefined` or empty", () => {
+  it("should return an `ObjectAsserter` with the provided `typeName` or the correct default if `undefined` or empty", () => {
     const defaultTypeName =
-      `${_ObjectType1.assertedTypeName} & ${_ObjectType2.assertedTypeName}`;
+      `${_ObjectType1.typeName} & ${_ObjectType2.typeName}`;
 
     const testCases = [
-      {
-        asserter: _Intersection,
-        assertedTypeName: intersectionName,
-      },
+      { asserter: _Intersection, typeName: intersectionName },
 
       {
         asserter: objectIntersectionOf(_ObjectType1, _ObjectType2),
-        assertedTypeName: defaultTypeName,
+        typeName: defaultTypeName,
       },
 
       {
         asserter: objectIntersectionOf(_ObjectType1, _ObjectType2, ""),
-        assertedTypeName: defaultTypeName,
+        typeName: defaultTypeName,
       },
     ];
 
-    for (const { asserter, assertedTypeName } of testCases) {
-      assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
+    for (const { asserter, typeName } of testCases) {
+      assertStrictEquals(asserter.typeName, typeName);
     }
   });
 
-  it("should return a `Function` that returns `value` when it is an object and none of the `propertyAsserters` of `asserterA` and `asserterB` throw an error for the corresponding properties of `value`", () => {
+  it("should return an `ObjectAsserter` whose `assert` method returns `value` when it is an object and none of the `propertyAsserters` of `asserterA` and `asserterB` throw an error for the corresponding properties of `value`", () => {
     const testCases = [
       { a: "", b: "", c: "" },
       { a: "a", b: "b", c: "c" },
@@ -77,28 +69,28 @@ describe("objectIntersectionOf", () => {
     ];
 
     for (const value of testCases) {
-      assertStrictEquals(_Intersection(value), value);
+      assertStrictEquals(_Intersection.assert(value), value);
     }
   });
 
-  it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not an object, or any of the `propertyAsserters` of `asserterA` and `asserterB` throw an error for the corresponding property of `value`", () => {
+  it("should return an `ObjectAsserter` whose `assert` method throws a `TypeAssertionError` with correct `message` when `value` is not an object, or any of the `propertyAsserters` of `asserterA` and `asserterB` throw an error for the corresponding property of `value`", () => {
     const object = { a: 0, b: 0, c: "" };
 
     assertThrows(
-      () => _Intersection(object, "name"),
+      () => _Intersection.assert(object, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_Intersection.assertedTypeName, object, {
+      new TypeAssertionError(_Intersection.typeName, object, {
         valueName: "name",
 
         issues: [
           new TypeAssertionError(
-            _Intersection.propertyAsserters.a.assertedTypeName,
+            _Intersection.propertyAsserters.a.typeName,
             object.a,
             { valueName: "a" },
           ),
 
           new TypeAssertionError(
-            _Intersection.propertyAsserters.b.assertedTypeName,
+            _Intersection.propertyAsserters.b.typeName,
             object.b,
             { valueName: "b" },
           ),
@@ -110,18 +102,18 @@ describe("objectIntersectionOf", () => {
     const unnamedAsserter = objectIntersectionOf(_ObjectType1, _ObjectType2);
 
     assertThrows(
-      () => unnamedAsserter(object),
+      () => unnamedAsserter.assert(object),
       TypeAssertionError,
-      new TypeAssertionError(unnamedAsserter.assertedTypeName, object, {
+      new TypeAssertionError(unnamedAsserter.typeName, object, {
         issues: [
           new TypeAssertionError(
-            _Intersection.propertyAsserters.a.assertedTypeName,
+            _Intersection.propertyAsserters.a.typeName,
             object.a,
             { valueName: "a" },
           ),
 
           new TypeAssertionError(
-            _Intersection.propertyAsserters.b.assertedTypeName,
+            _Intersection.propertyAsserters.b.typeName,
             object.b,
             { valueName: "b" },
           ),
@@ -146,9 +138,9 @@ describe("objectIntersectionOf", () => {
 
     for (const value of testCases) {
       assertThrows(
-        () => _Intersection(value),
+        () => _Intersection.assert(value),
         TypeAssertionError,
-        new TypeAssertionError(_Intersection.assertedTypeName, value).message,
+        new TypeAssertionError(_Intersection.typeName, value).message,
       );
     }
   });

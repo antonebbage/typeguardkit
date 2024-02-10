@@ -1,102 +1,90 @@
-import { assertInstanceOf, assertStrictEquals, assertThrows } from "assert";
+import { assertStrictEquals, assertThrows } from "assert";
 import { describe, it } from "testing/bdd.ts";
 import { TypeAssertionError } from "../mod.ts";
-import {
-  NumberAsserter,
-  numberAsserter,
-  NumberAsserterOptions,
-} from "./number_asserter.ts";
+import { NumberAsserter, NumberAsserterOptions } from "./number_asserter.ts";
 
-describe("numberAsserter", () => {
-  const anyNumberTypeName = "AnyNumber";
-  const anyNumberOptions: NumberAsserterOptions = {};
-  const _AnyNumber = numberAsserter(anyNumberTypeName, anyNumberOptions);
+const anyNumberTypeName = "AnyNumber";
+const anyNumberOptions: NumberAsserterOptions = {};
+const _AnyNumber = new NumberAsserter(anyNumberTypeName, anyNumberOptions);
 
-  const validNumberOptions: NumberAsserterOptions = { disallowNaN: true };
-  const _ValidNumber = numberAsserter("ValidNumber", validNumberOptions);
+const validNumberOptions: NumberAsserterOptions = { disallowNaN: true };
+const _ValidNumber = new NumberAsserter("ValidNumber", validNumberOptions);
 
-  const integerOptions: NumberAsserterOptions = { step: 1 };
-  const _Integer = numberAsserter("Integer", integerOptions);
+const integerOptions: NumberAsserterOptions = { step: 1 };
+const _Integer = new NumberAsserter("Integer", integerOptions);
 
-  const fractionalStep = 0.0001;
+const fractionalStep = 0.0001;
 
-  const fractionalStepNumberOptions: NumberAsserterOptions = {
-    step: fractionalStep,
-  };
+const fractionalStepNumberOptions: NumberAsserterOptions = {
+  step: fractionalStep,
+};
 
-  const _FractionalStepNumber = numberAsserter(
-    "FractionalStepNumber",
-    fractionalStepNumberOptions,
-  );
+const _FractionalStepNumber = new NumberAsserter(
+  "FractionalStepNumber",
+  fractionalStepNumberOptions,
+);
 
-  const minValue = -10;
-  const maxValue = 10;
+const minValue = -10;
+const maxValue = 10;
 
-  const numberInInclusiveRangeOptions: NumberAsserterOptions = {
-    min: { value: minValue, inclusive: true },
-    max: { value: maxValue, inclusive: true },
-  };
+const numberInInclusiveRangeOptions: NumberAsserterOptions = {
+  min: { value: minValue, inclusive: true },
+  max: { value: maxValue, inclusive: true },
+};
 
-  const _NumberInInclusiveRange = numberAsserter(
-    "NumberInInclusiveRange",
-    numberInInclusiveRangeOptions,
-  );
+const _NumberInInclusiveRange = new NumberAsserter(
+  "NumberInInclusiveRange",
+  numberInInclusiveRangeOptions,
+);
 
-  const evenIssue = "must be even";
+const evenIssue = "must be even";
 
-  const evenNumberInExclusiveRangeOptions: NumberAsserterOptions = {
-    min: { value: minValue, inclusive: false },
-    max: { value: maxValue, inclusive: false },
-    validate: (value) => value % 2 === 0 ? [] : [evenIssue],
-  };
+const evenNumberInExclusiveRangeOptions: NumberAsserterOptions = {
+  min: { value: minValue, inclusive: false },
+  max: { value: maxValue, inclusive: false },
+  validate: (value) => value % 2 === 0 ? [] : [evenIssue],
+};
 
-  const _EvenNumberInExclusiveRange = numberAsserter(
-    "EvenNumberInExclusiveRange",
-    evenNumberInExclusiveRangeOptions,
-  );
+const _EvenNumberInExclusiveRange = new NumberAsserter(
+  "EvenNumberInExclusiveRange",
+  evenNumberInExclusiveRangeOptions,
+);
 
-  const positiveOddNumberOptions: NumberAsserterOptions = {
-    min: { value: 1, inclusive: true },
-    step: 2,
-  };
+const positiveOddNumberOptions: NumberAsserterOptions = {
+  min: { value: 1, inclusive: true },
+  step: 2,
+};
 
-  const _PositiveOddNumber = numberAsserter(
-    "PositiveOddNumber",
-    positiveOddNumberOptions,
-  );
+const _PositiveOddNumber = new NumberAsserter(
+  "PositiveOddNumber",
+  positiveOddNumberOptions,
+);
 
-  const exclusiveMinPositiveOddNumberOptions: NumberAsserterOptions = {
-    min: { value: 1, inclusive: false },
-    step: 2,
-  };
+const exclusiveMinPositiveOddNumberOptions: NumberAsserterOptions = {
+  min: { value: 1, inclusive: false },
+  step: 2,
+};
 
-  const _ExclusiveMinPositiveOddNumber = numberAsserter(
-    "ExclusiveMinPositiveOddNumber",
-    exclusiveMinPositiveOddNumberOptions,
-  );
+const _ExclusiveMinPositiveOddNumber = new NumberAsserter(
+  "ExclusiveMinPositiveOddNumber",
+  exclusiveMinPositiveOddNumberOptions,
+);
 
-  const unnamedAsserter = numberAsserter("", {});
+const unnamedAsserter = new NumberAsserter("", {});
 
-  it("should return a `Function`", () => {
-    assertInstanceOf(_AnyNumber, Function);
-  });
-
-  it("should return a `Function` with the correct `asserterTypeName`", () => {
-    assertStrictEquals(_AnyNumber.asserterTypeName, "NumberAsserter");
-  });
-
-  it("should return a `Function` with the provided `assertedTypeName` or the correct default if empty", () => {
+describe("NumberAsserter", () => {
+  it("should have the provided `typeName` or the correct default if empty", () => {
     const testCases = [
-      { asserter: _AnyNumber, assertedTypeName: anyNumberTypeName },
-      { asserter: unnamedAsserter, assertedTypeName: "UnnamedNumber" },
+      { asserter: _AnyNumber, typeName: anyNumberTypeName },
+      { asserter: unnamedAsserter, typeName: "UnnamedNumber" },
     ];
 
-    for (const { asserter, assertedTypeName } of testCases) {
-      assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
+    for (const { asserter, typeName } of testCases) {
+      assertStrictEquals(asserter.typeName, typeName);
     }
   });
 
-  it("should return a `Function` with the provided `NumberAsserterOptions` or correct defaults as properties", () => {
+  it("should have the provided `NumberAsserterOptions` or correct defaults as properties", () => {
     const testCases = [
       { asserter: _AnyNumber, options: anyNumberOptions },
       { asserter: _ValidNumber, options: validNumberOptions },
@@ -135,14 +123,16 @@ describe("numberAsserter", () => {
 
     for (const step of testCases) {
       assertThrows(
-        () => numberAsserter("", { step }),
+        () => new NumberAsserter("", { step }),
         Error,
         "`step` must be positive and finite if defined",
       );
     }
   });
+});
 
-  it("should return a `Function` that returns `value` when `value` is of type `number` and valid according to the provided `NumberAsserterOptions`", () => {
+describe("NumberAsserter.assert", () => {
+  it("should return `value` when `value` is of type `number` and valid according to the provided `NumberAsserterOptions`", () => {
     const testCases = [
       {
         asserter: _AnyNumber,
@@ -176,18 +166,18 @@ describe("numberAsserter", () => {
 
     for (const { asserter, values } of testCases) {
       for (const value of values) {
-        assertStrictEquals(asserter(value), value);
+        assertStrictEquals(asserter.assert(value), value);
       }
     }
   });
 
-  it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not of type `number` or is invalid according to the provided `NumberAsserterOptions`", () => {
+  it("should throw a `TypeAssertionError` with correct `message` when `value` is not of type `number` or is invalid according to the provided `NumberAsserterOptions`", () => {
     const typeIssue = "must be of type `number`";
 
     assertThrows(
-      () => _AnyNumber(undefined, "name"),
+      () => _AnyNumber.assert(undefined, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_AnyNumber.assertedTypeName, undefined, {
+      new TypeAssertionError(_AnyNumber.typeName, undefined, {
         valueName: "name",
         issues: [typeIssue],
       })
@@ -195,9 +185,9 @@ describe("numberAsserter", () => {
     );
 
     assertThrows(
-      () => unnamedAsserter(undefined),
+      () => unnamedAsserter.assert(undefined),
       TypeAssertionError,
-      new TypeAssertionError(unnamedAsserter.assertedTypeName, undefined, {
+      new TypeAssertionError(unnamedAsserter.typeName, undefined, {
         issues: [typeIssue],
       })
         .message,
@@ -323,10 +313,9 @@ describe("numberAsserter", () => {
     for (const { asserter, values } of testCases) {
       for (const [value, issues] of values) {
         assertThrows(
-          () => asserter(value),
+          () => asserter.assert(value),
           TypeAssertionError,
-          new TypeAssertionError(asserter.assertedTypeName, value, { issues })
-            .message,
+          new TypeAssertionError(asserter.typeName, value, { issues }).message,
         );
       }
     }

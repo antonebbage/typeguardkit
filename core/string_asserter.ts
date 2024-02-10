@@ -3,18 +3,7 @@
 import { Asserter } from "./asserter.ts";
 import { TypeAssertionError } from "./type_assertion_error.ts";
 
-export const stringAsserterTypeName = "StringAsserter" as const;
-
-/**
- * A `StringAsserter` is an `Asserter<string>` with any additional validation
- * defined by its `StringAsserterOptions` properties.
- */
-export interface StringAsserter
-  extends Asserter<string>, StringAsserterOptions {
-  readonly asserterTypeName: typeof stringAsserterTypeName;
-}
-
-/** `StringAsserterOptions` can be passed to the `stringAsserter` function. */
+/** `StringAsserterOptions` are passed to the `StringAsserter` constructor. */
 export interface StringAsserterOptions {
   readonly minLength?: number;
   readonly maxLength?: number;
@@ -32,8 +21,8 @@ export interface StringAsserterRegex {
 }
 
 /**
- * `stringAsserter` returns a `StringAsserter` that asserts whether `value` is
- * of type `string` and valid according to the provided `StringAsserterOptions`.
+ * A `StringAsserter` is an `Asserter<string>`, with any additional validation
+ * defined by its `StringAsserterOptions` properties.
  *
  * The `minLength` and `maxLength` `StringAsserterOptions` can be used to set
  * the minimum and maximum number of characters (as UTF-16 code units) allowed.
@@ -48,22 +37,22 @@ export interface StringAsserterRegex {
  * empty array if `value` is valid, or an array of issues if `value` is invalid.
  *
  * The provided `StringAsserterOptions` are made accessible as properties of the
- * returned `StringAsserter`.
+ * created `StringAsserter`.
  *
  * Example:
  *
  * ```ts
- * import { stringAsserter } from "./mod.ts";
+ * import { StringAsserter } from "./mod.ts";
  *
- * export const _NonEmptyString = stringAsserter("NonEmptyString", {
+ * export const _NonEmptyString = new StringAsserter("NonEmptyString", {
  *   minLength: 1,
  * });
  *
- * export const _NumericString = stringAsserter("NumericString", {
+ * export const _NumericString = new StringAsserter("NumericString", {
  *   regex: { pattern: "\\d+", requirements: ["must be numeric"] },
  * });
  *
- * export const _Palindrome = stringAsserter("Palindrome", {
+ * export const _Palindrome = new StringAsserter("Palindrome", {
  *   validate(value) {
  *     if (value.length < 2) {
  *       return [];
@@ -77,52 +66,73 @@ export interface StringAsserterRegex {
  * });
  * ```
  */
-export function stringAsserter(
-  assertedTypeName: string,
-  { minLength, maxLength, regex, validate }: StringAsserterOptions,
-): StringAsserter {
-  if (
-    minLength !== undefined && (minLength < 1 || !Number.isInteger(minLength))
+export class StringAsserter implements Asserter<string>, StringAsserterOptions {
+  readonly typeName: string;
+
+  readonly minLength?: number;
+  readonly maxLength?: number;
+  readonly regex?: StringAsserterRegex;
+  readonly validate?: (value: string) => string[];
+
+  readonly #regExp: RegExp | undefined;
+
+  constructor(
+    typeName: string,
+    { minLength, maxLength, regex, validate }: StringAsserterOptions,
   ) {
-    throw new Error("`minLength` must be a positive integer if defined");
+    if (
+      minLength !== undefined && (minLength < 1 || !Number.isInteger(minLength))
+    ) {
+      throw new Error("`minLength` must be a positive integer if defined");
+    }
+
+    if (
+      maxLength !== undefined && (maxLength < 1 || !Number.isInteger(maxLength))
+    ) {
+      throw new Error("`maxLength` must be a positive integer if defined");
+    }
+
+    if (
+      minLength !== undefined && maxLength !== undefined &&
+      minLength > maxLength
+    ) {
+      throw new Error("`minLength` must be <= `maxLength` if both are defined");
+    }
+
+    this.#regExp = regex
+      ? new RegExp(`^(?:${regex.pattern})$`, "v")
+      : undefined;
+
+    if (
+      regex &&
+      (!regex.requirements.length ||
+        regex.requirements.some((requirement) => /^\s*$/.test(requirement)))
+    ) {
+      throw new Error(
+        "`regex.requirements` must not be empty or contain any blank `string`s if `regex` is defined",
+      );
+    }
+
+    this.typeName = typeName || "UnnamedString";
+
+    this.minLength = minLength;
+    this.maxLength = maxLength;
+    this.regex = regex;
+    this.validate = validate;
   }
 
-  if (
-    maxLength !== undefined && (maxLength < 1 || !Number.isInteger(maxLength))
-  ) {
-    throw new Error("`maxLength` must be a positive integer if defined");
-  }
-
-  if (
-    minLength !== undefined && maxLength !== undefined &&
-    minLength > maxLength
-  ) {
-    throw new Error("`minLength` must be <= `maxLength` if both are defined");
-  }
-
-  const regExp = regex ? new RegExp(`^(?:${regex.pattern})$`, "v") : undefined;
-
-  if (
-    regex &&
-    (!regex.requirements.length ||
-      regex.requirements.some((requirement) => /^\s*$/.test(requirement)))
-  ) {
-    throw new Error(
-      "`regex.requirements` must not be empty or contain any blank `string`s if `regex` is defined",
-    );
-  }
-
-  assertedTypeName ||= "UnnamedString";
-
-  const asserter = (value: unknown, valueName?: string) => {
+  assert(value: unknown, valueName?: string): string {
     if (typeof value !== "string") {
-      throw new TypeAssertionError(assertedTypeName, value, {
+      throw new TypeAssertionError(this.typeName, value, {
         valueName,
         issues: "must be of type `string`",
       });
     }
 
     const issues: string[] = [];
+
+    const minLength = this.minLength;
+    const maxLength = this.maxLength;
 
     if (
       minLength !== undefined && minLength === maxLength &&
@@ -145,31 +155,18 @@ export function stringAsserter(
       );
     }
 
-    if (regex && !regExp!.test(value)) {
-      issues.push(...regex.requirements);
+    if (this.regex && !this.#regExp!.test(value)) {
+      issues.push(...this.regex.requirements);
     }
 
-    if (validate) {
-      issues.push(...validate(value));
+    if (this.validate) {
+      issues.push(...this.validate(value));
     }
 
     if (issues.length) {
-      throw new TypeAssertionError(assertedTypeName, value, {
-        valueName,
-        issues,
-      });
+      throw new TypeAssertionError(this.typeName, value, { valueName, issues });
     }
 
     return value;
-  };
-
-  asserter.asserterTypeName = stringAsserterTypeName;
-  asserter.assertedTypeName = assertedTypeName;
-
-  asserter.minLength = minLength;
-  asserter.maxLength = maxLength;
-  asserter.regex = regex;
-  asserter.validate = validate;
-
-  return asserter;
+  }
 }

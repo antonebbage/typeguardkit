@@ -49,22 +49,21 @@ import {
   _string,
   arrayOf,
   ObjectAsserter,
-  objectAsserter,
   unionOf,
 } from "./mod.ts";
 
 // types/book.ts
 
-const asserter = objectAsserter("Book", {
+const asserter = new ObjectAsserter("Book", {
   isbn: _string,
   title: _string,
   authors: arrayOf(_string),
   pageCount: _PositiveInteger,
-  rating: unionOf([_number, _null]),
+  rating: unionOf(_number, _null),
   recommended: _boolean,
 });
 
-export type Book = ReturnType<typeof asserter>;
+export type Book = ReturnType<typeof asserter.assert>;
 
 export const _Book: ObjectAsserter<Book> = asserter;
 
@@ -72,13 +71,14 @@ export const _Book: ObjectAsserter<Book> = asserter;
 
 export async function getBook(isbn: string): Promise<Book> {
   const response = await fetch(`/api/books/${isbn}`);
+
   const responseBody = await response.json();
 
   // If `responseBody` is a `Book`, `_Book` returns `responseBody` as `Book`.
   // Otherwise, `_Book` throws a `TypeAssertionError`, including the optional
   // value name `"responseBody"` in its `message`.
 
-  return _Book(responseBody, "responseBody");
+  return _Book.assert(responseBody, "responseBody");
 }
 
 // local_storage/reading_list_isbns.ts
@@ -87,7 +87,8 @@ export const readingListIsbnsKey = "reading-list-isbns";
 
 export function getReadingListIsbns(): string[] {
   const json = localStorage.getItem(readingListIsbnsKey);
-  return json ? arrayOf(_string)(JSON.parse(json)) : [];
+
+  return json ? arrayOf(_string).assert(JSON.parse(json)) : [];
 }
 
 export function setReadingListIsbns(isbns: readonly string[]): void {
@@ -95,22 +96,22 @@ export function setReadingListIsbns(isbns: readonly string[]): void {
 }
 ```
 
-### `Asserter`s
+### `Asserter`
 
-An `Asserter` is a type assertion function.
+An `Asserter<Type>` has a type assertion method, `assert`, that asserts whether
+the provided `value` is of `Type`.
 
 ```ts
 interface Asserter<Type> {
-  (value: unknown, valueName?: string): Type;
+  readonly typeName: string;
 
-  readonly asserterTypeName: string;
-  readonly assertedTypeName: string;
+  assert(value: unknown, valueName?: string): Type;
 }
 ```
 
-If `value` is of `Type`, the `Asserter` should return `value` as `Type`.
-Otherwise, the `Asserter` should throw a `TypeAssertionError`, including
-`valueName` in its `message`.
+If `value` is of `Type`, `assert` should return `value` as `Type`. Otherwise,
+`assert` should throw a `TypeAssertionError`, including `valueName` in its
+`message`.
 
 The module includes the `_boolean`, `_number`, `_string`, `_null`, and
 `_undefined` primitive type `Asserter`s.
@@ -133,7 +134,7 @@ function handleUnknown(x: unknown) {
   let y;
 
   try {
-    y = _string(x, "x");
+    y = _string.assert(x, "x");
   } catch {
     return;
   }
@@ -147,13 +148,13 @@ function handleUnknown(x: unknown) {
 function handleString(y: string) {}
 ```
 
-You can create your own `Asserter`s with the `typeAsserter` function. For
-example, the `_string` `Asserter` was created like this:
+You can create your own `Asserter`s using the `TypeAsserter` class. For example,
+the `_string` `Asserter` was created like this:
 
 ```ts
-import { typeAsserter } from "./mod.ts";
+import { TypeAsserter } from "./mod.ts";
 
-export const _string = typeAsserter(
+export const _string = new TypeAsserter(
   "string",
   (value): value is string => typeof value === "string",
 );
@@ -170,7 +171,7 @@ so the value passed in can be narrowed to `Type`. If the `Asserter` throws an
 error, it will bubble up. Otherwise, `assertIs` will not return a value, but
 after calling it, the value passed in will be narrowed to `Type`.
 
-You can use `assertIs` like this:
+Example:
 
 ```ts
 import { _string, assertIs } from "./mod.ts";
@@ -199,7 +200,7 @@ creating a type guard, so the value passed in can be narrowed to `Type`. If the
 `Asserter` throws an error, `is` will catch it and return `false`. Otherwise,
 `is` will return `true`.
 
-You can use `is` like this:
+Example:
 
 ```ts
 import { _string, is } from "./mod.ts";
@@ -216,208 +217,48 @@ function handleUnknown(x: unknown) {
 function handleString(x: string) {}
 ```
 
-### Enum `Asserter`s
+### `NumberAsserter`
 
-You can create an `Asserter` for an enum type using the `enumAsserter` function
-like this:
+A `NumberAsserter` is an `Asserter<number>`, with any additional validation
+defined by its `NumberAsserterOptions` properties.
 
-```ts
-import { enumAsserter, is } from "./mod.ts";
-
-// types/direction.ts
-
-export enum Direction {
-  Up,
-  Right,
-  Down,
-  Left,
-}
-
-export const _Direction = enumAsserter("Direction", Direction);
-
-// elsewhere.ts
-
-function handleUnknown(x: unknown) {
-  if (is(_Direction, x)) {
-    // `x` has now been narrowed to type `Direction`, so can be passed to
-    // `handleDirection`.
-
-    handleDirection(x);
-  }
-}
-
-function handleDirection(x: Direction) {}
-```
-
-### `LiteralUnionAsserter`s
-
-You can use the `literalUnionAsserter` function to create a
-`LiteralUnionAsserter` for the union of the provided `values`.
-
-The `values` array should be asserted `as const` if defined outside the
-`literalUnionAsserter` call.
-
-The provided `values` will be set to the `values` property of the returned
-`LiteralUnionAsserter`.
-
-You can use `literalUnionAsserter` like this:
-
-```ts
-import { is, LiteralUnionAsserter, literalUnionAsserter } from "./mod.ts";
-
-// types/direction.ts
-
-const asserter = literalUnionAsserter(
-  "Direction",
-  ["up", "right", "down", "left"],
-);
-
-export type Direction = ReturnType<typeof asserter>;
-
-export const _Direction: LiteralUnionAsserter<readonly Direction[]> = asserter;
-
-// elsewhere.ts
-
-function handleUnknown(x: unknown) {
-  if (is(_Direction, x)) {
-    // `x` has now been narrowed to type `Direction`, so can be passed to
-    // `handleDirection`.
-
-    handleDirection(x);
-  }
-}
-
-function handleDirection(x: Direction) {}
-```
-
-### Other `Asserter` factory functions
-
-#### `unionOf`
-
-`unionOf` returns a `UnionAsserter` for the union of the `Type`s of the provided
-`Asserter`s.
-
-You can use `unionOf` like this:
-
-```ts
-import { _null, _string, is, unionOf } from "./mod.ts";
-
-const _stringOrNull = unionOf([_string, _null]);
-
-function handleUnknown(x: unknown) {
-  if (is(_stringOrNull, x)) {
-    // `x` has now been narrowed to type `string | null`, so can be passed to
-    // `handleStringOrNull`.
-
-    handleStringOrNull(x);
-  }
-}
-
-function handleStringOrNull(x: string | null) {}
-```
-
-#### `optionOf`
-
-`optionOf` returns an `OptionAsserter` for the union of the `DefinedType` of the
-provided `definedTypeAsserter` with `undefined`.
+The provided `NumberAsserterOptions` are made accessible as properties of the
+created `NumberAsserter`.
 
 Example:
 
 ```ts
-import { _string, optionOf } from "./mod.ts";
+import { NumberAsserter } from "./mod.ts";
 
-const _OptionalString = optionOf(_string);
-```
-
-#### `arrayOf`
-
-`arrayOf` returns an `ArrayAsserter<Element>` that asserts whether `value` is of
-type `Array<Element>` and valid according to any provided
-`ArrayAsserterOptions`.
-
-The provided `ArrayAsserterOptions` are made accessible as properties of the
-returned `ArrayAsserter`.
-
-You can use `arrayOf` like this:
-
-```ts
-import { _string, arrayOf } from "./mod.ts";
-
-export const _ArrayOfString = arrayOf(_string);
-
-export const _NonEmptyArrayOfString = arrayOf(
-  _string,
-  { minLength: 1 },
-  "NonEmptyArrayOfString",
-);
-```
-
-#### `recordOf`
-
-`recordOf` returns a `TypeAsserter<Record<Key, Value>>`, created using the
-provided `Asserter<Key>` and `Asserter<Value>`.
-
-You can use `recordOf` like this:
-
-```ts
-import { _string, is, recordOf } from "./mod.ts";
-
-const _RecordOfString = recordOf(_string, _string);
-
-function handleUnknown(x: unknown) {
-  if (is(_RecordOfString, x)) {
-    // `x` has now been narrowed to type `Record<string, string>`, so can be
-    // passed to `handleRecordOfString`.
-
-    handleRecordOfString(x);
-  }
-}
-
-function handleRecordOfString(x: Record<string, string>) {}
-```
-
-#### `numberAsserter`
-
-`numberAsserter` returns a `NumberAsserter` that asserts whether `value` is of
-type `number` and valid according to the provided `NumberAsserterOptions`.
-
-The provided `NumberAsserterOptions` are made accessible as properties of the
-returned `NumberAsserter`.
-
-You can use `numberAsserter` like this:
-
-```ts
-import { numberAsserter } from "./mod.ts";
-
-export const _EvenNumberInRange = numberAsserter("EvenNumberInRange", {
+export const _EvenNumberInRange = new NumberAsserter("EvenNumberInRange", {
   min: { value: 0, inclusive: true },
   max: { value: 100, inclusive: true },
   step: 2,
 });
 ```
 
-#### `stringAsserter`
+### `StringAsserter`
 
-`stringAsserter` returns a `StringAsserter` that asserts whether `value` is of
-type `string` and valid according to the provided `StringAsserterOptions`.
+A `StringAsserter` is an `Asserter<string>`, with any additional validation
+defined by its `StringAsserterOptions` properties.
 
 The provided `StringAsserterOptions` are made accessible as properties of the
-returned `StringAsserter`.
+created `StringAsserter`.
 
-You can use `stringAsserter` like this:
+Example:
 
 ```ts
-import { stringAsserter } from "./mod.ts";
+import { StringAsserter } from "./mod.ts";
 
-export const _NonEmptyString = stringAsserter("NonEmptyString", {
+export const _NonEmptyString = new StringAsserter("NonEmptyString", {
   minLength: 1,
 });
 
-export const _NumericString = stringAsserter("NumericString", {
+export const _NumericString = new StringAsserter("NumericString", {
   regex: { pattern: "\\d+", requirements: ["must be numeric"] },
 });
 
-export const _Palindrome = stringAsserter("Palindrome", {
+export const _Palindrome = new StringAsserter("Palindrome", {
   validate(value) {
     if (value.length < 2) {
       return [];
@@ -431,86 +272,189 @@ export const _Palindrome = stringAsserter("Palindrome", {
 });
 ```
 
-### `ObjectAsserter`s
+### `LiteralUnionAsserter`
+
+A `LiteralUnionAsserter` is an `Asserter` for the union of its `values`.
+
+The provided `values` are made accessible as a property of the created
+`LiteralUnionAsserter`.
+
+Example:
+
+```ts
+import { LiteralUnionAsserter } from "./mod.ts";
+
+const asserter = new LiteralUnionAsserter(
+  "Direction",
+  ["up", "right", "down", "left"],
+);
+
+export type Direction = ReturnType<typeof asserter.assert>;
+
+export const _Direction: LiteralUnionAsserter<readonly Direction[]> = asserter;
+```
+
+### `EnumAsserter`
+
+An `EnumAsserter` is an `Asserter` for the union of the member types of the
+provided `enumObject`.
+
+The provided `enumObject` is made accessible as a property of the created
+`EnumAsserter`.
+
+Example:
+
+```ts
+import { EnumAsserter } from "./mod.ts";
+
+export enum Direction {
+  Up,
+  Right,
+  Down,
+  Left,
+}
+
+export const _Direction = new EnumAsserter("Direction", Direction);
+```
+
+### `UnionAsserter`
+
+A `UnionAsserter` is an `Asserter` for the union of the `Type`s of its
+`memberAsserters`.
+
+The provided `memberAsserters` are made accessible as a property of the created
+`UnionAsserter`.
+
+Example:
+
+```ts
+import { _null, _string, UnionAsserter } from "./mod.ts";
+
+export const _stringOrNull = new UnionAsserter(
+  "stringOrNull",
+  [_string, _null],
+);
+```
+
+#### `unionOf`
+
+The `unionOf` function can be used to create a `UnionAsserter` without
+specifying a `typeName`.
+
+Example:
+
+```ts
+import { _null, _string, unionOf } from "./mod.ts";
+
+export const _stringOrNull = unionOf(_string, _null);
+```
+
+### `ArrayAsserter`
+
+An `ArrayAsserter` is an `Asserter` for the `Array` type defined by its
+`elementAsserter`, with any additional validation defined by its
+`ArrayAsserterOptions` properties.
+
+The provided `memberAsserter` and `ArrayAsserterOptions` are made accessible as
+properties of the created `ArrayAsserter`.
+
+Example:
+
+```ts
+import { _string, ArrayAsserter } from "./mod.ts";
+
+export const _NonEmptyArrayOfString = new ArrayAsserter(
+  "NonEmptyArrayOfString",
+  _string,
+  { minLength: 1 },
+);
+```
+
+#### `arrayOf`
+
+The `arrayOf` function can be used to create an `ArrayAsserter` without
+specifying a `typeName` or `ArrayAsserterOptions`.
+
+Example:
+
+```ts
+import { _string, arrayOf } from "./mod.ts";
+
+export const _ArrayOfString = arrayOf(_string);
+```
+
+### `RecordAsserter`
+
+A `RecordAsserter` is an `Asserter` for the `Record` type defined by its
+`keyAsserter` and `valueAsserter`.
+
+The provided `keyAsserter` and `valueAsserter` are made accessible as properties
+of the created `RecordAsserter`.
+
+Example:
+
+```ts
+import { _string, RecordAsserter } from "./mod.ts";
+
+export const _RecordOfStringByString = new RecordAsserter(
+  "RecordOfStringByString",
+  [_string, _string],
+);
+```
+
+#### `recordOf`
+
+The `recordOf` function can be used to create a `RecordAsserter` without
+specifying a `typeName`.
+
+Example:
+
+```ts
+import { _string, recordOf } from "./mod.ts";
+
+export const _RecordOfStringByString = recordOf(_string, _string);
+```
+
+### `ObjectAsserter`
 
 An `ObjectAsserter` is an `Asserter` for the object type defined by its
 `propertyAsserters`.
 
-```ts
-import { Asserter, objectAsserterTypeName } from "./mod.ts";
+The provided `propertyAsserters` are made accessible as a property of the
+created `ObjectAsserter`.
 
-interface ObjectAsserter<Type extends Record<string, unknown>>
-  extends Asserter<Type> {
-  readonly asserterTypeName: typeof objectAsserterTypeName;
-
-  readonly propertyAsserters: Readonly<
-    { [Key in keyof Type]-?: Asserter<Type[Key]> }
-  >;
-}
-```
-
-You can create an `ObjectAsserter` with the `objectAsserter` function and use it
-like this:
+Example:
 
 ```ts
-import {
-  _string,
-  is,
-  ObjectAsserter,
-  objectAsserter,
-  optionOf,
-} from "./mod.ts";
+import { _string, ObjectAsserter, optionOf } from "./mod.ts";
 
-// types/user.ts
-
-const asserter = objectAsserter("User", {
+const asserter = new ObjectAsserter("User", {
   name: _string,
   emailAddress: optionOf(_string),
 });
 
-export type User = ReturnType<typeof asserter>;
+export type User = ReturnType<typeof asserter.assert>;
 
 export const _User: ObjectAsserter<User> = asserter;
-
-// elsewhere.ts
-
-function handleUnknown(x: unknown) {
-  if (is(_User, x)) {
-    // `x` has now been narrowed to type `User`, so can be passed to
-    // `handleUser`.
-
-    handleUser(x);
-  }
-}
-
-function handleUser(x: User) {}
 ```
-
-### Other `ObjectAsserter` factory functions
 
 #### `objectIntersectionOf`
 
 `objectIntersectionOf` returns an `ObjectAsserter` for the intersection of the
 `Type`s of the provided `ObjectAsserter`s.
 
-You can use `objectIntersectionOf` like this:
+Example:
 
 ```ts
-import {
-  _string,
-  is,
-  ObjectAsserter,
-  objectAsserter,
-  objectIntersectionOf,
-} from "./mod.ts";
+import { _string, ObjectAsserter, objectIntersectionOf } from "./mod.ts";
 
 // types/entity.ts
 
-const entityAsserter = objectAsserter("Entity", {
+const entityAsserter = new ObjectAsserter("Entity", {
   id: _string,
 });
 
-export type Entity = ReturnType<typeof entityAsserter>;
+export type Entity = ReturnType<typeof entityAsserter.assert>;
 
 export const _Entity: ObjectAsserter<Entity> = entityAsserter;
 
@@ -518,28 +462,15 @@ export const _Entity: ObjectAsserter<Entity> = entityAsserter;
 
 const userAsserter = objectIntersectionOf(
   _Entity,
-  objectAsserter("", {
+  new ObjectAsserter("", {
     name: _string,
   }),
   "User",
 );
 
-export type User = ReturnType<typeof userAsserter>;
+export type User = ReturnType<typeof userAsserter.assert>;
 
 export const _User: ObjectAsserter<User> = userAsserter;
-
-// elsewhere.ts
-
-function handleUnknown(x: unknown) {
-  if (is(_User, x)) {
-    // `x` has now been narrowed to type `User`, so can be passed to
-    // `handleUser`.
-
-    handleUser(x);
-  }
-}
-
-function handleUser(x: User) {}
 ```
 
 #### `partialFrom`
@@ -551,13 +482,13 @@ provided `ObjectAsserter<Type>`.
 is a utility type that constructs a type the same as `Type`, but with all
 properties made optional.
 
-You can use `partialFrom` like this:
+Example:
 
 ```ts
-import { _string, ObjectAsserter, objectAsserter, partialFrom } from "./mod.ts";
+import { _string, ObjectAsserter, partialFrom } from "./mod.ts";
 
 const asserter = partialFrom(
-  objectAsserter("", {
+  new ObjectAsserter("", {
     option1: _string,
     option2: _string,
     option3: _string,
@@ -565,7 +496,7 @@ const asserter = partialFrom(
   "Options",
 );
 
-export type Options = ReturnType<typeof asserter>;
+export type Options = ReturnType<typeof asserter.assert>;
 
 export const _Options: ObjectAsserter<Options> = asserter;
 ```
@@ -579,20 +510,20 @@ the provided `ObjectAsserter<Type>` and `Keys`.
 is a utility type that constructs a type consisting of the properties of `Type`
 with `Keys`.
 
-You can use `pickFrom` like this:
+Example:
 
 ```ts
-import { _string, ObjectAsserter, objectAsserter, pickFrom } from "./mod.ts";
+import { _string, ObjectAsserter, pickFrom } from "./mod.ts";
 
 // types/user.ts
 
-const userAsserter = objectAsserter("User", {
+const userAsserter = new ObjectAsserter("User", {
   id: _string,
   firstName: _string,
   lastName: _string,
 });
 
-export type User = ReturnType<typeof userAsserter>;
+export type User = ReturnType<typeof userAsserter.assert>;
 
 export const _User: ObjectAsserter<User> = userAsserter;
 
@@ -600,7 +531,7 @@ export const _User: ObjectAsserter<User> = userAsserter;
 
 const userNameAsserter = pickFrom(_User, ["firstName", "lastName"]);
 
-export type UserName = ReturnType<typeof userNameAsserter>;
+export type UserName = ReturnType<typeof userNameAsserter.assert>;
 
 export const _UserName: ObjectAsserter<UserName> = userNameAsserter;
 ```
@@ -628,27 +559,26 @@ import {
   assertIs,
   is,
   ObjectAsserter,
-  objectAsserter,
   TypeAssertionError,
 } from "./mod.ts";
 
 // types/item.ts
 
-const itemAsserter = objectAsserter("Item", {
+const itemAsserter = new ObjectAsserter("Item", {
   quantity: _NonNegativeInteger,
 });
 
-export type Item = ReturnType<typeof itemAsserter>;
+export type Item = ReturnType<typeof itemAsserter.assert>;
 
 export const _Item: ObjectAsserter<Item> = itemAsserter;
 
 // types/form.ts
 
-const formAsserter = objectAsserter("Form", {
+const formAsserter = new ObjectAsserter("Form", {
   item: _Item,
 });
 
-export type Form = ReturnType<typeof formAsserter>;
+export type Form = ReturnType<typeof formAsserter.assert>;
 
 export const _Form: ObjectAsserter<Form> = formAsserter;
 

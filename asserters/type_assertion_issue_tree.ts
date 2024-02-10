@@ -1,15 +1,9 @@
 // This module is browser-compatible.
 
-import { typeAsserter, TypeAssertionIssueTree } from "../core/mod.ts";
+import { TypeAsserter, TypeAssertionIssueTree } from "../core/mod.ts";
 
-/**
- * `_TypeAssertionIssueTree` is a `TypeAssertionIssueTree` type assertion
- * function. If `value` is a `TypeAssertionIssueTree`, `_TypeAssertionIssueTree`
- * returns `value` as `TypeAssertionIssueTree`. Otherwise,
- * `_TypeAssertionIssueTree` throws a `TypeAssertionError`, including
- * `valueName` in its `message`.
- */
-export const _TypeAssertionIssueTree = typeAsserter(
+/** `_TypeAssertionIssueTree` is a `TypeAsserter<TypeAssertionIssueTree>`. */
+export const _TypeAssertionIssueTree = new TypeAsserter(
   "TypeAssertionIssueTree",
   isTypeAssertionIssueTree,
 );

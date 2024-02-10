@@ -1,7 +1,7 @@
 // This module is browser-compatible.
 
 import { Asserter } from "../asserter.ts";
-import { ObjectAsserter, objectAsserter } from "./object_asserter.ts";
+import { ObjectAsserter } from "./object_asserter.ts";
 
 /**
  * `pickFrom` returns an `ObjectAsserter<Pick<Type, Keys[number]>>`, created
@@ -10,22 +10,17 @@ import { ObjectAsserter, objectAsserter } from "./object_asserter.ts";
  * Example:
  *
  * ```ts
- * import {
- *   _string,
- *   ObjectAsserter,
- *   objectAsserter,
- *   pickFrom,
- * } from "../../mod.ts";
+ * import { _string, ObjectAsserter, pickFrom } from "../../mod.ts";
  *
  * // types/user.ts
  *
- * const userAsserter = objectAsserter("User", {
+ * const userAsserter = new ObjectAsserter("User", {
  *   id: _string,
  *   firstName: _string,
  *   lastName: _string,
  * });
  *
- * export type User = ReturnType<typeof userAsserter>;
+ * export type User = ReturnType<typeof userAsserter.assert>;
  *
  * export const _User: ObjectAsserter<User> = userAsserter;
  *
@@ -33,7 +28,7 @@ import { ObjectAsserter, objectAsserter } from "./object_asserter.ts";
  *
  * const userNameAsserter = pickFrom(_User, ["firstName", "lastName"]);
  *
- * export type UserName = ReturnType<typeof userNameAsserter>;
+ * export type UserName = ReturnType<typeof userNameAsserter.assert>;
  *
  * export const _UserName: ObjectAsserter<UserName> = userNameAsserter;
  * ```
@@ -46,7 +41,7 @@ export function pickFrom<
   keys: Keys,
   assertedTypeName?: string,
 ): ObjectAsserter<Pick<Type, Keys[number]>> {
-  assertedTypeName ||= `Pick<${asserter.assertedTypeName}, ${
+  assertedTypeName ||= `Pick<${asserter.typeName}, ${
     keys.map((key) => `"${String(key)}"`).join(" | ")
   }>`;
 
@@ -56,7 +51,7 @@ export function pickFrom<
     newPropertyAsserters[key] = asserter.propertyAsserters[key];
   }
 
-  return objectAsserter(
+  return new ObjectAsserter(
     assertedTypeName,
     newPropertyAsserters,
   ) as ObjectAsserter<Pick<Type, Keys[number]>>;

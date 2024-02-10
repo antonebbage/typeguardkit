@@ -1,14 +1,9 @@
 // This module is browser-compatible.
 
-import { typeAsserter } from "../core/mod.ts";
+import { TypeAsserter } from "../core/mod.ts";
 
-/**
- * `_undefined` is an `undefined` type assertion function. If `value` is
- * `undefined`, `_undefined` returns `value` as `undefined`. Otherwise,
- * `_undefined` throws a `TypeAssertionError`, including `valueName` in its
- * `message`.
- */
-export const _undefined = typeAsserter(
+/** `_undefined` is a `TypeAsserter<undefined>`. */
+export const _undefined = new TypeAsserter(
   "undefined",
   (value): value is undefined => value === undefined,
 );

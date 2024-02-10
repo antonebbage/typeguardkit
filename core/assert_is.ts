@@ -4,7 +4,7 @@ import { Asserter } from "./asserter.ts";
 
 /**
  * `assertIs` wraps `asserter` with an assertion signature so `value` can be
- * narrowed to `Type`. If `asserter` throws an error, it will bubble up.
+ * narrowed to `Type`. If `asserter.assert` throws an error, it will bubble up.
  * Otherwise, `assertIs` will not return a value, but after calling it, `value`
  * will be narrowed to `Type`.
  *
@@ -31,5 +31,5 @@ export function assertIs<Type>(
   value: unknown,
   valueName?: string,
 ): asserts value is Type {
-  asserter(value, valueName);
+  asserter.assert(value, valueName);
 }

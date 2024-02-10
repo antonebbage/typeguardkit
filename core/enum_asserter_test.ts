@@ -1,68 +1,74 @@
-import { assertInstanceOf, assertStrictEquals, assertThrows } from "assert";
+import { assertStrictEquals, assertThrows } from "assert";
 import { describe, it } from "testing/bdd.ts";
-import { typeAsserterTypeName, TypeAssertionError } from "../mod.ts";
-import { enumAsserter } from "./enum_asserter.ts";
+import { TypeAssertionError } from "../mod.ts";
+import { EnumAsserter } from "./enum_asserter.ts";
 
-describe("enumAsserter", () => {
-  const numericEnumName = "NumericEnum";
+const numericEnumName = "NumericEnum";
 
-  enum NumericEnum {
-    A,
-    B,
-    C,
-  }
+enum NumericEnum {
+  A,
+  B,
+  C,
+}
 
-  const _NumericEnum = enumAsserter(numericEnumName, NumericEnum);
+const _NumericEnum = new EnumAsserter(numericEnumName, NumericEnum);
 
-  const stringEnumName = "StringEnum";
+const stringEnumName = "StringEnum";
 
-  enum StringEnum {
-    A = "A",
-    B = "B",
-    C = "C",
-  }
+enum StringEnum {
+  A = "A",
+  B = "B",
+  C = "C",
+}
 
-  const _StringEnum = enumAsserter(stringEnumName, StringEnum);
+const _StringEnum = new EnumAsserter(stringEnumName, StringEnum);
 
-  const heterogeneousEnumName = "HeterogeneousEnum";
+const heterogeneousEnumName = "HeterogeneousEnum";
 
-  enum HeterogeneousEnum {
-    A,
-    B,
-    C = "C",
-  }
+enum HeterogeneousEnum {
+  A,
+  B,
+  C = "C",
+}
 
-  const _HeterogeneousEnum = enumAsserter(
-    heterogeneousEnumName,
-    HeterogeneousEnum,
-  );
+const _HeterogeneousEnum = new EnumAsserter(
+  heterogeneousEnumName,
+  HeterogeneousEnum,
+);
 
-  it("should return a `Function`", () => {
-    assertInstanceOf(_NumericEnum, Function);
-  });
-
-  it("should return a `Function` with the correct `asserterTypeName`", () => {
-    assertStrictEquals(_NumericEnum.asserterTypeName, typeAsserterTypeName);
-  });
-
-  it("should return a `Function` with the provided `assertedTypeName` or the correct default if empty", () => {
+describe("EnumAsserter", () => {
+  it("should have the provided `typeName` or the correct default if empty", () => {
     const testCases = [
-      { asserter: _NumericEnum, assertedTypeName: numericEnumName },
-      { asserter: _StringEnum, assertedTypeName: stringEnumName },
-      { asserter: _HeterogeneousEnum, assertedTypeName: heterogeneousEnumName },
+      { asserter: _NumericEnum, typeName: numericEnumName },
+      { asserter: _StringEnum, typeName: stringEnumName },
+      { asserter: _HeterogeneousEnum, typeName: heterogeneousEnumName },
 
       {
-        asserter: enumAsserter("", NumericEnum),
-        assertedTypeName: "UnnamedEnum",
+        asserter: new EnumAsserter("", NumericEnum),
+        typeName: "UnnamedEnum",
       },
     ];
 
-    for (const { asserter, assertedTypeName } of testCases) {
-      assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
+    for (const { asserter, typeName } of testCases) {
+      assertStrictEquals(asserter.typeName, typeName);
     }
   });
 
-  it("should return a `Function` that returns `value` when it is equal to one of `enumObject`'s members", () => {
+  it("should have the provided `enumObject` set to its `enumObject` property", () => {
+    const testCases = [
+      { asserter: _NumericEnum, enumObject: NumericEnum },
+      { asserter: _StringEnum, enumObject: StringEnum },
+      { asserter: _HeterogeneousEnum, enumObject: HeterogeneousEnum },
+    ];
+
+    for (const { asserter, enumObject } of testCases) {
+      assertStrictEquals(asserter.enumObject, enumObject);
+    }
+  });
+});
+
+describe("EnumAsserter.assert", () => {
+  it("should return `value` when it is equal to one of `enumObject`'s members", () => {
     const testCases = [
       {
         asserter: _NumericEnum,
@@ -82,28 +88,27 @@ describe("enumAsserter", () => {
 
     for (const { asserter, values } of testCases) {
       for (const value of values) {
-        assertStrictEquals(asserter(value), value);
+        assertStrictEquals(asserter.assert(value), value);
       }
     }
   });
 
-  it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not equal to any of `enumObject`'s members", () => {
+  it("should throw a `TypeAssertionError` with correct `message` when `value` is not equal to any of `enumObject`'s members", () => {
     assertThrows(
-      () => _NumericEnum(undefined, "name"),
+      () => _NumericEnum.assert(undefined, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_NumericEnum.assertedTypeName, undefined, {
+      new TypeAssertionError(_NumericEnum.typeName, undefined, {
         valueName: "name",
       })
         .message,
     );
 
-    const unnamedAsserter = enumAsserter("", NumericEnum);
+    const unnamedAsserter = new EnumAsserter("", NumericEnum);
 
     assertThrows(
-      () => unnamedAsserter(undefined),
+      () => unnamedAsserter.assert(undefined),
       TypeAssertionError,
-      new TypeAssertionError(unnamedAsserter.assertedTypeName, undefined)
-        .message,
+      new TypeAssertionError(unnamedAsserter.typeName, undefined).message,
     );
 
     const testCases = [
@@ -119,9 +124,9 @@ describe("enumAsserter", () => {
     for (const { asserter, values } of testCases) {
       for (const value of values) {
         assertThrows(
-          () => asserter(value),
+          () => asserter.assert(value),
           TypeAssertionError,
-          new TypeAssertionError(asserter.assertedTypeName, value).message,
+          new TypeAssertionError(asserter.typeName, value).message,
         );
       }
     }

@@ -1,13 +1,9 @@
 // This module is browser-compatible.
 
-import { typeAsserter } from "../core/mod.ts";
+import { TypeAsserter } from "../core/mod.ts";
 
-/**
- * `_string` is a `string` type assertion function. If `value` is a `string`,
- * `_string` returns `value` as `string`. Otherwise, `_string` throws a
- * `TypeAssertionError`, including `valueName` in its `message`.
- */
-export const _string = typeAsserter(
+/** `_string` is a `TypeAsserter<string>`. */
+export const _string = new TypeAsserter(
   "string",
   (value): value is string => typeof value === "string",
 );

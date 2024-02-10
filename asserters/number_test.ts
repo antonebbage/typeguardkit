@@ -4,41 +4,39 @@ import { TypeAssertionError } from "../mod.ts";
 import { _number } from "./number.ts";
 
 describe("_number", () => {
-  it('should have an `assertedTypeName` of `"number"`', () => {
-    assertStrictEquals(_number.assertedTypeName, "number");
+  it('should have a `typeName` of `"number"`', () => {
+    assertStrictEquals(_number.typeName, "number");
   });
 
-  it("should return `value` if of type `number`", () => {
+  it("`assert` should return `value` if of type `number`", () => {
     const testCases = [0, 1];
 
     for (const value of testCases) {
-      assertStrictEquals(_number(value), value);
+      assertStrictEquals(_number.assert(value), value);
     }
   });
 
-  it("should throw a `TypeAssertionError` with correct `message` if `value` not of type `number`", () => {
+  it("`assert` should throw a `TypeAssertionError` with correct `message` if `value` not of type `number`", () => {
     assertThrows(
-      () => _number(undefined, "name"),
+      () => _number.assert(undefined, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_number.assertedTypeName, undefined, {
-        valueName: "name",
-      })
+      new TypeAssertionError(_number.typeName, undefined, { valueName: "name" })
         .message,
     );
 
     assertThrows(
-      () => _number(undefined),
+      () => _number.assert(undefined),
       TypeAssertionError,
-      new TypeAssertionError(_number.assertedTypeName, undefined).message,
+      new TypeAssertionError(_number.typeName, undefined).message,
     );
 
     const testCases = [undefined, null, false, "", [], {}];
 
     for (const value of testCases) {
       assertThrows(
-        () => _number(value),
+        () => _number.assert(value),
         TypeAssertionError,
-        new TypeAssertionError(_number.assertedTypeName, value).message,
+        new TypeAssertionError(_number.typeName, value).message,
       );
     }
   });

@@ -1,36 +1,30 @@
-import { assertInstanceOf, assertStrictEquals, assertThrows } from "assert";
+import { assertStrictEquals, assertThrows } from "assert";
 import { describe, it } from "testing/bdd.ts";
 import { _number, _string, TypeAssertionError } from "../../mod.ts";
-import { objectAsserter } from "./object_asserter.ts";
+import { ObjectAsserter } from "./object_asserter.ts";
 
-describe("objectAsserter", () => {
-  const objectTypeName = "ObjectType";
+const objectTypeName = "ObjectType";
 
-  const _ObjectType = objectAsserter(objectTypeName, {
-    stringValue: _string,
-    numberValue: _number,
-  });
+const _ObjectType = new ObjectAsserter(objectTypeName, {
+  stringValue: _string,
+  numberValue: _number,
+});
 
-  it("should return a `Function`", () => {
-    assertInstanceOf(_ObjectType, Function);
-  });
-
-  it("should return a `Function` with the correct `asserterTypeName`", () => {
-    assertStrictEquals(_ObjectType.asserterTypeName, "ObjectAsserter");
-  });
-
-  it("should return a `Function` with the provided `assertedTypeName` or the correct default if empty", () => {
+describe("ObjectAsserter", () => {
+  it("should have the provided `typeName` or the correct default if empty", () => {
     const testCases = [
-      { asserter: _ObjectType, assertedTypeName: objectTypeName },
-      { asserter: objectAsserter("", {}), assertedTypeName: "UnnamedObject" },
+      { asserter: _ObjectType, typeName: objectTypeName },
+      { asserter: new ObjectAsserter("", {}), typeName: "UnnamedObject" },
     ];
 
-    for (const { asserter, assertedTypeName } of testCases) {
-      assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
+    for (const { asserter, typeName } of testCases) {
+      assertStrictEquals(asserter.typeName, typeName);
     }
   });
+});
 
-  it("should return a `Function` that returns `value` when it is an object and none of the `propertyAsserters` throw an error for the corresponding properties of `value`", () => {
+describe("ObjectAsserter.assert", () => {
+  it("should return `value` when it is an object and none of the `propertyAsserters` throw an error for the corresponding properties of `value`", () => {
     const testCases = [
       { stringValue: "", numberValue: 0 },
       { stringValue: "a", numberValue: 1 },
@@ -38,28 +32,28 @@ describe("objectAsserter", () => {
     ];
 
     for (const value of testCases) {
-      assertStrictEquals(_ObjectType(value), value);
+      assertStrictEquals(_ObjectType.assert(value), value);
     }
   });
 
-  it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not an object, or any of the `propertyAsserters` throw an error for the corresponding property of `value`", () => {
+  it("should throw a `TypeAssertionError` with correct `message` when `value` is not an object, or any of the `propertyAsserters` throw an error for the corresponding property of `value`", () => {
     const object = { stringValue: 0, numberValue: "" };
 
     assertThrows(
-      () => _ObjectType(object, "name"),
+      () => _ObjectType.assert(object, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_ObjectType.assertedTypeName, object, {
+      new TypeAssertionError(_ObjectType.typeName, object, {
         valueName: "name",
 
         issues: [
           new TypeAssertionError(
-            _ObjectType.propertyAsserters.stringValue.assertedTypeName,
+            _ObjectType.propertyAsserters.stringValue.typeName,
             object.stringValue,
             { valueName: "stringValue" },
           ),
 
           new TypeAssertionError(
-            _ObjectType.propertyAsserters.numberValue.assertedTypeName,
+            _ObjectType.propertyAsserters.numberValue.typeName,
             object.numberValue,
             { valueName: "numberValue" },
           ),
@@ -68,24 +62,24 @@ describe("objectAsserter", () => {
         .message,
     );
 
-    const unnamedAsserter = objectAsserter("", {
+    const unnamedAsserter = new ObjectAsserter("", {
       stringValue: _string,
       numberValue: _number,
     });
 
     assertThrows(
-      () => unnamedAsserter(object),
+      () => unnamedAsserter.assert(object),
       TypeAssertionError,
-      new TypeAssertionError(unnamedAsserter.assertedTypeName, object, {
+      new TypeAssertionError(unnamedAsserter.typeName, object, {
         issues: [
           new TypeAssertionError(
-            unnamedAsserter.propertyAsserters.stringValue.assertedTypeName,
+            unnamedAsserter.propertyAsserters.stringValue.typeName,
             object.stringValue,
             { valueName: "stringValue" },
           ),
 
           new TypeAssertionError(
-            unnamedAsserter.propertyAsserters.numberValue.assertedTypeName,
+            unnamedAsserter.propertyAsserters.numberValue.typeName,
             object.numberValue,
             { valueName: "numberValue" },
           ),
@@ -108,9 +102,9 @@ describe("objectAsserter", () => {
 
     for (const value of testCases) {
       assertThrows(
-        () => _ObjectType(value),
+        () => _ObjectType.assert(value),
         TypeAssertionError,
-        new TypeAssertionError(_ObjectType.assertedTypeName, value).message,
+        new TypeAssertionError(_ObjectType.typeName, value).message,
       );
     }
   });

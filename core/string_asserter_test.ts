@@ -1,74 +1,62 @@
-import { assertInstanceOf, assertStrictEquals, assertThrows } from "assert";
+import { assertStrictEquals, assertThrows } from "assert";
 import { describe, it } from "testing/bdd.ts";
 import { TypeAssertionError } from "../mod.ts";
-import {
-  StringAsserter,
-  stringAsserter,
-  StringAsserterOptions,
-} from "./string_asserter.ts";
+import { StringAsserter, StringAsserterOptions } from "./string_asserter.ts";
 
-describe("stringAsserter", () => {
-  const anyStringTypeName = "AnyString";
-  const anyStringOptions: StringAsserterOptions = {};
-  const _AnyString = stringAsserter(anyStringTypeName, anyStringOptions);
+const anyStringTypeName = "AnyString";
+const anyStringOptions: StringAsserterOptions = {};
+const _AnyString = new StringAsserter(anyStringTypeName, anyStringOptions);
 
-  const constrainedLengthStringOptions: StringAsserterOptions = {
-    minLength: 1,
-    maxLength: 8,
-  };
+const constrainedLengthStringOptions: StringAsserterOptions = {
+  minLength: 1,
+  maxLength: 8,
+};
 
-  const _ConstrainedLengthString = stringAsserter(
-    "ConstrainedLengthString",
-    constrainedLengthStringOptions,
-  );
+const _ConstrainedLengthString = new StringAsserter(
+  "ConstrainedLengthString",
+  constrainedLengthStringOptions,
+);
 
-  const lettersIssue = "must contain one or more letters";
+const lettersIssue = "must contain one or more letters";
 
-  const letterStringOptions: StringAsserterOptions = {
-    regex: { pattern: "\\p{Letter}+", requirements: [lettersIssue] },
-  };
+const letterStringOptions: StringAsserterOptions = {
+  regex: { pattern: "\\p{Letter}+", requirements: [lettersIssue] },
+};
 
-  const _LetterString = stringAsserter("LetterString", letterStringOptions);
+const _LetterString = new StringAsserter("LetterString", letterStringOptions);
 
-  const palindromeIssue = "must be a palindrome";
+const palindromeIssue = "must be a palindrome";
 
-  const palindromeOptions: StringAsserterOptions = {
-    validate(value) {
-      if (value.length < 2) {
-        return [];
-      }
+const palindromeOptions: StringAsserterOptions = {
+  validate(value) {
+    if (value.length < 2) {
+      return [];
+    }
 
-      const forwardValue = value.replace(/[^0-9a-z]/gi, "");
-      const backwardValue = forwardValue.split("").reverse().join("");
+    const forwardValue = value.replace(/[^0-9a-z]/gi, "");
+    const backwardValue = forwardValue.split("").reverse().join("");
 
-      return forwardValue === backwardValue ? [] : [palindromeIssue];
-    },
-  };
+    return forwardValue === backwardValue ? [] : [palindromeIssue];
+  },
+};
 
-  const _Palindrome = stringAsserter("Palindrome", palindromeOptions);
+const _Palindrome = new StringAsserter("Palindrome", palindromeOptions);
 
-  const unnamedAsserter = stringAsserter("", {});
+const unnamedAsserter = new StringAsserter("", {});
 
-  it("should return a `Function`", () => {
-    assertInstanceOf(_AnyString, Function);
-  });
-
-  it("should return a `Function` with the correct `asserterTypeName`", () => {
-    assertStrictEquals(_AnyString.asserterTypeName, "StringAsserter");
-  });
-
-  it("should return a `Function` with the provided `assertedTypeName` or the correct default if empty", () => {
+describe("StringAsserter", () => {
+  it("should have the provided `typeName` or the correct default if empty", () => {
     const testCases = [
-      { asserter: _AnyString, assertedTypeName: anyStringTypeName },
-      { asserter: unnamedAsserter, assertedTypeName: "UnnamedString" },
+      { asserter: _AnyString, typeName: anyStringTypeName },
+      { asserter: unnamedAsserter, typeName: "UnnamedString" },
     ];
 
-    for (const { asserter, assertedTypeName } of testCases) {
-      assertStrictEquals(asserter.assertedTypeName, assertedTypeName);
+    for (const { asserter, typeName } of testCases) {
+      assertStrictEquals(asserter.typeName, typeName);
     }
   });
 
-  it("should return a `Function` with the provided `StringAsserterOptions` or correct defaults as properties", () => {
+  it("should have the provided `StringAsserterOptions` or correct defaults as properties", () => {
     const testCases = [
       { asserter: _AnyString, options: anyStringOptions },
 
@@ -94,7 +82,7 @@ describe("stringAsserter", () => {
 
     for (const minLength of testCases) {
       assertThrows(
-        () => stringAsserter("", { minLength }),
+        () => new StringAsserter("", { minLength }),
         Error,
         "`minLength` must be a positive integer if defined",
       );
@@ -106,7 +94,7 @@ describe("stringAsserter", () => {
 
     for (const maxLength of testCases) {
       assertThrows(
-        () => stringAsserter("", { maxLength }),
+        () => new StringAsserter("", { maxLength }),
         Error,
         "`maxLength` must be a positive integer if defined",
       );
@@ -122,7 +110,7 @@ describe("stringAsserter", () => {
 
     for (const { minLength, maxLength } of testCases) {
       assertThrows(
-        () => stringAsserter("", { minLength, maxLength }),
+        () => new StringAsserter("", { minLength, maxLength }),
         Error,
         "`minLength` must be <= `maxLength` if both are defined",
       );
@@ -135,7 +123,7 @@ describe("stringAsserter", () => {
     for (const value of testCases) {
       assertThrows(
         () =>
-          stringAsserter("", {
+          new StringAsserter("", {
             regex: { pattern: value, requirements: ["requirement"] },
           }),
         SyntaxError,
@@ -154,14 +142,16 @@ describe("stringAsserter", () => {
 
     for (const requirements of testCases) {
       assertThrows(
-        () => stringAsserter("", { regex: { pattern: "", requirements } }),
+        () => new StringAsserter("", { regex: { pattern: "", requirements } }),
         Error,
         "`regex.requirements` must not be empty or contain any blank `string`s if `regex` is defined",
       );
     }
   });
+});
 
-  it("should return a `Function` that returns `value` when `value` is of type `string` and valid according to the provided `StringAsserterOptions`", () => {
+describe("StringAsserter.assert", () => {
+  it("should return `value` when `value` is of type `string` and valid according to the provided `StringAsserterOptions`", () => {
     const testCases = [
       { asserter: _AnyString, values: ["", "abc", "123"] },
       { asserter: _ConstrainedLengthString, values: ["a", "12345678"] },
@@ -171,18 +161,18 @@ describe("stringAsserter", () => {
 
     for (const { asserter, values } of testCases) {
       for (const value of values) {
-        assertStrictEquals(asserter(value), value);
+        assertStrictEquals(asserter.assert(value), value);
       }
     }
   });
 
-  it("should return a `Function` that throws a `TypeAssertionError` with correct `message` when `value` is not of type `string` or is invalid according to the provided `StringAsserterOptions`", () => {
+  it("should throw a `TypeAssertionError` with correct `message` when `value` is not of type `string` or is invalid according to the provided `StringAsserterOptions`", () => {
     const typeIssue = "must be of type `string`";
 
     assertThrows(
-      () => _AnyString(undefined, "name"),
+      () => _AnyString.assert(undefined, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_AnyString.assertedTypeName, undefined, {
+      new TypeAssertionError(_AnyString.typeName, undefined, {
         valueName: "name",
         issues: [typeIssue],
       })
@@ -190,9 +180,9 @@ describe("stringAsserter", () => {
     );
 
     assertThrows(
-      () => unnamedAsserter(undefined),
+      () => unnamedAsserter.assert(undefined),
       TypeAssertionError,
-      new TypeAssertionError(unnamedAsserter.assertedTypeName, undefined, {
+      new TypeAssertionError(unnamedAsserter.typeName, undefined, {
         issues: [typeIssue],
       })
         .message,
@@ -237,7 +227,7 @@ describe("stringAsserter", () => {
       },
 
       {
-        asserter: stringAsserter("", { minLength: 1, maxLength: 1 }),
+        asserter: new StringAsserter("", { minLength: 1, maxLength: 1 }),
 
         values: [
           ["", ["must have 1 character"]],
@@ -246,7 +236,7 @@ describe("stringAsserter", () => {
       },
 
       {
-        asserter: stringAsserter("", { minLength: 2, maxLength: 2 }),
+        asserter: new StringAsserter("", { minLength: 2, maxLength: 2 }),
 
         values: [
           ["a", ["must have 2 characters"]],
@@ -255,12 +245,12 @@ describe("stringAsserter", () => {
       },
 
       {
-        asserter: stringAsserter("", { minLength: 2 }),
+        asserter: new StringAsserter("", { minLength: 2 }),
         values: [["a", ["must have a minimum of 2 characters"]]],
       },
 
       {
-        asserter: stringAsserter("", { maxLength: 1 }),
+        asserter: new StringAsserter("", { maxLength: 1 }),
         values: [["ab", ["must have a maximum of 1 character"]]],
       },
 
@@ -303,10 +293,9 @@ describe("stringAsserter", () => {
     for (const { asserter, values } of testCases) {
       for (const [value, issues] of values) {
         assertThrows(
-          () => asserter(value),
+          () => asserter.assert(value),
           TypeAssertionError,
-          new TypeAssertionError(asserter.assertedTypeName, value, { issues })
-            .message,
+          new TypeAssertionError(asserter.typeName, value, { issues }).message,
         );
       }
     }

@@ -3,47 +3,40 @@
 import { Asserter } from "./asserter.ts";
 import { TypeAssertionError } from "./type_assertion_error.ts";
 
-export const typeAsserterTypeName = "TypeAsserter" as const;
-
 /**
- * A `TypeAsserter<Type>` is an `Asserter<Type>` with an `asserterTypeName` of
- * literal type `"TypeAsserter"`.
- */
-export interface TypeAsserter<Type> extends Asserter<Type> {
-  readonly asserterTypeName: typeof typeAsserterTypeName;
-}
-
-/**
- * `typeAsserter` returns a `TypeAsserter<Type>` that uses `typeGuard` to assert
+ * A `TypeAsserter<Type>` is an `Asserter<Type>` that uses `typeGuard` to assert
  * whether `value` is of `Type`.
  *
  * Example:
  *
  * ```ts
- * import { typeAsserter } from "../mod.ts";
+ * import { TypeAsserter } from "../mod.ts";
  *
- * export const _string = typeAsserter(
+ * export const _string = new TypeAsserter(
  *   "string",
  *   (value): value is string => typeof value === "string",
  * );
  * ```
  */
-export function typeAsserter<Type>(
-  assertedTypeName: string,
-  typeGuard: (value: unknown) => value is Type,
-): TypeAsserter<Type> {
-  assertedTypeName ||= "UnnamedType";
+export class TypeAsserter<Type> implements Asserter<Type> {
+  readonly typeName: string;
 
-  const asserter = (value: unknown, valueName?: string) => {
-    if (typeGuard(value)) {
+  readonly #typeGuard: (value: unknown) => value is Type;
+
+  constructor(
+    typeName: string,
+    typeGuard: (value: unknown) => value is Type,
+  ) {
+    this.typeName = typeName || "UnnamedType";
+
+    this.#typeGuard = typeGuard;
+  }
+
+  assert(value: unknown, valueName?: string): Type {
+    if (this.#typeGuard(value)) {
       return value;
     }
 
-    throw new TypeAssertionError(assertedTypeName, value, { valueName });
-  };
-
-  asserter.asserterTypeName = typeAsserterTypeName;
-  asserter.assertedTypeName = assertedTypeName;
-
-  return asserter;
+    throw new TypeAssertionError(this.typeName, value, { valueName });
+  }
 }

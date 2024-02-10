@@ -1,13 +1,9 @@
 // This module is browser-compatible.
 
-import { typeAsserter } from "../core/mod.ts";
+import { TypeAsserter } from "../core/mod.ts";
 
-/**
- * `_number` is a `number` type assertion function. If `value` is a `number`,
- * `_number` returns `value` as `number`. Otherwise, `_number` throws a
- * `TypeAssertionError`, including `valueName` in its `message`.
- */
-export const _number = typeAsserter(
+/** `_number` is a `TypeAsserter<number>`. */
+export const _number = new TypeAsserter(
   "number",
   (value): value is number => typeof value === "number",
 );

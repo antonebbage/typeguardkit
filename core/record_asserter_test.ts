@@ -1,43 +1,57 @@
-import { assertInstanceOf, assertStrictEquals, assertThrows } from "assert";
+import { assertStrictEquals, assertThrows } from "assert";
 import { describe, it } from "testing/bdd.ts";
 import {
   _number,
   _string,
   LiteralUnionAsserter,
-  RecordAsserter,
   TypeAssertionError,
 } from "../mod.ts";
-import { recordOf } from "./record_of.ts";
+import { RecordAsserter } from "./record_asserter.ts";
 
-describe("recordOf", () => {
-  const _LiteralUnion = new LiteralUnionAsserter(
-    "LiteralUnion",
-    ["a", "b", "c"],
-  );
+const _LiteralUnion = new LiteralUnionAsserter("LiteralUnion", ["a", "b", "c"]);
 
-  const _RecordOfStringByString = recordOf(_string, _string);
-  const _RecordOfStringByLiteralUnion = recordOf(_LiteralUnion, _string);
-  const _RecordOfNumberByString = recordOf(_string, _number);
+const recordOfStringByStringTypeName = "RecordOfStringByString";
 
-  it("should return a `RecordAsserter`", () => {
-    assertInstanceOf(_RecordOfStringByString, RecordAsserter);
-  });
+const _RecordOfStringByString = new RecordAsserter(
+  recordOfStringByStringTypeName,
+  [_string, _string],
+);
 
-  it("should return a `RecordAsserter` with the correct `typeName`", () => {
+const recordOfStringByLiteralUnionTypeName = "RecordOfStringByLiteralUnion";
+
+const _RecordOfStringByLiteralUnion = new RecordAsserter(
+  recordOfStringByLiteralUnionTypeName,
+  [_LiteralUnion, _string],
+);
+
+const recordOfNumberByStringTypeName = "RecordOfNumberByString";
+
+const _RecordOfNumberByString = new RecordAsserter(
+  recordOfNumberByStringTypeName,
+  [_string, _number],
+);
+
+describe("RecordAsserter", () => {
+  it("should have the provided `typeName` or the correct default if `undefined` or empty", () => {
     const testCases = [
       {
         asserter: _RecordOfStringByString,
-        typeName: `Record<${_string.typeName}, ${_string.typeName}>`,
+        typeName: recordOfStringByStringTypeName,
       },
 
       {
         asserter: _RecordOfStringByLiteralUnion,
-        typeName: `Record<${_LiteralUnion.typeName}, ${_string.typeName}>`,
+        typeName: recordOfStringByLiteralUnionTypeName,
       },
 
       {
         asserter: _RecordOfNumberByString,
-        typeName: `Record<${_string.typeName}, ${_number.typeName}>`,
+        typeName: recordOfNumberByStringTypeName,
+      },
+
+      {
+        asserter: new RecordAsserter("", [_string, _string]),
+        typeName: "UnnamedRecord",
       },
     ];
 
@@ -72,8 +86,10 @@ describe("recordOf", () => {
       assertStrictEquals(recordAsserter.valueAsserter, valueAsserter);
     }
   });
+});
 
-  it("should return a `RecordAsserter` whose `assert` method returns `value` when it is a `Record` where `keyAsserter` and `valueAsserter` do not throw an error for any key or value", () => {
+describe("RecordAsserter.assert", () => {
+  it("should return `value` when it is a `Record` where `keyAsserter` and `valueAsserter` do not throw an error for any key or value", () => {
     const testCases = [
       {
         asserter: _RecordOfStringByString,
@@ -98,7 +114,7 @@ describe("recordOf", () => {
     }
   });
 
-  it("should return a `RecordAsserter` whose `assert` method throws a `TypeAssertionError` with correct `message` when `value` is not a `Record` where `keyAsserter` and `valueAsserter` do not throw an error for any key or value", () => {
+  it("should throw a `TypeAssertionError` with correct `message` when `value` is not a `Record` where `keyAsserter` and `valueAsserter` do not throw an error for any key or value", () => {
     assertThrows(
       () =>
         _RecordOfStringByString.assert({ a: undefined, b: undefined }, "name"),
@@ -109,6 +125,29 @@ describe("recordOf", () => {
         {
           valueName: "name",
 
+          issues: [
+            new TypeAssertionError(_string.typeName, undefined, {
+              valueName: "a",
+            }),
+
+            new TypeAssertionError(_string.typeName, undefined, {
+              valueName: "b",
+            }),
+          ],
+        },
+      )
+        .message,
+    );
+
+    const unnamedAsserter = new RecordAsserter("", [_string, _string]);
+
+    assertThrows(
+      () => unnamedAsserter.assert({ a: undefined, b: undefined }),
+      TypeAssertionError,
+      new TypeAssertionError(
+        unnamedAsserter.typeName,
+        { a: undefined, b: undefined },
+        {
           issues: [
             new TypeAssertionError(_string.typeName, undefined, {
               valueName: "a",
