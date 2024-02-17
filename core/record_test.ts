@@ -7,17 +7,17 @@ import {
   RecordAsserter,
   TypeAssertionError,
 } from "../mod.ts";
-import { recordOf } from "./record_of.ts";
+import { record } from "./record.ts";
 
-describe("recordOf", () => {
+describe("record", () => {
   const _LiteralUnion = new LiteralUnionAsserter(
     "LiteralUnion",
     ["a", "b", "c"],
   );
 
-  const _RecordOfStringByString = recordOf(_string, _string);
-  const _RecordOfStringByLiteralUnion = recordOf(_LiteralUnion, _string);
-  const _RecordOfNumberByString = recordOf(_string, _number);
+  const _RecordOfStringByString = record(_string, _string);
+  const _RecordOfStringByLiteralUnion = record(_LiteralUnion, _string);
+  const _RecordOfNumberByString = record(_string, _number);
 
   it("should return a `RecordAsserter`", () => {
     assertInstanceOf(_RecordOfStringByString, RecordAsserter);

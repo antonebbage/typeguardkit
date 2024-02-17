@@ -12,7 +12,7 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  * The provided `keyAsserter` and `valueAsserter` are made accessible as
  * properties of the created `RecordAsserter`.
  *
- * The `recordOf` function can be used to create a `RecordAsserter` without
+ * The `record` function can be used to create a `RecordAsserter` without
  * specifying a `typeName`.
  *
  * Example:

@@ -6,22 +6,22 @@ import { RecordAsserter } from "./record_asserter.ts";
 import { TypeAsserter } from "./type_asserter.ts";
 
 /**
- * `recordOf` can be used to create a `RecordAsserter` without specifying a
+ * `record` can be used to create a `RecordAsserter` without specifying a
  * `typeName`.
  *
  * Example:
  *
  * ```ts
- * import { _string, recordOf } from "../mod.ts";
+ * import { _string, record } from "../mod.ts";
  *
- * export const _RecordOfStringByString = recordOf(_string, _string);
+ * export const _RecordOfStringByString = record(_string, _string);
  *
  * export type RecordOfStringByString = ReturnType<
  *   typeof _RecordOfStringByString.assert
  * >;
  * ```
  */
-export function recordOf<Key extends string, Value>(
+export function record<Key extends string, Value>(
   keyAsserter: TypeAsserter<Key> | LiteralUnionAsserter<readonly Key[]>,
   valueAsserter: Asserter<Value>,
 ): RecordAsserter<Key, Value> {

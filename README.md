@@ -402,17 +402,17 @@ export type RecordOfStringByString = ReturnType<
 >;
 ```
 
-#### `recordOf`
+#### `record`
 
-The `recordOf` function can be used to create a `RecordAsserter` without
+The `record` function can be used to create a `RecordAsserter` without
 specifying a `typeName`.
 
 Example:
 
 ```ts
-import { _string, recordOf } from "./mod.ts";
+import { _string, record } from "./mod.ts";
 
-export const _RecordOfStringByString = recordOf(_string, _string);
+export const _RecordOfStringByString = record(_string, _string);
 
 export type RecordOfStringByString = ReturnType<
   typeof _RecordOfStringByString.assert
