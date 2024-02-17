@@ -8,8 +8,8 @@
 
 A TypeScript module to help construct type assertion functions and type guards.
 
-The included functions can be used to create types and their assertion functions
-and guards from a single source definition.
+The included classes and functions can be used to create types and their
+assertion functions and guards from a single source definition.
 
 Type assertion functions and guards can be used to catch incompatible types
 entering your program due to data corruption, interfaces not being adhered to,
