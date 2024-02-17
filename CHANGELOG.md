@@ -1,3 +1,32 @@
+## [0.23.0](https://github.com/antonebbage/typeguardkit/compare/0.22.0...0.23.0) (2024-02-17)
+
+### ⚠ BREAKING CHANGES
+
+- rename `pickFrom` to `pick`
+- rename `partialFrom` to `partial`
+- rename `objectIntersectionOf` to `objectIntersection`
+- rename `unionOf` to `union`
+- rename `recordOf` to `record`
+- rename `optionOf` to `option`
+- rename `arrayOf` to `array`
+
+### Features
+
+- rename `arrayOf` to `array`
+  ([8588245](https://github.com/antonebbage/typeguardkit/commit/858824539b2682e8963f1bc68286ac542e8f3259))
+- rename `objectIntersectionOf` to `objectIntersection`
+  ([cfd4581](https://github.com/antonebbage/typeguardkit/commit/cfd4581f54542ba601631679d38142afc9702306))
+- rename `optionOf` to `option`
+  ([0bf26e5](https://github.com/antonebbage/typeguardkit/commit/0bf26e5ed54224fec2ee529d0dc0f124b8a87424))
+- rename `partialFrom` to `partial`
+  ([bf09128](https://github.com/antonebbage/typeguardkit/commit/bf091284a8acf22505dffc785c5e5ea91ab936f3))
+- rename `pickFrom` to `pick`
+  ([83420be](https://github.com/antonebbage/typeguardkit/commit/83420be4541dea776d3389e25cb969be6700d0d2))
+- rename `recordOf` to `record`
+  ([25cf21b](https://github.com/antonebbage/typeguardkit/commit/25cf21b4d3fce736148a7063129875c32325cca2))
+- rename `unionOf` to `union`
+  ([38dd256](https://github.com/antonebbage/typeguardkit/commit/38dd256e491510891d9376bad700619b95b28951))
+
 ## [0.22.0](https://github.com/antonebbage/typeguardkit/compare/0.21.0...0.22.0) (2024-02-10)
 
 ### ⚠ BREAKING CHANGES
