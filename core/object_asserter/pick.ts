@@ -4,13 +4,13 @@ import { Asserter } from "../asserter.ts";
 import { ObjectAsserter } from "./object_asserter.ts";
 
 /**
- * `pickFrom` returns an `ObjectAsserter<Pick<Type, Keys[number]>>`, created
- * using the provided `ObjectAsserter<Type>` and `Keys`.
+ * `pick` returns an `ObjectAsserter<Pick<Type, Keys[number]>>`, created using
+ * the provided `ObjectAsserter<Type>` and `Keys`.
  *
  * Example:
  *
  * ```ts
- * import { _string, ObjectAsserter, pickFrom } from "../../mod.ts";
+ * import { _string, ObjectAsserter, pick } from "../../mod.ts";
  *
  * // types/user.ts
  *
@@ -24,12 +24,12 @@ import { ObjectAsserter } from "./object_asserter.ts";
  *
  * // types/user_name.ts
  *
- * export const _UserName = pickFrom(_User, ["firstName", "lastName"]);
+ * export const _UserName = pick(_User, ["firstName", "lastName"]);
  *
  * export type UserName = ReturnType<typeof _UserName.assert>;
  * ```
  */
-export function pickFrom<
+export function pick<
   Type extends Record<string, unknown>,
   Keys extends Array<keyof Type>,
 >(

@@ -7,9 +7,9 @@ import {
   ObjectAsserter,
   TypeAssertionError,
 } from "../../mod.ts";
-import { pickFrom } from "./pick_from.ts";
+import { pick } from "./pick.ts";
 
-describe("pickFrom", () => {
+describe("pick", () => {
   const _ObjectType = new ObjectAsserter("ObjectType", {
     a: _string,
     b: _number,
@@ -18,7 +18,7 @@ describe("pickFrom", () => {
 
   const keys: Array<keyof ReturnType<typeof _ObjectType.assert>> = ["b", "c"];
 
-  const _PickedObjectType = pickFrom(_ObjectType, keys);
+  const _PickedObjectType = pick(_ObjectType, keys);
 
   it("should return an `ObjectAsserter`", () => {
     assertInstanceOf(_PickedObjectType, ObjectAsserter);
@@ -29,12 +29,12 @@ describe("pickFrom", () => {
 
     const testCases = [
       {
-        asserter: pickFrom(_ObjectType, ["a"], "PickedObjectType"),
+        asserter: pick(_ObjectType, ["a"], "PickedObjectType"),
         typeName: "PickedObjectType",
       },
 
       { asserter: _PickedObjectType, typeName: defaultTypeName },
-      { asserter: pickFrom(_ObjectType, keys, ""), typeName: defaultTypeName },
+      { asserter: pick(_ObjectType, keys, ""), typeName: defaultTypeName },
     ];
 
     for (const { asserter, typeName } of testCases) {
@@ -82,7 +82,7 @@ describe("pickFrom", () => {
         .message,
     );
 
-    const namedAsserter = pickFrom(_ObjectType, keys, "PickedObjectType");
+    const namedAsserter = pick(_ObjectType, keys, "PickedObjectType");
 
     assertThrows(
       () => namedAsserter.assert(object),

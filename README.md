@@ -497,10 +497,10 @@ export const _Options = partial(
 export type Options = ReturnType<typeof _Options.assert>;
 ```
 
-#### `pickFrom`
+#### `pick`
 
-`pickFrom` returns an `ObjectAsserter<Pick<Type, Keys[number]>>`, created using
-the provided `ObjectAsserter<Type>` and `Keys`.
+`pick` returns an `ObjectAsserter<Pick<Type, Keys[number]>>`, created using the
+provided `ObjectAsserter<Type>` and `Keys`.
 
 [`Pick<Type, Keys>`](https://www.typescriptlang.org/docs/handbook/utility-types.html#picktype-keys)
 is a utility type that constructs a type consisting of the properties of `Type`
@@ -509,7 +509,7 @@ with `Keys`.
 Example:
 
 ```ts
-import { _string, ObjectAsserter, pickFrom } from "./mod.ts";
+import { _string, ObjectAsserter, pick } from "./mod.ts";
 
 // types/user.ts
 
@@ -523,7 +523,7 @@ export type User = ReturnType<typeof _User.assert>;
 
 // types/user_name.ts
 
-export const _UserName = pickFrom(_User, ["firstName", "lastName"]);
+export const _UserName = pick(_User, ["firstName", "lastName"]);
 
 export type UserName = ReturnType<typeof _UserName.assert>;
 ```
