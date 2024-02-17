@@ -1,10 +1,10 @@
 import { assertInstanceOf, assertStrictEquals, assertThrows } from "assert";
 import { describe, it } from "testing/bdd.ts";
 import { _string, OptionAsserter, TypeAssertionError } from "../mod.ts";
-import { optionOf } from "./option_of.ts";
+import { option } from "./option.ts";
 
-describe("optionOf", () => {
-  const _OptionalString = optionOf(_string);
+describe("option", () => {
+  const _OptionalString = option(_string);
 
   it("should return an `OptionAsserter`", () => {
     assertInstanceOf(_OptionalString, OptionAsserter);

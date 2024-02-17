@@ -1,8 +1,8 @@
 // This module is browser-compatible.
 
 import { Asserter } from "../asserter.ts";
+import { option } from "../option.ts";
 import { OptionAsserter } from "../option_asserter.ts";
-import { optionOf } from "../option_of.ts";
 import { ObjectAsserter } from "./object_asserter.ts";
 
 /**
@@ -39,7 +39,7 @@ export function partialFrom<Type extends Record<string, unknown>>(
 
     newPropertyAsserters[key] = oldPropertyAsserter instanceof OptionAsserter
       ? oldPropertyAsserter
-      : optionOf(oldPropertyAsserter);
+      : option(oldPropertyAsserter);
   }
 
   return new ObjectAsserter(
