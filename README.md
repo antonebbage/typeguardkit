@@ -471,10 +471,10 @@ export const _User = objectIntersection(
 export type User = ReturnType<typeof _User.assert>;
 ```
 
-#### `partialFrom`
+#### `partial`
 
-`partialFrom` returns an `ObjectAsserter<Partial<Type>>`, created using the
-provided `ObjectAsserter<Type>`.
+`partial` returns an `ObjectAsserter<Partial<Type>>`, created using the provided
+`ObjectAsserter<Type>`.
 
 [`Partial<Type>`](https://www.typescriptlang.org/docs/handbook/utility-types.html#partialtype)
 is a utility type that constructs a type the same as `Type`, but with all
@@ -483,9 +483,9 @@ properties made optional.
 Example:
 
 ```ts
-import { _string, ObjectAsserter, partialFrom } from "./mod.ts";
+import { _string, ObjectAsserter, partial } from "./mod.ts";
 
-export const _Options = partialFrom(
+export const _Options = partial(
   new ObjectAsserter("", {
     option1: _string,
     option2: _string,

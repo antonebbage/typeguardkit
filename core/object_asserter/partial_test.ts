@@ -8,16 +8,16 @@ import {
   OptionAsserter,
   TypeAssertionError,
 } from "../../mod.ts";
-import { partialFrom } from "./partial_from.ts";
+import { partial } from "./partial.ts";
 
-describe("partialFrom", () => {
+describe("partial", () => {
   const _ObjectType = new ObjectAsserter("ObjectType", {
     a: _string,
     b: _number,
     c: _boolean,
   });
 
-  const _PartialObjectType = partialFrom(_ObjectType);
+  const _PartialObjectType = partial(_ObjectType);
 
   it("should return an `ObjectAsserter`", () => {
     assertInstanceOf(_PartialObjectType, ObjectAsserter);
@@ -28,12 +28,12 @@ describe("partialFrom", () => {
 
     const testCases = [
       {
-        asserter: partialFrom(_ObjectType, "PartialObjectType"),
+        asserter: partial(_ObjectType, "PartialObjectType"),
         typeName: "PartialObjectType",
       },
 
       { asserter: _PartialObjectType, typeName: defaultTypeName },
-      { asserter: partialFrom(_ObjectType, ""), typeName: defaultTypeName },
+      { asserter: partial(_ObjectType, ""), typeName: defaultTypeName },
     ];
 
     for (const { asserter, typeName } of testCases) {
@@ -91,7 +91,7 @@ describe("partialFrom", () => {
         .message,
     );
 
-    const namedAsserter = partialFrom(_ObjectType, "PartialObjectType");
+    const namedAsserter = partial(_ObjectType, "PartialObjectType");
 
     assertThrows(
       () => namedAsserter.assert(object),

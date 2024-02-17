@@ -6,15 +6,15 @@ import { OptionAsserter } from "../option_asserter.ts";
 import { ObjectAsserter } from "./object_asserter.ts";
 
 /**
- * `partialFrom` returns an `ObjectAsserter<Partial<Type>>`, created using the
+ * `partial` returns an `ObjectAsserter<Partial<Type>>`, created using the
  * provided `ObjectAsserter<Type>`.
  *
  * Example:
  *
  * ```ts
- * import { _string, ObjectAsserter, partialFrom } from "../../mod.ts";
+ * import { _string, ObjectAsserter, partial } from "../../mod.ts";
  *
- * export const _Options = partialFrom(
+ * export const _Options = partial(
  *   new ObjectAsserter("", {
  *     option1: _string,
  *     option2: _string,
@@ -26,7 +26,7 @@ import { ObjectAsserter } from "./object_asserter.ts";
  * export type Options = ReturnType<typeof _Options.assert>;
  * ```
  */
-export function partialFrom<Type extends Record<string, unknown>>(
+export function partial<Type extends Record<string, unknown>>(
   asserter: ObjectAsserter<Type>,
   assertedTypeName?: string,
 ): ObjectAsserter<Partial<Type>> {
