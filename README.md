@@ -440,15 +440,15 @@ export const _User = new ObjectAsserter("User", {
 export type User = ReturnType<typeof _User.assert>;
 ```
 
-#### `objectIntersectionOf`
+#### `objectIntersection`
 
-`objectIntersectionOf` returns an `ObjectAsserter` for the intersection of the
+`objectIntersection` returns an `ObjectAsserter` for the intersection of the
 `Type`s of the provided `ObjectAsserter`s.
 
 Example:
 
 ```ts
-import { _string, ObjectAsserter, objectIntersectionOf } from "./mod.ts";
+import { _string, ObjectAsserter, objectIntersection } from "./mod.ts";
 
 // types/entity.ts
 
@@ -460,7 +460,7 @@ export type Entity = ReturnType<typeof _Entity.assert>;
 
 // types/user.ts
 
-export const _User = objectIntersectionOf(
+export const _User = objectIntersection(
   _Entity,
   new ObjectAsserter("", {
     name: _string,

@@ -7,13 +7,13 @@ import { isTypeNameOpen } from "./_is_type_name_open.ts";
 import { ObjectAsserter } from "./object_asserter.ts";
 
 /**
- * `objectIntersectionOf` returns an `ObjectAsserter` for the intersection of
- * the `Type`s of the provided `ObjectAsserter`s.
+ * `objectIntersection` returns an `ObjectAsserter` for the intersection of the
+ * `Type`s of the provided `ObjectAsserter`s.
  *
  * Example:
  *
  * ```ts
- * import { _string, ObjectAsserter, objectIntersectionOf } from "../../mod.ts";
+ * import { _string, ObjectAsserter, objectIntersection } from "../../mod.ts";
  *
  * // types/entity.ts
  *
@@ -25,7 +25,7 @@ import { ObjectAsserter } from "./object_asserter.ts";
  *
  * // types/user.ts
  *
- * export const _User = objectIntersectionOf(
+ * export const _User = objectIntersection(
  *   _Entity,
  *   new ObjectAsserter("", {
  *     name: _string,
@@ -36,7 +36,7 @@ import { ObjectAsserter } from "./object_asserter.ts";
  * export type User = ReturnType<typeof _User.assert>;
  * ```
  */
-export function objectIntersectionOf<
+export function objectIntersection<
   TypeA extends Record<string, unknown>,
   TypeB extends Record<string, unknown>,
 >(

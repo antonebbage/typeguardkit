@@ -8,9 +8,9 @@ import {
   TypeAssertionError,
   union,
 } from "../../mod.ts";
-import { objectIntersectionOf } from "./object_intersection_of.ts";
+import { objectIntersection } from "./object_intersection.ts";
 
-describe("objectIntersectionOf", () => {
+describe("objectIntersection", () => {
   const objectType1Name = "ObjectType1";
 
   const _ObjectType1 = new ObjectAsserter(objectType1Name, {
@@ -28,7 +28,7 @@ describe("objectIntersectionOf", () => {
 
   const intersectionName = "Intersection";
 
-  const _Intersection = objectIntersectionOf(
+  const _Intersection = objectIntersection(
     _ObjectType1,
     _ObjectType2,
     intersectionName,
@@ -46,12 +46,12 @@ describe("objectIntersectionOf", () => {
       { asserter: _Intersection, typeName: intersectionName },
 
       {
-        asserter: objectIntersectionOf(_ObjectType1, _ObjectType2),
+        asserter: objectIntersection(_ObjectType1, _ObjectType2),
         typeName: defaultTypeName,
       },
 
       {
-        asserter: objectIntersectionOf(_ObjectType1, _ObjectType2, ""),
+        asserter: objectIntersection(_ObjectType1, _ObjectType2, ""),
         typeName: defaultTypeName,
       },
     ];
@@ -99,7 +99,7 @@ describe("objectIntersectionOf", () => {
         .message,
     );
 
-    const unnamedAsserter = objectIntersectionOf(_ObjectType1, _ObjectType2);
+    const unnamedAsserter = objectIntersection(_ObjectType1, _ObjectType2);
 
     assertThrows(
       () => unnamedAsserter.assert(object),
