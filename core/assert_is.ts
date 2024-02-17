@@ -14,11 +14,7 @@ import { Asserter } from "./asserter.ts";
  * import { _string, assertIs } from "../mod.ts";
  *
  * function handleUnknown(x: unknown) {
- *   try {
- *     assertIs(_string, x, "x");
- *   } catch {
- *     return;
- *   }
+ *   assertIs(_string, x, "x");
  *
  *   handleString(x);
  * }

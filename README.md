@@ -175,11 +175,7 @@ Example:
 import { _string, assertIs } from "./mod.ts";
 
 function handleUnknown(x: unknown) {
-  try {
-    assertIs(_string, x, "x");
-  } catch {
-    return;
-  }
+  assertIs(_string, x, "x");
 
   // `x` has now been narrowed to type `string`, so can be passed to
   // `handleString`.
