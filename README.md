@@ -78,20 +78,6 @@ export async function getBook(isbn: string): Promise<Book> {
 
   return _Book.assert(responseBody, "responseBody");
 }
-
-// local_storage/reading_list_isbns.ts
-
-export const readingListIsbnsKey = "reading-list-isbns";
-
-export function getReadingListIsbns(): string[] {
-  const json = localStorage.getItem(readingListIsbnsKey);
-
-  return json ? arrayOf(_string).assert(JSON.parse(json)) : [];
-}
-
-export function setReadingListIsbns(isbns: readonly string[]): void {
-  localStorage.setItem(readingListIsbnsKey, JSON.stringify(isbns));
-}
 ```
 
 ### `Asserter`
