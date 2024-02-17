@@ -47,7 +47,7 @@ import {
   _number,
   _PositiveInteger,
   _string,
-  arrayOf,
+  array,
   ObjectAsserter,
   unionOf,
 } from "./mod.ts";
@@ -57,7 +57,7 @@ import {
 export const _Book = new ObjectAsserter("Book", {
   isbn: _string,
   title: _string,
-  authors: arrayOf(_string),
+  authors: array(_string),
   pageCount: _PositiveInteger,
   rating: unionOf(_number, _null),
   recommended: _boolean,
@@ -364,17 +364,17 @@ export type NonEmptyArrayOfString = ReturnType<
 >;
 ```
 
-#### `arrayOf`
+#### `array`
 
-The `arrayOf` function can be used to create an `ArrayAsserter` without
-specifying a `typeName` or `ArrayAsserterOptions`.
+The `array` function can be used to create an `ArrayAsserter` without specifying
+a `typeName` or `ArrayAsserterOptions`.
 
 Example:
 
 ```ts
-import { _string, arrayOf } from "./mod.ts";
+import { _string, array } from "./mod.ts";
 
-export const _ArrayOfString = arrayOf(_string);
+export const _ArrayOfString = array(_string);
 
 export type ArrayOfString = ReturnType<typeof _ArrayOfString.assert>;
 ```

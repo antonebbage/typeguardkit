@@ -1,7 +1,7 @@
 // This module is browser-compatible.
 
+export * from "./array.ts";
 export * from "./array_asserter.ts";
-export * from "./array_of.ts";
 export * from "./assert_is.ts";
 export * from "./asserter.ts";
 export * from "./enum_asserter.ts";

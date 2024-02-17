@@ -20,7 +20,7 @@ export interface ArrayAsserterOptions {
  * The provided `memberAsserter` and `ArrayAsserterOptions` are made accessible
  * as properties of the created `ArrayAsserter`.
  *
- * The `arrayOf` function can be used to create an `ArrayAsserter` without
+ * The `array` function can be used to create an `ArrayAsserter` without
  * specifying a `typeName` or `ArrayAsserterOptions`.
  *
  * Example:

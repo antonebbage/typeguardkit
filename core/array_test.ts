@@ -7,11 +7,11 @@ import {
   ArrayAsserterOptions,
   TypeAssertionError,
 } from "../mod.ts";
-import { arrayOf } from "./array_of.ts";
+import { array } from "./array.ts";
 
-describe("arrayOf", () => {
-  const _ArrayOfString = arrayOf(_string);
-  const _ArrayOfNumber = arrayOf(_number);
+describe("array", () => {
+  const _ArrayOfString = array(_string);
+  const _ArrayOfNumber = array(_number);
 
   it("should return an `ArrayAsserter`", () => {
     assertInstanceOf(_ArrayOfString, ArrayAsserter);
