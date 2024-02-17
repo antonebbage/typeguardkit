@@ -33,6 +33,10 @@ export interface ArrayAsserterOptions {
  *   _string,
  *   { minLength: 1 },
  * );
+ *
+ * export type NonEmptyArrayOfString = ReturnType<
+ *   typeof _NonEmptyArrayOfString.assert
+ * >;
  * ```
  */
 export class ArrayAsserter<Element>

@@ -22,6 +22,8 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  *   "stringOrNull",
  *   [_string, _null],
  * );
+ *
+ * export type stringOrNull = ReturnType<typeof _stringOrNull.assert>;
  * ```
  */
 export class UnionAsserter<

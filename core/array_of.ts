@@ -13,6 +13,8 @@ import { Asserter } from "./asserter.ts";
  * import { _string, arrayOf } from "../mod.ts";
  *
  * export const _ArrayOfString = arrayOf(_string);
+ *
+ * export type ArrayOfString = ReturnType<typeof _ArrayOfString.assert>;
  * ```
  */
 export function arrayOf<Element>(

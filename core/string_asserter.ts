@@ -48,9 +48,13 @@ export interface StringAsserterRegex {
  *   minLength: 1,
  * });
  *
+ * export type NonEmptyString = ReturnType<typeof _NonEmptyString.assert>;
+ *
  * export const _NumericString = new StringAsserter("NumericString", {
  *   regex: { pattern: "\\d+", requirements: ["must be numeric"] },
  * });
+ *
+ * export type NumericString = ReturnType<typeof _NumericString.assert>;
  *
  * export const _Palindrome = new StringAsserter("Palindrome", {
  *   validate(value) {
@@ -64,6 +68,8 @@ export interface StringAsserterRegex {
  *     return forwardValue === backwardValue ? [] : ["must be a palindrome"];
  *   },
  * });
+ *
+ * export type Palindrome = ReturnType<typeof _Palindrome.assert>;
  * ```
  */
 export class StringAsserter implements Asserter<string>, StringAsserterOptions {

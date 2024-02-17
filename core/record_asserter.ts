@@ -24,6 +24,10 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  *   "RecordOfStringByString",
  *   [_string, _string],
  * );
+ *
+ * export type RecordOfStringByString = ReturnType<
+ *   typeof _RecordOfStringByString.assert
+ * >;
  * ```
  */
 export class RecordAsserter<Key extends string, Value>

@@ -15,6 +15,10 @@ import { TypeAsserter } from "./type_asserter.ts";
  * import { _string, recordOf } from "../mod.ts";
  *
  * export const _RecordOfStringByString = recordOf(_string, _string);
+ *
+ * export type RecordOfStringByString = ReturnType<
+ *   typeof _RecordOfStringByString.assert
+ * >;
  * ```
  */
 export function recordOf<Key extends string, Value>(

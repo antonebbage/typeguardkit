@@ -41,6 +41,8 @@ export interface NumberAsserterBound {
  *   max: { value: 100, inclusive: true },
  *   step: 2,
  * });
+ *
+ * export type EvenNumberInRange = ReturnType<typeof _EvenNumberInRange.assert>;
  * ```
  */
 export class NumberAsserter implements Asserter<number> {

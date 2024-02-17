@@ -229,6 +229,8 @@ export const _EvenNumberInRange = new NumberAsserter("EvenNumberInRange", {
   max: { value: 100, inclusive: true },
   step: 2,
 });
+
+export type EvenNumberInRange = ReturnType<typeof _EvenNumberInRange.assert>;
 ```
 
 ### `StringAsserter`
@@ -248,9 +250,13 @@ export const _NonEmptyString = new StringAsserter("NonEmptyString", {
   minLength: 1,
 });
 
+export type NonEmptyString = ReturnType<typeof _NonEmptyString.assert>;
+
 export const _NumericString = new StringAsserter("NumericString", {
   regex: { pattern: "\\d+", requirements: ["must be numeric"] },
 });
+
+export type NumericString = ReturnType<typeof _NumericString.assert>;
 
 export const _Palindrome = new StringAsserter("Palindrome", {
   validate(value) {
@@ -264,6 +270,8 @@ export const _Palindrome = new StringAsserter("Palindrome", {
     return forwardValue === backwardValue ? [] : ["must be a palindrome"];
   },
 });
+
+export type Palindrome = ReturnType<typeof _Palindrome.assert>;
 ```
 
 ### `LiteralUnionAsserter`
@@ -326,6 +334,8 @@ export const _stringOrNull = new UnionAsserter(
   "stringOrNull",
   [_string, _null],
 );
+
+export type stringOrNull = ReturnType<typeof _stringOrNull.assert>;
 ```
 
 #### `unionOf`
@@ -339,6 +349,8 @@ Example:
 import { _null, _string, unionOf } from "./mod.ts";
 
 export const _stringOrNull = unionOf(_string, _null);
+
+export type stringOrNull = ReturnType<typeof _stringOrNull.assert>;
 ```
 
 ### `ArrayAsserter`
@@ -360,6 +372,10 @@ export const _NonEmptyArrayOfString = new ArrayAsserter(
   _string,
   { minLength: 1 },
 );
+
+export type NonEmptyArrayOfString = ReturnType<
+  typeof _NonEmptyArrayOfString.assert
+>;
 ```
 
 #### `arrayOf`
@@ -373,6 +389,8 @@ Example:
 import { _string, arrayOf } from "./mod.ts";
 
 export const _ArrayOfString = arrayOf(_string);
+
+export type ArrayOfString = ReturnType<typeof _ArrayOfString.assert>;
 ```
 
 ### `RecordAsserter`
@@ -392,6 +410,10 @@ export const _RecordOfStringByString = new RecordAsserter(
   "RecordOfStringByString",
   [_string, _string],
 );
+
+export type RecordOfStringByString = ReturnType<
+  typeof _RecordOfStringByString.assert
+>;
 ```
 
 #### `recordOf`
@@ -405,6 +427,10 @@ Example:
 import { _string, recordOf } from "./mod.ts";
 
 export const _RecordOfStringByString = recordOf(_string, _string);
+
+export type RecordOfStringByString = ReturnType<
+  typeof _RecordOfStringByString.assert
+>;
 ```
 
 ### `ObjectAsserter`

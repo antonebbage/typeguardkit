@@ -13,6 +13,8 @@ import { UnionAsserter } from "./union_asserter.ts";
  * import { _null, _string, unionOf } from "../mod.ts";
  *
  * export const _stringOrNull = unionOf(_string, _null);
+ *
+ * export type stringOrNull = ReturnType<typeof _stringOrNull.assert>;
  * ```
  */
 export function unionOf<Asserters extends ReadonlyArray<Asserter<unknown>>>(
