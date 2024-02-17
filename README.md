@@ -72,9 +72,9 @@ export async function getBook(isbn: string): Promise<Book> {
 
   const responseBody = await response.json();
 
-  // If `responseBody` is a `Book`, `_Book` returns `responseBody` as `Book`.
-  // Otherwise, `_Book` throws a `TypeAssertionError`, including the optional
-  // value name `"responseBody"` in its `message`.
+  // If `responseBody` is a `Book`, `_Book.assert` returns `responseBody` as
+  // `Book`. Otherwise, `_Book` throws a `TypeAssertionError`, including the
+  // optional value name `"responseBody"` in its `message`.
 
   return _Book.assert(responseBody, "responseBody");
 }
