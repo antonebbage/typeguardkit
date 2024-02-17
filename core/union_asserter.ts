@@ -10,7 +10,7 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  * The provided `memberAsserters` are made accessible as a property of the
  * created `UnionAsserter`.
  *
- * The `unionOf` function can be used to create a `UnionAsserter` without
+ * The `union` function can be used to create a `UnionAsserter` without
  * specifying a `typeName`.
  *
  * Example:

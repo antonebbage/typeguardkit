@@ -16,5 +16,5 @@ export * from "./record_asserter.ts";
 export * from "./string_asserter.ts";
 export * from "./type_asserter.ts";
 export * from "./type_assertion_error.ts";
+export * from "./union.ts";
 export * from "./union_asserter.ts";
-export * from "./union_of.ts";

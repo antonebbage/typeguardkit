@@ -6,7 +6,7 @@ import {
   _string,
   ObjectAsserter,
   TypeAssertionError,
-  unionOf,
+  union,
 } from "../../mod.ts";
 import { objectIntersectionOf } from "./object_intersection_of.ts";
 
@@ -15,14 +15,14 @@ describe("objectIntersectionOf", () => {
 
   const _ObjectType1 = new ObjectAsserter(objectType1Name, {
     a: _string,
-    b: unionOf(_string, _number),
+    b: union(_string, _number),
   });
 
   const objectType2Name = "ObjectType2";
 
   const _ObjectType2 = new ObjectAsserter(objectType2Name, {
     a: _string,
-    b: unionOf(_string, _boolean),
+    b: union(_string, _boolean),
     c: _string,
   });
 

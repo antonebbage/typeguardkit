@@ -49,7 +49,7 @@ import {
   _string,
   array,
   ObjectAsserter,
-  unionOf,
+  union,
 } from "./mod.ts";
 
 // types/book.ts
@@ -59,7 +59,7 @@ export const _Book = new ObjectAsserter("Book", {
   title: _string,
   authors: array(_string),
   pageCount: _PositiveInteger,
-  rating: unionOf(_number, _null),
+  rating: union(_number, _null),
   recommended: _boolean,
 });
 
@@ -105,7 +105,7 @@ It also includes the `_NonNegativeNumber`, `_PositiveNumber`, `_Integer`,
 `Asserter`s that perform additional validation.
 
 The `_null` and `_undefined` `Asserter`s can be used to create union type
-`Asserter`s with the [`unionOf`](#unionof) function.
+`Asserter`s with the [`union`](#union) function.
 
 As well as wrapping `Asserter`s in the
 [`assertIs`](#assertion-signature-wrapper) or
@@ -324,17 +324,17 @@ export const _stringOrNull = new UnionAsserter(
 export type stringOrNull = ReturnType<typeof _stringOrNull.assert>;
 ```
 
-#### `unionOf`
+#### `union`
 
-The `unionOf` function can be used to create a `UnionAsserter` without
-specifying a `typeName`.
+The `union` function can be used to create a `UnionAsserter` without specifying
+a `typeName`.
 
 Example:
 
 ```ts
-import { _null, _string, unionOf } from "./mod.ts";
+import { _null, _string, union } from "./mod.ts";
 
-export const _stringOrNull = unionOf(_string, _null);
+export const _stringOrNull = union(_string, _null);
 
 export type stringOrNull = ReturnType<typeof _stringOrNull.assert>;
 ```

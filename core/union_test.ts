@@ -7,9 +7,9 @@ import {
   TypeAssertionError,
   UnionAsserter,
 } from "../mod.ts";
-import { unionOf } from "./union_of.ts";
+import { union } from "./union.ts";
 
-describe("unionOf", () => {
+describe("union", () => {
   const _object = new TypeAsserter(
     "Record<string, unknown>",
     (value): value is Record<string, unknown> =>
@@ -17,7 +17,7 @@ describe("unionOf", () => {
   );
 
   const memberAsserters = [_string, _number, _object];
-  const _stringOrNumberOrObject = unionOf(...memberAsserters);
+  const _stringOrNumberOrObject = union(...memberAsserters);
 
   it("should return a `UnionAsserter`", () => {
     assertInstanceOf(_stringOrNumberOrObject, UnionAsserter);

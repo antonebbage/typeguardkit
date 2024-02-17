@@ -4,20 +4,20 @@ import { Asserter } from "./asserter.ts";
 import { UnionAsserter } from "./union_asserter.ts";
 
 /**
- * `unionOf` can be used to create a `UnionAsserter` without specifying a
+ * `union` can be used to create a `UnionAsserter` without specifying a
  * `typeName`.
  *
  * Example:
  *
  * ```ts
- * import { _null, _string, unionOf } from "../mod.ts";
+ * import { _null, _string, union } from "../mod.ts";
  *
- * export const _stringOrNull = unionOf(_string, _null);
+ * export const _stringOrNull = union(_string, _null);
  *
  * export type stringOrNull = ReturnType<typeof _stringOrNull.assert>;
  * ```
  */
-export function unionOf<Asserters extends ReadonlyArray<Asserter<unknown>>>(
+export function union<Asserters extends ReadonlyArray<Asserter<unknown>>>(
   ...memberAsserters: Asserters
 ): UnionAsserter<Asserters> {
   const typeName = memberAsserters.map(({ typeName }) => typeName).join(" | ");
