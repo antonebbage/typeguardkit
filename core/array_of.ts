@@ -4,8 +4,8 @@ import { ArrayAsserter } from "./array_asserter.ts";
 import { Asserter } from "./asserter.ts";
 
 /**
- * The `arrayOf` function can be used to create an `ArrayAsserter` without
- * specifying a `typeName` or `ArrayAsserterOptions`.
+ * `arrayOf` can be used to create an `ArrayAsserter` without specifying a
+ * `typeName` or `ArrayAsserterOptions`.
  *
  * Example:
  *
