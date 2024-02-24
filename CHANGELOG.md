@@ -1,3 +1,16 @@
+## [0.24.0](https://github.com/antonebbage/typeguardkit/compare/0.23.0...0.24.0) (2024-02-24)
+
+### ⚠ BREAKING CHANGES
+
+- generic type parameters have changed for the `ObjectAsserter` class and
+  `objectIntersection`, `partial`, and `pick` functions.
+
+### Bug Fixes
+
+- make `ObjectAsserter` assert type with optional props where `OptionAsserter`
+  specified
+  ([2b98a23](https://github.com/antonebbage/typeguardkit/commit/2b98a23880ea951d5e6387bb4a087b098f1e0d42))
+
 ## [0.23.0](https://github.com/antonebbage/typeguardkit/compare/0.22.0...0.23.0) (2024-02-17)
 
 ### ⚠ BREAKING CHANGES
