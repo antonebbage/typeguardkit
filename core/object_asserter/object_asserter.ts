@@ -1,8 +1,8 @@
 // This module is browser-compatible.
 
 import { Asserter } from "../asserter.ts";
-import { TypeAssertionError } from "../type_assertion_error.ts";
 import { OptionAsserter } from "../option_asserter.ts";
+import { TypeAssertionError } from "../type_assertion_error.ts";
 
 /**
  * An `ObjectAsserter` is an `Asserter` for the object type defined by its
