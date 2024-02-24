@@ -1,7 +1,6 @@
 // This module is browser-compatible.
 
 import { Asserter } from "../asserter.ts";
-import { option } from "../option.ts";
 import { OptionAsserter } from "../option_asserter.ts";
 import { ObjectAsserter } from "./object_asserter.ts";
 
@@ -26,10 +25,12 @@ import { ObjectAsserter } from "./object_asserter.ts";
  * export type Options = ReturnType<typeof _Options.assert>;
  * ```
  */
-export function partial<Type extends Record<string, unknown>>(
-  asserter: ObjectAsserter<Type>,
+export function partial<
+  PropertyAsserters extends Record<string, Asserter<unknown>>,
+>(
+  asserter: ObjectAsserter<PropertyAsserters>,
   assertedTypeName?: string,
-): ObjectAsserter<Partial<Type>> {
+): ObjectAsserter<PartialPropertyAsserters<PropertyAsserters>> {
   assertedTypeName ||= `Partial<${asserter.typeName}>`;
 
   const newPropertyAsserters: Record<string, Asserter<unknown>> = {};
@@ -39,11 +40,19 @@ export function partial<Type extends Record<string, unknown>>(
 
     newPropertyAsserters[key] = oldPropertyAsserter instanceof OptionAsserter
       ? oldPropertyAsserter
-      : option(oldPropertyAsserter);
+      : new OptionAsserter(oldPropertyAsserter);
   }
 
   return new ObjectAsserter(
     assertedTypeName,
     newPropertyAsserters,
-  ) as ObjectAsserter<Partial<Type>>;
+  ) as ObjectAsserter<PartialPropertyAsserters<PropertyAsserters>>;
 }
+
+type PartialPropertyAsserters<
+  PropertyAsserters extends Record<string, Asserter<unknown>>,
+> = {
+  [Key in keyof PropertyAsserters]: PropertyAsserters[Key] extends
+    OptionAsserter<unknown> ? PropertyAsserters[Key]
+    : OptionAsserter<ReturnType<PropertyAsserters[Key]["assert"]>>;
+};

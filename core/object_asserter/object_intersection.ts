@@ -37,13 +37,13 @@ import { ObjectAsserter } from "./object_asserter.ts";
  * ```
  */
 export function objectIntersection<
-  TypeA extends Record<string, unknown>,
-  TypeB extends Record<string, unknown>,
+  PropertyAssertersA extends Record<string, Asserter<unknown>>,
+  PropertyAssertersB extends Record<string, Asserter<unknown>>,
 >(
-  asserterA: ObjectAsserter<TypeA>,
-  asserterB: ObjectAsserter<TypeB>,
+  asserterA: ObjectAsserter<PropertyAssertersA>,
+  asserterB: ObjectAsserter<PropertyAssertersB>,
   assertedTypeName?: string,
-): ObjectAsserter<TypeA & TypeB> {
+): ObjectAsserter<PropertyAssertersA & PropertyAssertersB> {
   assertedTypeName ||= `${asserterA.typeName} & ${asserterB.typeName}`;
 
   const newPropertyAsserters: Record<string, Asserter<unknown>> = {};
@@ -82,5 +82,5 @@ export function objectIntersection<
   return new ObjectAsserter(
     assertedTypeName,
     newPropertyAsserters,
-  ) as ObjectAsserter<TypeA & TypeB>;
+  ) as ObjectAsserter<PropertyAssertersA & PropertyAssertersB>;
 }

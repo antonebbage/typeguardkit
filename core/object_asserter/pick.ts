@@ -30,13 +30,13 @@ import { ObjectAsserter } from "./object_asserter.ts";
  * ```
  */
 export function pick<
-  Type extends Record<string, unknown>,
-  Keys extends Array<keyof Type>,
+  PropertyAsserters extends Record<string, Asserter<unknown>>,
+  Keys extends Array<keyof PropertyAsserters>,
 >(
-  asserter: ObjectAsserter<Type>,
+  asserter: ObjectAsserter<PropertyAsserters>,
   keys: Keys,
   assertedTypeName?: string,
-): ObjectAsserter<Pick<Type, Keys[number]>> {
+): ObjectAsserter<Pick<PropertyAsserters, Keys[number]>> {
   assertedTypeName ||= `Pick<${asserter.typeName}, ${
     keys.map((key) => `"${String(key)}"`).join(" | ")
   }>`;
@@ -50,5 +50,5 @@ export function pick<
   return new ObjectAsserter(
     assertedTypeName,
     newPropertyAsserters,
-  ) as ObjectAsserter<Pick<Type, Keys[number]>>;
+  ) as ObjectAsserter<Pick<PropertyAsserters, Keys[number]>>;
 }

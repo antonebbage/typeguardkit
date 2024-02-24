@@ -2,6 +2,7 @@
 
 import { Asserter } from "../asserter.ts";
 import { TypeAssertionError } from "../type_assertion_error.ts";
+import { OptionAsserter } from "../option_asserter.ts";
 
 /**
  * An `ObjectAsserter` is an `Asserter` for the object type defined by its
@@ -23,18 +24,22 @@ import { TypeAssertionError } from "../type_assertion_error.ts";
  * export type User = ReturnType<typeof _User.assert>;
  * ```
  */
-export class ObjectAsserter<Type extends Record<string, unknown>>
-  implements Asserter<Type> {
+export class ObjectAsserter<
+  PropertyAsserters extends Record<string, Asserter<unknown>>,
+> implements Asserter<AssertedObject<PropertyAsserters>> {
   readonly typeName: string;
 
   constructor(
     typeName: string,
-    readonly propertyAsserters: { [Key in keyof Type]-?: Asserter<Type[Key]> },
+    readonly propertyAsserters: PropertyAsserters,
   ) {
     this.typeName = typeName || "UnnamedObject";
   }
 
-  assert(value: unknown, valueName?: string): Type {
+  assert(
+    value: unknown,
+    valueName?: string,
+  ): AssertedObject<PropertyAsserters> {
     if (typeof value !== "object" || value === null) {
       throw new TypeAssertionError(this.typeName, value, { valueName });
     }
@@ -54,7 +59,26 @@ export class ObjectAsserter<Type extends Record<string, unknown>>
       throw new TypeAssertionError(this.typeName, value, { valueName, issues });
     }
 
-    // deno-lint-ignore no-explicit-any
-    return value as any;
+    return value as AssertedObject<PropertyAsserters>;
   }
 }
+
+type AssertedObject<
+  PropertyAsserters extends Record<string, Asserter<unknown>>,
+> =
+  & {
+    [
+      Key in keyof PropertyAsserters as PropertyAsserters[Key] extends
+        OptionAsserter<unknown> ? never
+        : Key
+    ]: ReturnType<PropertyAsserters[Key]["assert"]>;
+  }
+  & Partial<
+    {
+      [
+        Key in keyof PropertyAsserters as PropertyAsserters[Key] extends
+          OptionAsserter<unknown> ? Key
+          : never
+      ]: ReturnType<PropertyAsserters[Key]["assert"]>;
+    }
+  >;
