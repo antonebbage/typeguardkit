@@ -3,6 +3,7 @@
 import { Asserter } from "../asserter.ts";
 import { OptionAsserter } from "../option_asserter.ts";
 import { TypeAssertionError } from "../type_assertion_error.ts";
+import { SimplifiedTooltipRepresentation } from "./_simplified_tooltip_representation.ts";
 
 /**
  * An `ObjectAsserter` is an `Asserter` for the object type defined by its
@@ -65,7 +66,7 @@ export class ObjectAsserter<
 
 type AssertedObject<
   PropertyAsserters extends Record<string, Asserter<unknown>>,
-> =
+> = SimplifiedTooltipRepresentation<
   & {
     [
       Key in keyof PropertyAsserters as PropertyAsserters[Key] extends
@@ -73,12 +74,11 @@ type AssertedObject<
         : Key
     ]: ReturnType<PropertyAsserters[Key]["assert"]>;
   }
-  & Partial<
-    {
-      [
-        Key in keyof PropertyAsserters as PropertyAsserters[Key] extends
-          OptionAsserter<unknown> ? Key
-          : never
-      ]: ReturnType<PropertyAsserters[Key]["assert"]>;
-    }
-  >;
+  & {
+    [
+      Key in keyof PropertyAsserters as PropertyAsserters[Key] extends
+        OptionAsserter<unknown> ? Key
+        : never
+    ]?: ReturnType<PropertyAsserters[Key]["assert"]>;
+  }
+>;

@@ -2,6 +2,7 @@
 
 import { Asserter } from "../asserter.ts";
 import { OptionAsserter } from "../option_asserter.ts";
+import { SimplifiedTooltipRepresentation } from "./_simplified_tooltip_representation.ts";
 import { ObjectAsserter } from "./object_asserter.ts";
 
 /**
@@ -30,7 +31,9 @@ export function partial<
 >(
   asserter: ObjectAsserter<PropertyAsserters>,
   assertedTypeName?: string,
-): ObjectAsserter<PartialPropertyAsserters<PropertyAsserters>> {
+): ObjectAsserter<
+  SimplifiedTooltipRepresentation<PartialPropertyAsserters<PropertyAsserters>>
+> {
   assertedTypeName ||= `Partial<${asserter.typeName}>`;
 
   const newPropertyAsserters: Record<string, Asserter<unknown>> = {};
@@ -46,7 +49,9 @@ export function partial<
   return new ObjectAsserter(
     assertedTypeName,
     newPropertyAsserters,
-  ) as ObjectAsserter<PartialPropertyAsserters<PropertyAsserters>>;
+  ) as ObjectAsserter<
+    SimplifiedTooltipRepresentation<PartialPropertyAsserters<PropertyAsserters>>
+  >;
 }
 
 type PartialPropertyAsserters<

@@ -4,6 +4,7 @@ import { Asserter } from "../asserter.ts";
 import { is } from "../is.ts";
 import { TypeAsserter } from "../type_asserter.ts";
 import { isTypeNameOpen } from "./_is_type_name_open.ts";
+import { SimplifiedTooltipRepresentation } from "./_simplified_tooltip_representation.ts";
 import { ObjectAsserter } from "./object_asserter.ts";
 
 /**
@@ -43,7 +44,9 @@ export function objectIntersection<
   asserterA: ObjectAsserter<PropertyAssertersA>,
   asserterB: ObjectAsserter<PropertyAssertersB>,
   assertedTypeName?: string,
-): ObjectAsserter<PropertyAssertersA & PropertyAssertersB> {
+): ObjectAsserter<
+  SimplifiedTooltipRepresentation<PropertyAssertersA & PropertyAssertersB>
+> {
   assertedTypeName ||= `${asserterA.typeName} & ${asserterB.typeName}`;
 
   const newPropertyAsserters: Record<string, Asserter<unknown>> = {};
@@ -82,5 +85,7 @@ export function objectIntersection<
   return new ObjectAsserter(
     assertedTypeName,
     newPropertyAsserters,
-  ) as ObjectAsserter<PropertyAssertersA & PropertyAssertersB>;
+  ) as ObjectAsserter<
+    SimplifiedTooltipRepresentation<PropertyAssertersA & PropertyAssertersB>
+  >;
 }

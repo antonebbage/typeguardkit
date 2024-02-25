@@ -1,6 +1,7 @@
 // This module is browser-compatible.
 
 import { Asserter } from "../asserter.ts";
+import { SimplifiedTooltipRepresentation } from "./_simplified_tooltip_representation.ts";
 import { ObjectAsserter } from "./object_asserter.ts";
 
 /**
@@ -36,7 +37,9 @@ export function pick<
   asserter: ObjectAsserter<PropertyAsserters>,
   keys: Keys,
   assertedTypeName?: string,
-): ObjectAsserter<Pick<PropertyAsserters, Keys[number]>> {
+): ObjectAsserter<
+  SimplifiedTooltipRepresentation<Pick<PropertyAsserters, Keys[number]>>
+> {
   assertedTypeName ||= `Pick<${asserter.typeName}, ${
     keys.map((key) => `"${String(key)}"`).join(" | ")
   }>`;
@@ -50,5 +53,7 @@ export function pick<
   return new ObjectAsserter(
     assertedTypeName,
     newPropertyAsserters,
-  ) as ObjectAsserter<Pick<PropertyAsserters, Keys[number]>>;
+  ) as ObjectAsserter<
+    SimplifiedTooltipRepresentation<Pick<PropertyAsserters, Keys[number]>>
+  >;
 }
