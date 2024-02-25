@@ -1,3 +1,10 @@
+## [0.25.0](https://github.com/antonebbage/typeguardkit/compare/0.24.0...0.25.0) (2024-02-25)
+
+### Features
+
+- simplify object type tooltip representations
+  ([35948ea](https://github.com/antonebbage/typeguardkit/commit/35948ea0ec2e82728f85073ac6f95825a0a78fd5))
+
 ## [0.24.0](https://github.com/antonebbage/typeguardkit/compare/0.23.0...0.24.0) (2024-02-24)
 
 ### ⚠ BREAKING CHANGES
