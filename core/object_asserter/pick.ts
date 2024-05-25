@@ -1,12 +1,12 @@
 // This module is browser-compatible.
 
 import { Asserter } from "../asserter.ts";
-import { SimplifiedTooltipRepresentation } from "./_simplified_tooltip_representation.ts";
 import { ObjectAsserter } from "./object_asserter.ts";
+import { PickAsserter } from "./pick_asserter.ts";
 
 /**
- * `pick` returns an `ObjectAsserter<Pick<Type, Keys[number]>>`, created using
- * the provided `ObjectAsserter<Type>` and `Keys`.
+ * `pick` can be used to create a `PickAsserter` without specifying a
+ * `typeName`.
  *
  * Example:
  *
@@ -36,24 +36,10 @@ export function pick<
 >(
   asserter: ObjectAsserter<PropertyAsserters>,
   keys: Keys,
-  assertedTypeName?: string,
-): ObjectAsserter<
-  SimplifiedTooltipRepresentation<Pick<PropertyAsserters, Keys[number]>>
-> {
-  assertedTypeName ||= `Pick<${asserter.typeName}, ${
+): PickAsserter<PropertyAsserters, Keys> {
+  const typeName = `Pick<${asserter.typeName}, ${
     keys.map((key) => `"${String(key)}"`).join(" | ")
   }>`;
 
-  const newPropertyAsserters: Record<string, Asserter<unknown>> = {};
-
-  for (const key of keys as string[]) {
-    newPropertyAsserters[key] = asserter.propertyAsserters[key];
-  }
-
-  return new ObjectAsserter(
-    assertedTypeName,
-    newPropertyAsserters,
-  ) as ObjectAsserter<
-    SimplifiedTooltipRepresentation<Pick<PropertyAsserters, Keys[number]>>
-  >;
+  return new PickAsserter(typeName, asserter, keys);
 }

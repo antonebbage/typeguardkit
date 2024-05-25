@@ -550,14 +550,42 @@ export const _Options = partial(
 export type Options = ReturnType<typeof _Options.assert>;
 ```
 
+### `PickAsserter`
+
+A `PickAsserter` is an `ObjectAsserter` for the type constructed by picking the
+set of properties `Keys` from the asserted type of the provided
+`ObjectAsserter`.
+
+Example:
+
+```ts
+import { _string, ObjectAsserter, PickAsserter } from "./mod.ts";
+
+// types/user.ts
+
+export const _User = new ObjectAsserter("User", {
+  id: _string,
+  firstName: _string,
+  lastName: _string,
+});
+
+export type User = ReturnType<typeof _User.assert>;
+
+// types/user_name.ts
+
+export const _UserName = new PickAsserter(
+  "UserName",
+  _User,
+  ["firstName", "lastName"],
+);
+
+export type UserName = ReturnType<typeof _UserName.assert>;
+```
+
 #### `pick`
 
-`pick` returns an `ObjectAsserter<Pick<Type, Keys[number]>>`, created using the
-provided `ObjectAsserter<Type>` and `Keys`.
-
-[`Pick<Type, Keys>`](https://www.typescriptlang.org/docs/handbook/utility-types.html#picktype-keys)
-is a utility type that constructs a type consisting of the properties of `Type`
-with `Keys`.
+The `pick` function can be used to create a `PickAsserter` without specifying a
+`typeName`.
 
 Example:
 

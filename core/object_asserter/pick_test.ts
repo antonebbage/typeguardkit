@@ -5,6 +5,7 @@ import {
   _number,
   _string,
   ObjectAsserter,
+  PickAsserter,
   TypeAssertionError,
 } from "../../mod.ts";
 import { pick } from "./pick.ts";
@@ -20,29 +21,18 @@ describe("pick", () => {
 
   const _PickedObjectType = pick(_ObjectType, keys);
 
-  it("should return an `ObjectAsserter`", () => {
-    assertInstanceOf(_PickedObjectType, ObjectAsserter);
+  it("should return a `PickAsserter`", () => {
+    assertInstanceOf(_PickedObjectType, PickAsserter);
   });
 
-  it("should return an `ObjectAsserter` with the provided `typeName` or the correct default if `undefined` or empty", () => {
-    const defaultTypeName = `Pick<${_ObjectType.typeName}, "b" | "c">`;
-
-    const testCases = [
-      {
-        asserter: pick(_ObjectType, ["a"], "PickedObjectType"),
-        typeName: "PickedObjectType",
-      },
-
-      { asserter: _PickedObjectType, typeName: defaultTypeName },
-      { asserter: pick(_ObjectType, keys, ""), typeName: defaultTypeName },
-    ];
-
-    for (const { asserter, typeName } of testCases) {
-      assertStrictEquals(asserter.typeName, typeName);
-    }
+  it("should return a `PickAsserter` with the correct `typeName`", () => {
+    assertStrictEquals(
+      _PickedObjectType.typeName,
+      `Pick<${_ObjectType.typeName}, "b" | "c">`,
+    );
   });
 
-  it("should return an `ObjectAsserter` whose `assert` method returns `value` when it is an object and none of the `asserter.propertyAsserters` with `keys` throw an error for the corresponding properties of `value`", () => {
+  it("should return a `PickAsserter` whose `assert` method returns `value` when it is an object and none of the `asserter.propertyAsserters` with `keys` throw an error for the corresponding properties of `value`", () => {
     const testCases = [
       { b: 0, c: false },
       { b: 1, c: true },
@@ -56,7 +46,7 @@ describe("pick", () => {
     }
   });
 
-  it("should return an `ObjectAsserter` whose `assert` method throws a `TypeAssertionError` with correct `message` when `value` is not an object, or any of the `asserter.propertyAsserters` with `keys` throw an error for the corresponding property of `value`", () => {
+  it("should return a `PickAsserter` whose `assert` method throws a `TypeAssertionError` with correct `message` when `value` is not an object, or any of the `asserter.propertyAsserters` with `keys` throw an error for the corresponding property of `value`", () => {
     const object = { b: "", c: "" };
 
     assertThrows(
@@ -65,29 +55,6 @@ describe("pick", () => {
       new TypeAssertionError(_PickedObjectType.typeName, object, {
         valueName: "name",
 
-        issues: [
-          new TypeAssertionError(
-            _PickedObjectType.propertyAsserters.b.typeName,
-            object.b,
-            { valueName: "b" },
-          ),
-
-          new TypeAssertionError(
-            _PickedObjectType.propertyAsserters.c.typeName,
-            object.c,
-            { valueName: "c" },
-          ),
-        ],
-      })
-        .message,
-    );
-
-    const namedAsserter = pick(_ObjectType, keys, "PickedObjectType");
-
-    assertThrows(
-      () => namedAsserter.assert(object),
-      TypeAssertionError,
-      new TypeAssertionError(namedAsserter.typeName, object, {
         issues: [
           new TypeAssertionError(
             _PickedObjectType.propertyAsserters.b.typeName,
