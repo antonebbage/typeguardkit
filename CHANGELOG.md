@@ -1,3 +1,23 @@
+## [0.26.0](https://github.com/antonebbage/typeguardkit/compare/0.25.0...0.26.0) (2024-05-25)
+
+### ⚠ BREAKING CHANGES
+
+- `pick` no longer accepts an `assertedTypeName` argument (use `PickAsserter`
+  constructor to specify a `typeName`)
+- `partial` no longer accepts an `assertedTypeName` argument (use
+  `PartialAsserter` constructor to specify a `typeName`)
+- `objectIntersection` no longer accepts an `assertedTypeName` argument (use
+  `ObjectIntersectionAsserter` constructor to specify a `typeName`)
+
+### Features
+
+- add `ObjectIntersectionAsserter`
+  ([549c2cd](https://github.com/antonebbage/typeguardkit/commit/549c2cd4ec00d595871cf1de6af3a994afb85ca4))
+- add `PartialAsserter`
+  ([eaed3cf](https://github.com/antonebbage/typeguardkit/commit/eaed3cf662a55b0195d31922e49ec68958c1e679))
+- add `PickAsserter`
+  ([f8747ff](https://github.com/antonebbage/typeguardkit/commit/f8747ff47ce626039d3a4b2283a573077403bc87))
+
 ## [0.25.0](https://github.com/antonebbage/typeguardkit/compare/0.24.0...0.25.0) (2024-02-25)
 
 ### Features
