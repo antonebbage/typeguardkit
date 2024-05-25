@@ -1,5 +1,9 @@
-import { assertInstanceOf, assertStrictEquals, assertThrows } from "assert";
-import { describe, it } from "testing/bdd.ts";
+import {
+  assertInstanceOf,
+  assertStrictEquals,
+  assertThrows,
+} from "@std/assert";
+import { describe, it } from "@std/testing/bdd";
 import { _string, OptionAsserter, TypeAssertionError } from "../mod.ts";
 import { option } from "./option.ts";
 

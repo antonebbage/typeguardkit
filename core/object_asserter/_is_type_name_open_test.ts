@@ -1,5 +1,5 @@
-import { assertStrictEquals } from "assert";
-import { describe, it } from "testing/bdd.ts";
+import { assertStrictEquals } from "@std/assert";
+import { describe, it } from "@std/testing/bdd";
 import { isTypeNameOpen } from "./_is_type_name_open.ts";
 
 describe("isTypeNameOpen", () => {

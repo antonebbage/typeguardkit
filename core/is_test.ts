@@ -1,5 +1,5 @@
-import { assertStrictEquals } from "assert";
-import { describe, it } from "testing/bdd.ts";
+import { assertStrictEquals } from "@std/assert";
+import { describe, it } from "@std/testing/bdd";
 import { _string } from "../mod.ts";
 import { is } from "./is.ts";
 

@@ -4,8 +4,8 @@ import {
   assertObjectMatch,
   assertStrictEquals,
   assertStringIncludes,
-} from "assert";
-import { describe, it } from "testing/bdd.ts";
+} from "@std/assert";
+import { describe, it } from "@std/testing/bdd";
 import { TypeAssertionError } from "./type_assertion_error.ts";
 
 describe("TypeAssertionError", () => {

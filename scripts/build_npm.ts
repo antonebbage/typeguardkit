@@ -1,10 +1,10 @@
-import { build, emptyDir } from "dnt";
+import { build, emptyDir } from "@deno/dnt";
 
 await emptyDir("./npm");
 
 await build({
   entryPoints: ["./mod.ts"],
-  importMap: "./import_map.json",
+  importMap: "./deno.json",
   outDir: "./npm",
 
   shims: {

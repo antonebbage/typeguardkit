@@ -1,5 +1,5 @@
-import { assertStrictEquals, assertThrows } from "assert";
-import { describe, it } from "testing/bdd.ts";
+import { assertStrictEquals, assertThrows } from "@std/assert";
+import { describe, it } from "@std/testing/bdd";
 import { TypeAssertionError } from "../mod.ts";
 import { _undefined } from "./undefined.ts";
 
