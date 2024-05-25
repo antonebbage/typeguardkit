@@ -5,6 +5,7 @@ import {
   _number,
   _string,
   ObjectAsserter,
+  ObjectIntersectionAsserter,
   TypeAssertionError,
   union,
 } from "../../mod.ts";
@@ -26,42 +27,20 @@ describe("objectIntersection", () => {
     c: _string,
   });
 
-  const intersectionName = "Intersection";
+  const _Intersection = objectIntersection(_ObjectType1, _ObjectType2);
 
-  const _Intersection = objectIntersection(
-    _ObjectType1,
-    _ObjectType2,
-    intersectionName,
-  );
-
-  it("should return an `ObjectAsserter`", () => {
-    assertInstanceOf(_Intersection, ObjectAsserter);
+  it("should return an `ObjectIntersectionAsserter`", () => {
+    assertInstanceOf(_Intersection, ObjectIntersectionAsserter);
   });
 
-  it("should return an `ObjectAsserter` with the provided `typeName` or the correct default if `undefined` or empty", () => {
-    const defaultTypeName =
-      `${_ObjectType1.typeName} & ${_ObjectType2.typeName}`;
-
-    const testCases = [
-      { asserter: _Intersection, typeName: intersectionName },
-
-      {
-        asserter: objectIntersection(_ObjectType1, _ObjectType2),
-        typeName: defaultTypeName,
-      },
-
-      {
-        asserter: objectIntersection(_ObjectType1, _ObjectType2, ""),
-        typeName: defaultTypeName,
-      },
-    ];
-
-    for (const { asserter, typeName } of testCases) {
-      assertStrictEquals(asserter.typeName, typeName);
-    }
+  it("should return an `ObjectIntersectionAsserter` with the correct `typeName`", () => {
+    assertStrictEquals(
+      _Intersection.typeName,
+      `${_ObjectType1.typeName} & ${_ObjectType2.typeName}`,
+    );
   });
 
-  it("should return an `ObjectAsserter` whose `assert` method returns `value` when it is an object and none of the `propertyAsserters` of `asserterA` and `asserterB` throw an error for the corresponding properties of `value`", () => {
+  it("should return an `ObjectIntersectionAsserter` whose `assert` method returns `value` when it is an object and none of the `propertyAsserters` of `asserterA` and `asserterB` throw an error for the corresponding properties of `value`", () => {
     const testCases = [
       { a: "", b: "", c: "" },
       { a: "a", b: "b", c: "c" },
@@ -73,7 +52,7 @@ describe("objectIntersection", () => {
     }
   });
 
-  it("should return an `ObjectAsserter` whose `assert` method throws a `TypeAssertionError` with correct `message` when `value` is not an object, or any of the `propertyAsserters` of `asserterA` and `asserterB` throw an error for the corresponding property of `value`", () => {
+  it("should return an `ObjectIntersectionAsserter` whose `assert` method throws a `TypeAssertionError` with correct `message` when `value` is not an object, or any of the `propertyAsserters` of `asserterA` and `asserterB` throw an error for the corresponding property of `value`", () => {
     const object = { a: 0, b: 0, c: "" };
 
     assertThrows(
@@ -82,29 +61,6 @@ describe("objectIntersection", () => {
       new TypeAssertionError(_Intersection.typeName, object, {
         valueName: "name",
 
-        issues: [
-          new TypeAssertionError(
-            _Intersection.propertyAsserters.a.typeName,
-            object.a,
-            { valueName: "a" },
-          ),
-
-          new TypeAssertionError(
-            _Intersection.propertyAsserters.b.typeName,
-            object.b,
-            { valueName: "b" },
-          ),
-        ],
-      })
-        .message,
-    );
-
-    const unnamedAsserter = objectIntersection(_ObjectType1, _ObjectType2);
-
-    assertThrows(
-      () => unnamedAsserter.assert(object),
-      TypeAssertionError,
-      new TypeAssertionError(unnamedAsserter.typeName, object, {
         issues: [
           new TypeAssertionError(
             _Intersection.propertyAsserters.a.typeName,

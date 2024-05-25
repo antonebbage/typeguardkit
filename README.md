@@ -440,15 +440,15 @@ export const _User = new ObjectAsserter("User", {
 export type User = ReturnType<typeof _User.assert>;
 ```
 
-#### `objectIntersection`
+### `ObjectIntersectionAsserter`
 
-`objectIntersection` returns an `ObjectAsserter` for the intersection of the
-`Type`s of the provided `ObjectAsserter`s.
+An `ObjectIntersectionAsserter` is an `ObjectAsserter` for the intersection of
+the asserted types of the provided `ObjectAsserter`s.
 
 Example:
 
 ```ts
-import { _string, ObjectAsserter, objectIntersection } from "./mod.ts";
+import { _string, ObjectAsserter, ObjectIntersectionAsserter } from "./mod.ts";
 
 // types/entity.ts
 
@@ -460,15 +460,51 @@ export type Entity = ReturnType<typeof _Entity.assert>;
 
 // types/user.ts
 
-export const _User = objectIntersection(
-  _Entity,
-  new ObjectAsserter("", {
-    name: _string,
-  }),
+export const _User = new ObjectIntersectionAsserter(
   "User",
+  [
+    _Entity,
+
+    new ObjectAsserter("", {
+      name: _string,
+    }),
+  ],
 );
 
 export type User = ReturnType<typeof _User.assert>;
+```
+
+#### `objectIntersection`
+
+The `objectIntersection` function can be used to create an
+`ObjectIntersectionAsserter` without specifying a `typeName`.
+
+Example:
+
+```ts
+import { _string, ObjectAsserter, objectIntersection } from "./mod.ts";
+
+// types/a.ts
+
+export const _A = new ObjectAsserter("A", {
+  a: _string,
+});
+
+export type A = ReturnType<typeof _A.assert>;
+
+// types/b.ts
+
+export const _B = new ObjectAsserter("B", {
+  b: _string,
+});
+
+export type B = ReturnType<typeof _B.assert>;
+
+// types/c.ts
+
+export const _C = objectIntersection(_A, _B);
+
+export type C = ReturnType<typeof _C.assert>;
 ```
 
 #### `partial`
