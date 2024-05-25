@@ -1,13 +1,12 @@
 // This module is browser-compatible.
 
 import { Asserter } from "../asserter.ts";
-import { OptionAsserter } from "../option_asserter.ts";
-import { SimplifiedTooltipRepresentation } from "./_simplified_tooltip_representation.ts";
 import { ObjectAsserter } from "./object_asserter.ts";
+import { PartialAsserter } from "./partial_asserter.ts";
 
 /**
- * `partial` returns an `ObjectAsserter<Partial<Type>>`, created using the
- * provided `ObjectAsserter<Type>`.
+ * `partial` can be used to create a `PartialAsserter` without specifying a
+ * `typeName`.
  *
  * Example:
  *
@@ -20,7 +19,6 @@ import { ObjectAsserter } from "./object_asserter.ts";
  *     option2: _string,
  *     option3: _string,
  *   }),
- *   "Options",
  * );
  *
  * export type Options = ReturnType<typeof _Options.assert>;
@@ -30,34 +28,6 @@ export function partial<
   PropertyAsserters extends Record<string, Asserter<unknown>>,
 >(
   asserter: ObjectAsserter<PropertyAsserters>,
-  assertedTypeName?: string,
-): ObjectAsserter<
-  SimplifiedTooltipRepresentation<PartialPropertyAsserters<PropertyAsserters>>
-> {
-  assertedTypeName ||= `Partial<${asserter.typeName}>`;
-
-  const newPropertyAsserters: Record<string, Asserter<unknown>> = {};
-
-  for (const key in asserter.propertyAsserters) {
-    const oldPropertyAsserter = asserter.propertyAsserters[key];
-
-    newPropertyAsserters[key] = oldPropertyAsserter instanceof OptionAsserter
-      ? oldPropertyAsserter
-      : new OptionAsserter(oldPropertyAsserter);
-  }
-
-  return new ObjectAsserter(
-    assertedTypeName,
-    newPropertyAsserters,
-  ) as ObjectAsserter<
-    SimplifiedTooltipRepresentation<PartialPropertyAsserters<PropertyAsserters>>
-  >;
+): PartialAsserter<PropertyAsserters> {
+  return new PartialAsserter(`Partial<${asserter.typeName}>`, asserter);
 }
-
-type PartialPropertyAsserters<
-  PropertyAsserters extends Record<string, Asserter<unknown>>,
-> = {
-  [Key in keyof PropertyAsserters]: PropertyAsserters[Key] extends
-    OptionAsserter<unknown> ? PropertyAsserters[Key]
-    : OptionAsserter<ReturnType<PropertyAsserters[Key]["assert"]>>;
-};

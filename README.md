@@ -507,14 +507,32 @@ export const _C = objectIntersection(_A, _B);
 export type C = ReturnType<typeof _C.assert>;
 ```
 
+### `PartialAsserter`
+
+A `PartialAsserter` is an `ObjectAsserter` for the asserted type of the provided
+`ObjectAsserter` with all properties set to optional.
+
+Example:
+
+```ts
+import { _string, ObjectAsserter, PartialAsserter } from "./mod.ts";
+
+export const _Options = new PartialAsserter(
+  "Options",
+  new ObjectAsserter("", {
+    option1: _string,
+    option2: _string,
+    option3: _string,
+  }),
+);
+
+export type Options = ReturnType<typeof _Options.assert>;
+```
+
 #### `partial`
 
-`partial` returns an `ObjectAsserter<Partial<Type>>`, created using the provided
-`ObjectAsserter<Type>`.
-
-[`Partial<Type>`](https://www.typescriptlang.org/docs/handbook/utility-types.html#partialtype)
-is a utility type that constructs a type the same as `Type`, but with all
-properties made optional.
+The `partial` function can be used to create a `PartialAsserter` without
+specifying a `typeName`.
 
 Example:
 
@@ -527,7 +545,6 @@ export const _Options = partial(
     option2: _string,
     option3: _string,
   }),
-  "Options",
 );
 
 export type Options = ReturnType<typeof _Options.assert>;
