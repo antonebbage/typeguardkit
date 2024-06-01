@@ -16,11 +16,11 @@ import { ObjectAsserter } from "./object_asserter.ts";
  *
  * export const _Options = new PartialAsserter(
  *   "Options",
- *   new ObjectAsserter("", {
+ *   {
  *     option1: _string,
  *     option2: _string,
  *     option3: _string,
- *   }),
+ *   },
  * );
  *
  * export type Options = ReturnType<typeof _Options.assert>;
@@ -33,12 +33,19 @@ export class PartialAsserter<
 > {
   constructor(
     typeName: string,
-    asserter: ObjectAsserter<PropertyAsserters>,
+    asserterOrPropertyAsserters:
+      | ObjectAsserter<PropertyAsserters>
+      | PropertyAsserters,
   ) {
     const newPropertyAsserters: Record<string, Asserter<unknown>> = {};
 
-    for (const key in asserter.propertyAsserters) {
-      const oldPropertyAsserter = asserter.propertyAsserters[key];
+    const propertyAsserters =
+      asserterOrPropertyAsserters instanceof ObjectAsserter
+        ? asserterOrPropertyAsserters.propertyAsserters
+        : asserterOrPropertyAsserters;
+
+    for (const key in propertyAsserters) {
+      const oldPropertyAsserter = propertyAsserters[key];
 
       newPropertyAsserters[key] = oldPropertyAsserter instanceof OptionAsserter
         ? oldPropertyAsserter

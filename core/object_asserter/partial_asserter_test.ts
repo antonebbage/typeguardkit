@@ -20,17 +20,22 @@ const _ObjectType = new ObjectAsserter("ObjectType", {
   c: _boolean,
 });
 
-const partialObjectTypeName = "PartialObjectType";
+const partialObjectType1Name = "PartialObjectType1";
 
-const _PartialObjectType = new PartialAsserter(
-  partialObjectTypeName,
+const _PartialObjectType1 = new PartialAsserter(
+  partialObjectType1Name,
   _ObjectType,
+);
+
+const _PartialObjectType2 = new PartialAsserter(
+  "PartialObjectType2",
+  _ObjectType.propertyAsserters,
 );
 
 describe("PartialAsserter", () => {
   it("should have the provided `typeName` or the correct default if empty", () => {
     const testCases = [
-      { asserter: _PartialObjectType, typeName: partialObjectTypeName },
+      { asserter: _PartialObjectType1, typeName: partialObjectType1Name },
 
       {
         asserter: new PartialAsserter("", _ObjectType),
@@ -45,7 +50,13 @@ describe("PartialAsserter", () => {
 
   it("should have `propertyAsserters` that are all the correct type", () => {
     for (
-      const asserter of Object.values(_PartialObjectType.propertyAsserters)
+      const asserter of Object.values(_PartialObjectType1.propertyAsserters)
+    ) {
+      assertInstanceOf(asserter, OptionAsserter);
+    }
+
+    for (
+      const asserter of Object.values(_PartialObjectType2.propertyAsserters)
     ) {
       assertInstanceOf(asserter, OptionAsserter);
     }
@@ -65,7 +76,8 @@ describe("PartialAsserter.assert", () => {
     ];
 
     for (const value of testCases) {
-      assertStrictEquals(_PartialObjectType.assert(value), value);
+      assertStrictEquals(_PartialObjectType1.assert(value), value);
+      assertStrictEquals(_PartialObjectType2.assert(value), value);
     }
   });
 
@@ -73,20 +85,20 @@ describe("PartialAsserter.assert", () => {
     const object = { a: 0, b: "", c: false };
 
     assertThrows(
-      () => _PartialObjectType.assert(object, "name"),
+      () => _PartialObjectType1.assert(object, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_PartialObjectType.typeName, object, {
+      new TypeAssertionError(_PartialObjectType1.typeName, object, {
         valueName: "name",
 
         issues: [
           new TypeAssertionError(
-            _PartialObjectType.propertyAsserters.a.typeName,
+            _PartialObjectType1.propertyAsserters.a.typeName,
             object.a,
             { valueName: "a" },
           ),
 
           new TypeAssertionError(
-            _PartialObjectType.propertyAsserters.b.typeName,
+            _PartialObjectType1.propertyAsserters.b.typeName,
             object.b,
             { valueName: "b" },
           ),
@@ -103,13 +115,13 @@ describe("PartialAsserter.assert", () => {
       new TypeAssertionError(unnamedAsserter.typeName, object, {
         issues: [
           new TypeAssertionError(
-            _PartialObjectType.propertyAsserters.a.typeName,
+            _PartialObjectType1.propertyAsserters.a.typeName,
             object.a,
             { valueName: "a" },
           ),
 
           new TypeAssertionError(
-            _PartialObjectType.propertyAsserters.b.typeName,
+            _PartialObjectType1.propertyAsserters.b.typeName,
             object.b,
             { valueName: "b" },
           ),
@@ -128,9 +140,9 @@ describe("PartialAsserter.assert", () => {
 
     for (const value of testCases) {
       assertThrows(
-        () => _PartialObjectType.assert(value),
+        () => _PartialObjectType1.assert(value),
         TypeAssertionError,
-        new TypeAssertionError(_PartialObjectType.typeName, value).message,
+        new TypeAssertionError(_PartialObjectType1.typeName, value).message,
       );
     }
   });

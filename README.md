@@ -519,11 +519,11 @@ import { _string, ObjectAsserter, PartialAsserter } from "./mod.ts";
 
 export const _Options = new PartialAsserter(
   "Options",
-  new ObjectAsserter("", {
+  {
     option1: _string,
     option2: _string,
     option3: _string,
-  }),
+  },
 );
 
 export type Options = ReturnType<typeof _Options.assert>;
