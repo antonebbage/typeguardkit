@@ -1,3 +1,16 @@
+## [0.27.0](https://github.com/antonebbage/typeguardkit/compare/0.26.0...0.27.0) (2024-06-01)
+
+### Features
+
+- add `mustBeASet` to `ArrayAsserterOptions`
+  ([5fbbb90](https://github.com/antonebbage/typeguardkit/commit/5fbbb90740efeb8e1a522602e65508cfc794de94))
+- allow `LiteralUnionAsserter` `boolean` `values`
+  ([e885943](https://github.com/antonebbage/typeguardkit/commit/e88594318f5f0a2b7670b638ef857e8309cafe02))
+- allow passing property asserters to `ObjectIntersectionAsserter` constructor
+  ([ce71555](https://github.com/antonebbage/typeguardkit/commit/ce715553d9ad2ae383f0c41fff27a0b8927b36c3))
+- allow passing property asserters to `PartialAsserter` constructor
+  ([f9ef297](https://github.com/antonebbage/typeguardkit/commit/f9ef297eb10ccbe3abc280c31d3409155544ef60))
+
 ## [0.26.0](https://github.com/antonebbage/typeguardkit/compare/0.25.0...0.26.0) (2024-05-25)
 
 ### ⚠ BREAKING CHANGES
