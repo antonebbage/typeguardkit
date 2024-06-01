@@ -13,15 +13,20 @@ import { PartialAsserter } from "./partial_asserter.ts";
  * ```ts
  * import { _string, ObjectAsserter, partial } from "../../mod.ts";
  *
- * export const _Options = partial(
- *   new ObjectAsserter("", {
- *     option1: _string,
- *     option2: _string,
- *     option3: _string,
- *   }),
- * );
+ * // types/user_name.ts
  *
- * export type Options = ReturnType<typeof _Options.assert>;
+ * export const _UserName = new ObjectAsserter("UserName", {
+ *   firstName: _string,
+ *   lastName: _string,
+ * });
+ *
+ * export type UserName = ReturnType<typeof _UserName.assert>;
+ *
+ * // types/user_name_update.ts
+ *
+ * export const _UserNameUpdate = partial(_UserName);
+ *
+ * export type UserNameUpdate = ReturnType<typeof _UserNameUpdate.assert>;
  * ```
  */
 export function partial<
