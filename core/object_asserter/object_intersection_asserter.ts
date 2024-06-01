@@ -35,9 +35,9 @@ import { ObjectAsserter } from "./object_asserter.ts";
  *   [
  *     _Entity,
  *
- *     new ObjectAsserter("", {
+ *     {
  *       name: _string,
- *     }),
+ *     },
  *   ],
  * );
  *
@@ -52,17 +52,22 @@ export class ObjectIntersectionAsserter<
 > {
   constructor(
     typeName: string,
-    [asserterA, asserterB]: [
+    [asserterA, asserterOrPropertyAssertersB]: [
       ObjectAsserter<PropertyAssertersA>,
-      ObjectAsserter<PropertyAssertersB>,
+      ObjectAsserter<PropertyAssertersB> | PropertyAssertersB,
     ],
   ) {
     const newPropertyAsserters: Record<string, Asserter<unknown>> = {};
 
+    const propertyAssertersB =
+      asserterOrPropertyAssertersB instanceof ObjectAsserter
+        ? asserterOrPropertyAssertersB.propertyAsserters
+        : asserterOrPropertyAssertersB;
+
     for (const key in asserterA.propertyAsserters) {
       const propertyAsserterA = asserterA.propertyAsserters[key];
 
-      const propertyAsserterB = asserterB.propertyAsserters[key] as
+      const propertyAsserterB = propertyAssertersB[key] as
         | Asserter<unknown>
         | undefined;
 
@@ -85,9 +90,9 @@ export class ObjectIntersectionAsserter<
       }
     }
 
-    for (const key in asserterB.propertyAsserters) {
+    for (const key in propertyAssertersB) {
       if (!asserterA.propertyAsserters[key]) {
-        newPropertyAsserters[key] = asserterB.propertyAsserters[key];
+        newPropertyAsserters[key] = propertyAssertersB[key];
       }
     }
 

@@ -25,17 +25,22 @@ const _ObjectType2 = new ObjectAsserter(objectType2Name, {
   c: _string,
 });
 
-const intersectionName = "Intersection";
+const intersection1Name = "Intersection1";
 
-const _Intersection = new ObjectIntersectionAsserter(
-  intersectionName,
+const _Intersection1 = new ObjectIntersectionAsserter(
+  intersection1Name,
   [_ObjectType1, _ObjectType2],
+);
+
+const _Intersection2 = new ObjectIntersectionAsserter(
+  "Intersection2",
+  [_ObjectType1, _ObjectType2.propertyAsserters],
 );
 
 describe("ObjectIntersectionAsserter", () => {
   it("should have the provided `typeName` or the correct default if empty", () => {
     const testCases = [
-      { asserter: _Intersection, typeName: intersectionName },
+      { asserter: _Intersection1, typeName: intersection1Name },
 
       {
         asserter: new ObjectIntersectionAsserter(
@@ -62,7 +67,8 @@ describe("ObjectIntersectionAsserter.assert", () => {
     ];
 
     for (const value of testCases) {
-      assertStrictEquals(_Intersection.assert(value), value);
+      assertStrictEquals(_Intersection1.assert(value), value);
+      assertStrictEquals(_Intersection2.assert(value), value);
     }
   });
 
@@ -70,20 +76,20 @@ describe("ObjectIntersectionAsserter.assert", () => {
     const object = { a: 0, b: 0, c: "" };
 
     assertThrows(
-      () => _Intersection.assert(object, "name"),
+      () => _Intersection1.assert(object, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_Intersection.typeName, object, {
+      new TypeAssertionError(_Intersection1.typeName, object, {
         valueName: "name",
 
         issues: [
           new TypeAssertionError(
-            _Intersection.propertyAsserters.a.typeName,
+            _Intersection1.propertyAsserters.a.typeName,
             object.a,
             { valueName: "a" },
           ),
 
           new TypeAssertionError(
-            _Intersection.propertyAsserters.b.typeName,
+            _Intersection1.propertyAsserters.b.typeName,
             object.b,
             { valueName: "b" },
           ),
@@ -103,13 +109,13 @@ describe("ObjectIntersectionAsserter.assert", () => {
       new TypeAssertionError(unnamedAsserter.typeName, object, {
         issues: [
           new TypeAssertionError(
-            _Intersection.propertyAsserters.a.typeName,
+            _Intersection1.propertyAsserters.a.typeName,
             object.a,
             { valueName: "a" },
           ),
 
           new TypeAssertionError(
-            _Intersection.propertyAsserters.b.typeName,
+            _Intersection1.propertyAsserters.b.typeName,
             object.b,
             { valueName: "b" },
           ),
@@ -134,9 +140,9 @@ describe("ObjectIntersectionAsserter.assert", () => {
 
     for (const value of testCases) {
       assertThrows(
-        () => _Intersection.assert(value),
+        () => _Intersection1.assert(value),
         TypeAssertionError,
-        new TypeAssertionError(_Intersection.typeName, value).message,
+        new TypeAssertionError(_Intersection1.typeName, value).message,
       );
     }
   });

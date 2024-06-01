@@ -465,9 +465,9 @@ export const _User = new ObjectIntersectionAsserter(
   [
     _Entity,
 
-    new ObjectAsserter("", {
+    {
       name: _string,
-    }),
+    },
   ],
 );
 
