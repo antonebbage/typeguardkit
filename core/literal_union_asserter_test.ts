@@ -4,7 +4,7 @@ import { TypeAssertionError } from "../mod.ts";
 import { LiteralUnionAsserter } from "./literal_union_asserter.ts";
 
 const literalUnionName = "LiteralUnion";
-const literalUnionValues = [0, 1, "", "a"] as const;
+const literalUnionValues = ["", "a", 0, 1, false] as const;
 
 const _LiteralUnion = new LiteralUnionAsserter(
   literalUnionName,
@@ -34,9 +34,7 @@ describe("LiteralUnionAsserter", () => {
 
 describe("LiteralUnionAsserter.assert", () => {
   it("should return `value` when it is equal to one of the `values`", () => {
-    const testCases = [0, 1, "", "a"];
-
-    for (const value of testCases) {
+    for (const value of literalUnionValues) {
       assertStrictEquals(_LiteralUnion.assert(value), value);
     }
   });
@@ -51,7 +49,7 @@ describe("LiteralUnionAsserter.assert", () => {
         .message,
     );
 
-    const unnamedAsserter = new LiteralUnionAsserter("", [0, 1, "", "a"]);
+    const unnamedAsserter = new LiteralUnionAsserter("", literalUnionValues);
 
     assertThrows(
       () => unnamedAsserter.assert(undefined),
@@ -59,7 +57,7 @@ describe("LiteralUnionAsserter.assert", () => {
       new TypeAssertionError(unnamedAsserter.typeName, undefined).message,
     );
 
-    const testCases = [undefined, null, false, [], {}, 2, "b"];
+    const testCases = [undefined, null, [], {}, "b", 2, true];
 
     for (const value of testCases) {
       assertThrows(

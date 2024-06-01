@@ -26,7 +26,7 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  * ```
  */
 export class LiteralUnionAsserter<
-  const Values extends ReadonlyArray<number | string>,
+  const Values extends ReadonlyArray<string | number | boolean>,
 > implements Asserter<Values[number]> {
   readonly typeName: string;
 
