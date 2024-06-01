@@ -1,12 +1,48 @@
 import { assertStrictEquals, assertThrows } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
-import { _number, _string, TypeAssertionError } from "../mod.ts";
+import {
+  _number,
+  _string,
+  array,
+  ObjectAsserter,
+  TypeAssertionError,
+} from "../mod.ts";
 import { ArrayAsserter, ArrayAsserterOptions } from "./array_asserter.ts";
 
 const arrayOfNumberTypeName = "ArrayOfNumber";
-const _ArrayOfNumber = new ArrayAsserter(arrayOfNumberTypeName, _number, {});
+const arrayOfNumberOptions: ArrayAsserterOptions = {};
 
-const constrainedLengthArrayOfStringTypeName = "ConstrainedLengthArrayOfString";
+const _ArrayOfNumber = new ArrayAsserter(
+  arrayOfNumberTypeName,
+  _number,
+  arrayOfNumberOptions,
+);
+
+const arraySetOfNumberOptions: ArrayAsserterOptions = { mustBeASet: true };
+
+const _ArraySetOfNumber = new ArrayAsserter(
+  "ArraySetOfNumber",
+  _number,
+  arraySetOfNumberOptions,
+);
+
+const _ArraySetOfArray = new ArrayAsserter("ArraySetOfArray", array(_number), {
+  mustBeASet: true,
+});
+
+const _ObjectType1 = new ObjectAsserter("ObjectType1", {
+  a: _number,
+  b: _number,
+});
+
+const _ObjectType2 = new ObjectAsserter("ObjectType2", {
+  a: _ObjectType1,
+  b: _ObjectType1,
+});
+
+const _ArraySetOfObject = new ArrayAsserter("ArraySetOfObject", _ObjectType2, {
+  mustBeASet: true,
+});
 
 const constrainedLengthArrayOfStringOptions: ArrayAsserterOptions = {
   minLength: 1,
@@ -14,7 +50,7 @@ const constrainedLengthArrayOfStringOptions: ArrayAsserterOptions = {
 };
 
 const _ConstrainedLengthArrayOfString = new ArrayAsserter(
-  constrainedLengthArrayOfStringTypeName,
+  "ConstrainedLengthArrayOfString",
   _string,
   constrainedLengthArrayOfStringOptions,
 );
@@ -22,11 +58,6 @@ const _ConstrainedLengthArrayOfString = new ArrayAsserter(
 describe("ArrayAsserter", () => {
   it("should have the provided `typeName` or the correct default if empty", () => {
     const testCases = [
-      {
-        asserter: _ConstrainedLengthArrayOfString,
-        typeName: constrainedLengthArrayOfStringTypeName,
-      },
-
       { asserter: _ArrayOfNumber, typeName: arrayOfNumberTypeName },
 
       {
@@ -57,7 +88,8 @@ describe("ArrayAsserter", () => {
 
   it("should have the provided `ArrayAsserterOptions` or correct defaults as properties", () => {
     const testCases = [
-      { asserter: _ArrayOfNumber, options: {} as ArrayAsserterOptions },
+      { asserter: _ArrayOfNumber, options: arrayOfNumberOptions },
+      { asserter: _ArraySetOfNumber, options: arraySetOfNumberOptions },
 
       {
         asserter: _ConstrainedLengthArrayOfString,
@@ -68,6 +100,7 @@ describe("ArrayAsserter", () => {
     for (const { asserter, options } of testCases) {
       assertStrictEquals(asserter.minLength, options.minLength);
       assertStrictEquals(asserter.maxLength, options.maxLength);
+      assertStrictEquals(asserter.mustBeASet, !!options.mustBeASet);
     }
   });
 
@@ -115,7 +148,72 @@ describe("ArrayAsserter", () => {
 describe("ArrayAsserter.assert", () => {
   it("should return `value` when it is an `Array` where `elementAsserter` does not throw an error for any element", () => {
     const testCases = [
-      { asserter: _ArrayOfNumber, values: [[], [0], [0, 1, 2]] },
+      { asserter: _ArrayOfNumber, values: [[], [0], [0, 1, 1]] },
+      { asserter: _ArraySetOfNumber, values: [[], [0], [0, 1, 2]] },
+
+      {
+        asserter: _ArraySetOfArray,
+
+        values: [
+          [],
+          [[]],
+          [[0]],
+          [[0], [0, 1]],
+          [[0, 1], [1, 0]],
+          [[0, 1], [0, 2]],
+        ],
+      },
+
+      {
+        asserter: _ArraySetOfObject,
+
+        values: [
+          [],
+
+          [
+            {
+              a: { a: 0, b: 0 },
+              b: { a: 0, b: 0 },
+            },
+          ],
+
+          [
+            {
+              a: { a: 0, b: 0 },
+              b: { a: 0, b: 0 },
+            },
+
+            {
+              a: { a: 0, b: 0 },
+              b: { a: 0, b: 1 },
+            },
+          ],
+
+          [
+            {
+              a: { a: 0, b: 0, c: 0 },
+              b: { a: 0, b: 0 },
+            },
+
+            {
+              a: { a: 0, b: 0 },
+              b: { a: 0, b: 0 },
+            },
+          ],
+
+          [
+            {
+              a: { a: 0, b: 0 },
+              b: { a: 0, b: 0 },
+            },
+
+            {
+              a: { a: 0, b: 0 },
+              b: { a: 0, b: 0, c: 0 },
+            },
+          ],
+        ],
+      },
 
       {
         asserter: _ConstrainedLengthArrayOfString,
@@ -177,6 +275,8 @@ describe("ArrayAsserter.assert", () => {
         .message,
     );
 
+    const mustBeASetIssue = "must be a set";
+
     const testCases: Array<{
       asserter: ArrayAsserter<unknown>;
       values: Array<[value: unknown, issues?: string[]]>;
@@ -200,6 +300,83 @@ describe("ArrayAsserter.assert", () => {
           [[{}]],
 
           [["", undefined]],
+        ],
+      },
+
+      {
+        asserter: _ArraySetOfNumber,
+
+        values: [
+          [[0, 0], [mustBeASetIssue]],
+          [[0, 1, 1], [mustBeASetIssue]],
+        ],
+      },
+
+      {
+        asserter: _ArraySetOfArray,
+
+        values: [
+          [[[0, 1], [0, 1]], [mustBeASetIssue]],
+          [[[0, 1], [0, 2], [0, 2]], [mustBeASetIssue]],
+        ],
+      },
+
+      {
+        asserter: _ArraySetOfObject,
+
+        values: [
+          [
+            [
+              {
+                a: { a: 0, b: 0 },
+                b: { a: 0, b: 0 },
+              },
+
+              {
+                a: { a: 0, b: 0 },
+                b: { a: 0, b: 0 },
+              },
+            ],
+
+            [mustBeASetIssue],
+          ],
+
+          [
+            [
+              {
+                a: { a: 0, b: 0 },
+                b: { a: 0, b: 0 },
+              },
+
+              {
+                a: { a: 0, b: 0 },
+                b: { b: 0, a: 0 },
+              },
+            ],
+
+            [mustBeASetIssue],
+          ],
+
+          [
+            [
+              {
+                a: { a: 0, b: 0 },
+                b: { a: 0, b: 0 },
+              },
+
+              {
+                a: { a: 1, b: 1 },
+                b: { a: 1, b: 1 },
+              },
+
+              {
+                a: { a: 1, b: 1 },
+                b: { a: 1, b: 1 },
+              },
+            ],
+
+            [mustBeASetIssue],
+          ],
         ],
       },
 
