@@ -104,7 +104,7 @@ export class ArrayAsserter<Element>
     }
 
     if (this.mustBeASet && !ArrayAsserter.#checkArrayIsASet(value)) {
-      issues.push("must be a set");
+      issues.push("must not have duplicates");
     }
 
     for (let i = 0; i < value.length; i++) {

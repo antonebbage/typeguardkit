@@ -275,7 +275,7 @@ describe("ArrayAsserter.assert", () => {
         .message,
     );
 
-    const mustBeASetIssue = "must be a set";
+    const mustBeASetIssue = "must not have duplicates";
 
     const testCases: Array<{
       asserter: ArrayAsserter<unknown>;
