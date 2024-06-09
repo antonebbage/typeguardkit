@@ -111,9 +111,9 @@ describe("NumberAsserter", () => {
 
     for (const { asserter, options } of testCases) {
       assertStrictEquals(asserter.disallowNaN, !!options.disallowNaN);
-      assertStrictEquals(asserter.min, options.min);
-      assertStrictEquals(asserter.max, options.max);
-      assertStrictEquals(asserter.step, options.step);
+      assertStrictEquals(asserter.min, options.min ?? null);
+      assertStrictEquals(asserter.max, options.max ?? null);
+      assertStrictEquals(asserter.step, options.step ?? null);
 
       if (options.rules) {
         assertStrictEquals(asserter.rules, options.rules);

@@ -60,9 +60,9 @@ export class NumberAsserter implements Asserter<number> {
   readonly typeName: string;
 
   readonly disallowNaN: boolean;
-  readonly min?: NumberAsserterBound;
-  readonly max?: NumberAsserterBound;
-  readonly step?: number;
+  readonly min: NumberAsserterBound | null;
+  readonly max: NumberAsserterBound | null;
+  readonly step: number | null;
   readonly rules: NumberAsserterRule[];
 
   constructor(
@@ -89,9 +89,9 @@ export class NumberAsserter implements Asserter<number> {
     this.typeName = typeName || "UnnamedNumber";
 
     this.disallowNaN = disallowNaN;
-    this.min = min;
-    this.max = max;
-    this.step = step;
+    this.min = min ?? null;
+    this.max = max ?? null;
+    this.step = step ?? null;
     this.rules = rules ?? [];
   }
 
@@ -139,7 +139,7 @@ export class NumberAsserter implements Asserter<number> {
 
     const step = this.step;
 
-    if (step !== undefined) {
+    if (step !== null) {
       let isStepMismatch = false;
 
       if (!isFinite(value)) {
