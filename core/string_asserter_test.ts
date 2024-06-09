@@ -76,9 +76,9 @@ describe("StringAsserter", () => {
     ];
 
     for (const { asserter, options } of testCases) {
-      assertStrictEquals(asserter.minLength, options.minLength);
-      assertStrictEquals(asserter.maxLength, options.maxLength);
-      assertStrictEquals(asserter.regex, options.regex);
+      assertStrictEquals(asserter.minLength, options.minLength ?? null);
+      assertStrictEquals(asserter.maxLength, options.maxLength ?? null);
+      assertStrictEquals(asserter.regex, options.regex ?? null);
 
       if (options.rules) {
         assertStrictEquals(asserter.rules, options.rules);

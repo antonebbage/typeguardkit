@@ -89,15 +89,15 @@ export interface StringAsserterRule {
  * export type Palindrome = ReturnType<typeof _Palindrome.assert>;
  * ```
  */
-export class StringAsserter implements Asserter<string>, StringAsserterOptions {
+export class StringAsserter implements Asserter<string> {
   readonly typeName: string;
 
-  readonly minLength?: number;
-  readonly maxLength?: number;
-  readonly regex?: StringAsserterRegex;
+  readonly minLength: number | null;
+  readonly maxLength: number | null;
+  readonly regex: StringAsserterRegex | null;
   readonly rules: StringAsserterRule[];
 
-  readonly #regExp: RegExp | undefined;
+  readonly #regExp?: RegExp;
 
   constructor(
     typeName: string,
@@ -151,9 +151,9 @@ export class StringAsserter implements Asserter<string>, StringAsserterOptions {
 
     this.typeName = typeName || "UnnamedString";
 
-    this.minLength = minLength;
-    this.maxLength = maxLength;
-    this.regex = regex;
+    this.minLength = minLength ?? null;
+    this.maxLength = maxLength ?? null;
+    this.regex = regex ?? null;
     this.rules = rules ?? [];
   }
 
@@ -171,19 +171,19 @@ export class StringAsserter implements Asserter<string>, StringAsserterOptions {
     const maxLength = this.maxLength;
 
     if (
-      minLength !== undefined && minLength === maxLength &&
+      minLength !== null && minLength === maxLength &&
       value.length !== minLength
     ) {
       issues.push(
         `must have ${minLength} character${minLength > 0 ? "s" : ""}`,
       );
-    } else if (minLength !== undefined && value.length < minLength) {
+    } else if (minLength !== null && value.length < minLength) {
       issues.push(
         `must have a minimum of ${minLength} character${
           minLength > 0 ? "s" : ""
         }`,
       );
-    } else if (maxLength !== undefined && value.length > maxLength) {
+    } else if (maxLength !== null && value.length > maxLength) {
       issues.push(
         `must have a maximum of ${maxLength} character${
           maxLength > 0 ? "s" : ""
