@@ -1,4 +1,4 @@
-import { assertStrictEquals, assertThrows } from "@std/assert";
+import { assertEquals, assertStrictEquals, assertThrows } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import { TypeAssertionError } from "../mod.ts";
 import { NumberAsserter, NumberAsserterOptions } from "./number_asserter.ts";
@@ -42,7 +42,7 @@ const evenIssue = "must be even";
 const evenNumberInExclusiveRangeOptions: NumberAsserterOptions = {
   min: { value: minValue, inclusive: false },
   max: { value: maxValue, inclusive: false },
-  validate: (value) => value % 2 === 0 ? [] : [evenIssue],
+  rules: [{ validate: (value) => value % 2 === 0, requirements: [evenIssue] }],
 };
 
 const _EvenNumberInExclusiveRange = new NumberAsserter(
@@ -114,7 +114,12 @@ describe("NumberAsserter", () => {
       assertStrictEquals(asserter.min, options.min);
       assertStrictEquals(asserter.max, options.max);
       assertStrictEquals(asserter.step, options.step);
-      assertStrictEquals(asserter.validate, options.validate);
+
+      if (options.rules) {
+        assertStrictEquals(asserter.rules, options.rules);
+      } else {
+        assertEquals(asserter.rules, []);
+      }
     }
   });
 
@@ -126,6 +131,27 @@ describe("NumberAsserter", () => {
         () => new NumberAsserter("", { step }),
         Error,
         "`step` must be positive and finite if defined",
+      );
+    }
+  });
+
+  it("should throw an `Error` with correct `message` if `rules` is defined but there is a rule whose `requirements` is empty or contains any blank `string`s", () => {
+    const testCases = [
+      [],
+      [""],
+      [" "],
+      ["", "requirement"],
+      ["requirement", ""],
+    ];
+
+    for (const requirements of testCases) {
+      assertThrows(
+        () =>
+          new NumberAsserter("", {
+            rules: [{ validate: () => true, requirements }],
+          }),
+        Error,
+        "rule `requirements` must not be empty or contain any blank `string`s",
       );
     }
   });

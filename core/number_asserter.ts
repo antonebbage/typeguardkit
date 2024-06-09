@@ -9,7 +9,7 @@ export interface NumberAsserterOptions {
   readonly min?: NumberAsserterBound;
   readonly max?: NumberAsserterBound;
   readonly step?: number;
-  readonly validate?: (value: number) => string[];
+  readonly rules?: NumberAsserterRule[];
 }
 
 /**
@@ -22,11 +22,22 @@ export interface NumberAsserterBound {
 }
 
 /**
+ * `NumberAsserterRule`s can be assigned to the `NumberAsserterOptions` `rules`
+ * property.
+ */
+export interface NumberAsserterRule {
+  readonly validate: (value: number) => boolean;
+  readonly requirements: readonly string[];
+}
+
+/**
  * A `NumberAsserter` is an `Asserter<number>`, with any additional validation
  * defined by its `NumberAsserterOptions` properties.
  *
- * If defined, the `NumberAsserterOptions` `validate` function should return an
- * empty array if `value` is valid, or an array of issues if `value` is invalid.
+ * The `rules` option can be used to specify `validate` functions and their
+ * `requirements`. Each `validate` function should return `true` if `value` is
+ * valid according to the rule, and `false` otherwise. `requirements` must not
+ * be empty or contain any blank `string`s.
  *
  * The provided `NumberAsserterOptions` are made accessible as properties of the
  * created `NumberAsserter`.
@@ -52,14 +63,27 @@ export class NumberAsserter implements Asserter<number> {
   readonly min?: NumberAsserterBound;
   readonly max?: NumberAsserterBound;
   readonly step?: number;
-  readonly validate?: (value: number) => string[];
+  readonly rules: NumberAsserterRule[];
 
   constructor(
     typeName: string,
-    { disallowNaN = false, min, max, step, validate }: NumberAsserterOptions,
+    { disallowNaN = false, min, max, step, rules }: NumberAsserterOptions,
   ) {
     if (step !== undefined && (step <= 0 || !isFinite(step))) {
       throw new Error("`step` must be positive and finite if defined");
+    }
+
+    if (rules) {
+      for (const { requirements } of rules) {
+        if (
+          (!requirements.length ||
+            requirements.some((requirement) => /^\s*$/.test(requirement)))
+        ) {
+          throw new Error(
+            "rule `requirements` must not be empty or contain any blank `string`s",
+          );
+        }
+      }
     }
 
     this.typeName = typeName || "UnnamedNumber";
@@ -68,7 +92,7 @@ export class NumberAsserter implements Asserter<number> {
     this.min = min;
     this.max = max;
     this.step = step;
-    this.validate = validate;
+    this.rules = rules ?? [];
   }
 
   assert(value: unknown, valueName?: string): number {
@@ -163,8 +187,10 @@ export class NumberAsserter implements Asserter<number> {
       }
     }
 
-    if (this.validate) {
-      issues.push(...this.validate(value));
+    for (const { validate, requirements } of this.rules) {
+      if (!validate(value)) {
+        issues.push(...requirements);
+      }
     }
 
     if (issues.length) {
