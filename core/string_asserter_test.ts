@@ -1,4 +1,4 @@
-import { assertStrictEquals, assertThrows } from "@std/assert";
+import { assertEquals, assertStrictEquals, assertThrows } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import { TypeAssertionError } from "../mod.ts";
 import { StringAsserter, StringAsserterOptions } from "./string_asserter.ts";
@@ -28,16 +28,22 @@ const _LetterString = new StringAsserter("LetterString", letterStringOptions);
 const palindromeIssue = "must be a palindrome";
 
 const palindromeOptions: StringAsserterOptions = {
-  validate(value) {
-    if (value.length < 2) {
-      return [];
-    }
+  rules: [
+    {
+      validate(value) {
+        if (value.length < 2) {
+          return true;
+        }
 
-    const forwardValue = value.replace(/[^0-9a-z]/gi, "");
-    const backwardValue = forwardValue.split("").reverse().join("");
+        const forwardValue = value.replace(/[^0-9a-z]/gi, "");
+        const backwardValue = forwardValue.split("").reverse().join("");
 
-    return forwardValue === backwardValue ? [] : [palindromeIssue];
-  },
+        return forwardValue === backwardValue;
+      },
+
+      requirements: [palindromeIssue],
+    },
+  ],
 };
 
 const _Palindrome = new StringAsserter("Palindrome", palindromeOptions);
@@ -73,7 +79,12 @@ describe("StringAsserter", () => {
       assertStrictEquals(asserter.minLength, options.minLength);
       assertStrictEquals(asserter.maxLength, options.maxLength);
       assertStrictEquals(asserter.regex, options.regex);
-      assertStrictEquals(asserter.validate, options.validate);
+
+      if (options.rules) {
+        assertStrictEquals(asserter.rules, options.rules);
+      } else {
+        assertEquals(asserter.rules, []);
+      }
     }
   });
 
@@ -145,6 +156,27 @@ describe("StringAsserter", () => {
         () => new StringAsserter("", { regex: { pattern: "", requirements } }),
         Error,
         "`regex.requirements` must not be empty or contain any blank `string`s if `regex` is defined",
+      );
+    }
+  });
+
+  it("should throw an `Error` with correct `message` if `rules` is defined but there is a rule whose `requirements` is empty or contains any blank `string`s", () => {
+    const testCases = [
+      [],
+      [""],
+      [" "],
+      ["", "requirement"],
+      ["requirement", ""],
+    ];
+
+    for (const requirements of testCases) {
+      assertThrows(
+        () =>
+          new StringAsserter("", {
+            rules: [{ validate: () => true, requirements }],
+          }),
+        Error,
+        "rule `requirements` must not be empty or contain any blank `string`s",
       );
     }
   });

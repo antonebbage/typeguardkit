@@ -8,7 +8,7 @@ export interface StringAsserterOptions {
   readonly minLength?: number;
   readonly maxLength?: number;
   readonly regex?: StringAsserterRegex;
-  readonly validate?: (value: string) => string[];
+  readonly rules?: StringAsserterRule[];
 }
 
 /**
@@ -21,20 +21,31 @@ export interface StringAsserterRegex {
 }
 
 /**
+ * `StringAsserterRule`s can be assigned to the `StringAsserterOptions` `rules`
+ * property.
+ */
+export interface StringAsserterRule {
+  readonly validate: (value: string) => boolean;
+  readonly requirements: readonly string[];
+}
+
+/**
  * A `StringAsserter` is an `Asserter<string>`, with any additional validation
  * defined by its `StringAsserterOptions` properties.
  *
- * The `minLength` and `maxLength` `StringAsserterOptions` can be used to set
- * the minimum and maximum number of characters (as UTF-16 code units) allowed.
+ * The `minLength` and `maxLength` options can be used to set the minimum and
+ * maximum number of characters (as UTF-16 code units) allowed.
  *
- * The `StringAsserterOptions` `regex` can be used to specify a regular
- * expression to match against. `regex.pattern` must be a valid HTML `<input>`
- * `pattern` attribute value. It is compiled with `^(?:` at the start, `)$` at
- * the end, and with the `v` flag. `regex.requirements` must not be empty or
- * contain any blank `string`s.
+ * The `regex` option can be used to specify a regular expression to match
+ * against. `regex.pattern` must be a valid HTML `<input>` `pattern` attribute
+ * value. It is compiled with `^(?:` at the start, `)$` at the end, and with the
+ * `v` flag. `regex.requirements` must not be empty or contain any blank
+ * `string`s.
  *
- * If defined, the `StringAsserterOptions` `validate` function should return an
- * empty array if `value` is valid, or an array of issues if `value` is invalid.
+ * The `rules` option can be used to specify `validate` functions and their
+ * `requirements`. Each `validate` function should return `true` if `value` is
+ * valid according to the rule, and `false` otherwise. `requirements` must not
+ * be empty or contain any blank `string`s.
  *
  * The provided `StringAsserterOptions` are made accessible as properties of the
  * created `StringAsserter`.
@@ -57,16 +68,22 @@ export interface StringAsserterRegex {
  * export type NumericString = ReturnType<typeof _NumericString.assert>;
  *
  * export const _Palindrome = new StringAsserter("Palindrome", {
- *   validate(value) {
- *     if (value.length < 2) {
- *       return [];
- *     }
+ *   rules: [
+ *     {
+ *       validate(value) {
+ *         if (value.length < 2) {
+ *           return true;
+ *         }
  *
- *     const forwardValue = value.replace(/[^0-9a-z]/gi, "");
- *     const backwardValue = forwardValue.split("").reverse().join("");
+ *         const forwardValue = value.replace(/[^0-9a-z]/gi, "");
+ *         const backwardValue = forwardValue.split("").reverse().join("");
  *
- *     return forwardValue === backwardValue ? [] : ["must be a palindrome"];
- *   },
+ *         return forwardValue === backwardValue;
+ *       },
+ *
+ *       requirements: ["must be a palindrome"],
+ *     },
+ *   ],
  * });
  *
  * export type Palindrome = ReturnType<typeof _Palindrome.assert>;
@@ -78,13 +95,13 @@ export class StringAsserter implements Asserter<string>, StringAsserterOptions {
   readonly minLength?: number;
   readonly maxLength?: number;
   readonly regex?: StringAsserterRegex;
-  readonly validate?: (value: string) => string[];
+  readonly rules: StringAsserterRule[];
 
   readonly #regExp: RegExp | undefined;
 
   constructor(
     typeName: string,
-    { minLength, maxLength, regex, validate }: StringAsserterOptions,
+    { minLength, maxLength, regex, rules }: StringAsserterOptions,
   ) {
     if (
       minLength !== undefined && (minLength < 1 || !Number.isInteger(minLength))
@@ -119,12 +136,25 @@ export class StringAsserter implements Asserter<string>, StringAsserterOptions {
       );
     }
 
+    if (rules) {
+      for (const { requirements } of rules) {
+        if (
+          (!requirements.length ||
+            requirements.some((requirement) => /^\s*$/.test(requirement)))
+        ) {
+          throw new Error(
+            "rule `requirements` must not be empty or contain any blank `string`s",
+          );
+        }
+      }
+    }
+
     this.typeName = typeName || "UnnamedString";
 
     this.minLength = minLength;
     this.maxLength = maxLength;
     this.regex = regex;
-    this.validate = validate;
+    this.rules = rules ?? [];
   }
 
   assert(value: unknown, valueName?: string): string {
@@ -165,8 +195,10 @@ export class StringAsserter implements Asserter<string>, StringAsserterOptions {
       issues.push(...this.regex.requirements);
     }
 
-    if (this.validate) {
-      issues.push(...this.validate(value));
+    for (const { validate, requirements } of this.rules) {
+      if (!validate(value)) {
+        issues.push(...requirements);
+      }
     }
 
     if (issues.length) {

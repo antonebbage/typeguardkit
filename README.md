@@ -245,16 +245,22 @@ export const _NumericString = new StringAsserter("NumericString", {
 export type NumericString = ReturnType<typeof _NumericString.assert>;
 
 export const _Palindrome = new StringAsserter("Palindrome", {
-  validate(value) {
-    if (value.length < 2) {
-      return [];
-    }
+  rules: [
+    {
+      validate(value) {
+        if (value.length < 2) {
+          return true;
+        }
 
-    const forwardValue = value.replace(/[^0-9a-z]/gi, "");
-    const backwardValue = forwardValue.split("").reverse().join("");
+        const forwardValue = value.replace(/[^0-9a-z]/gi, "");
+        const backwardValue = forwardValue.split("").reverse().join("");
 
-    return forwardValue === backwardValue ? [] : ["must be a palindrome"];
-  },
+        return forwardValue === backwardValue;
+      },
+
+      requirements: ["must be a palindrome"],
+    },
+  ],
 });
 
 export type Palindrome = ReturnType<typeof _Palindrome.assert>;
