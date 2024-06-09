@@ -5,14 +5,14 @@
       "jsr:@deno/cache-dir@^0.8.0": "jsr:@deno/cache-dir@0.8.0",
       "jsr:@deno/dnt@^0.41.2": "jsr:@deno/dnt@0.41.2",
       "jsr:@std/assert@^0.218.2": "jsr:@std/assert@0.218.2",
-      "jsr:@std/assert@^0.225.3": "jsr:@std/assert@0.225.3",
+      "jsr:@std/assert@^0.226.0": "jsr:@std/assert@0.226.0",
       "jsr:@std/bytes@^0.218.2": "jsr:@std/bytes@0.218.2",
       "jsr:@std/fmt@^0.218.2": "jsr:@std/fmt@0.218.2",
       "jsr:@std/fs@^0.218.2": "jsr:@std/fs@0.218.2",
       "jsr:@std/internal@^1.0.0": "jsr:@std/internal@1.0.0",
       "jsr:@std/io@^0.218.2": "jsr:@std/io@0.218.2",
       "jsr:@std/path@^0.218.2": "jsr:@std/path@0.218.2",
-      "jsr:@std/testing@^0.224.0": "jsr:@std/testing@0.224.0",
+      "jsr:@std/testing@^0.225.1": "jsr:@std/testing@0.225.1",
       "npm:@ts-morph/bootstrap@0.22": "npm:@ts-morph/bootstrap@0.22.0",
       "npm:code-block-writer@^13.0.1": "npm:code-block-writer@13.0.1"
     },
@@ -38,8 +38,8 @@
       "@std/assert@0.218.2": {
         "integrity": "7f0a5a1a8cf86607cd6c2c030584096e1ffad27fc9271429a8cb48cfbdee5eaf"
       },
-      "@std/assert@0.225.3": {
-        "integrity": "b3c2847aecf6955b50644cdb9cf072004ea3d1998dd7579fc0acb99dbb23bd4f",
+      "@std/assert@0.226.0": {
+        "integrity": "0dfb5f7c7723c18cec118e080fec76ce15b4c31154b15ad2bd74822603ef75b3",
         "dependencies": [
           "jsr:@std/internal@^1.0.0"
         ]
@@ -72,8 +72,8 @@
           "jsr:@std/assert@^0.218.2"
         ]
       },
-      "@std/testing@0.224.0": {
-        "integrity": "371b8a929aa7132240d5dd766a439be8f780ef5c176ab194e0bcab72370c761e"
+      "@std/testing@0.225.1": {
+        "integrity": "1a11119553fc33410abe8566731ae513c53e73db040cedbf901858fbd7587819"
       }
     },
     "npm": {
@@ -227,8 +227,8 @@
   "workspace": {
     "dependencies": [
       "jsr:@deno/dnt@^0.41.2",
-      "jsr:@std/assert@^0.225.3",
-      "jsr:@std/testing@^0.224.0"
+      "jsr:@std/assert@^0.226.0",
+      "jsr:@std/testing@^0.225.1"
     ]
   }
 }
