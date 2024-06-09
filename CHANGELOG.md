@@ -1,3 +1,25 @@
+## [0.28.0](https://github.com/antonebbage/typeguardkit/compare/0.27.0...0.28.0) (2024-06-09)
+
+### ⚠ BREAKING CHANGES
+
+- change `undefined` `NumberAsserter` properties to `null`
+- change `undefined` `StringAsserter` properties to `null`
+- change `NumberAsserter` `validate` option to `rules`
+- change `StringAsserter` `validate` option to `rules`
+
+### Features
+
+- change `ArrayAsserter` `mustBeASet` message
+  ([3c47bb3](https://github.com/antonebbage/typeguardkit/commit/3c47bb366ea4b4a447196735aa578cb39abf25a1))
+- change `NumberAsserter` `validate` option to `rules`
+  ([d677f04](https://github.com/antonebbage/typeguardkit/commit/d677f04e94327d6b689913c309c5e523ec762cde))
+- change `StringAsserter` `validate` option to `rules`
+  ([285859b](https://github.com/antonebbage/typeguardkit/commit/285859b564ad6a56b58f547d7b539a06e0fa8095))
+- change `undefined` `NumberAsserter` properties to `null`
+  ([52d8021](https://github.com/antonebbage/typeguardkit/commit/52d8021824ef8b9182261159563307cacd0d1344))
+- change `undefined` `StringAsserter` properties to `null`
+  ([69d7e61](https://github.com/antonebbage/typeguardkit/commit/69d7e61b908a986c29a4591ea8afa9cba96edcef))
+
 ## [0.27.0](https://github.com/antonebbage/typeguardkit/compare/0.26.0...0.27.0) (2024-06-01)
 
 ### Features
