@@ -1,4 +1,5 @@
 import {
+  assertEquals,
   assertInstanceOf,
   assertStrictEquals,
   assertThrows,
@@ -8,7 +9,6 @@ import {
   _number,
   _string,
   ArrayAsserter,
-  ArrayAsserterOptions,
   Asserter,
   TypeAssertionError,
 } from "../mod.ts";
@@ -45,19 +45,13 @@ describe("array", () => {
   });
 
   it("should return an `ArrayAsserter` with the correct `ArrayAsserterOptions` properties", () => {
-    const testCases: Array<
-      {
-        asserter: ArrayAsserter<string> | ArrayAsserter<number>;
-        options: ArrayAsserterOptions<unknown>;
-      }
-    > = [
-      { asserter: _ArrayOfString, options: {} },
-      { asserter: _ArrayOfNumber, options: {} },
-    ];
+    const testCases = [_ArrayOfString, _ArrayOfNumber];
 
-    for (const { asserter, options } of testCases) {
-      assertStrictEquals(asserter.minLength, options.minLength ?? null);
-      assertStrictEquals(asserter.maxLength, options.maxLength ?? null);
+    for (const asserter of testCases) {
+      assertStrictEquals(asserter.minLength, null);
+      assertStrictEquals(asserter.maxLength, null);
+      assertStrictEquals(asserter.mustBeASet, false);
+      assertEquals(asserter.rules, []);
     }
   });
 
