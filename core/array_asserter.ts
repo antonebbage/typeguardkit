@@ -4,10 +4,20 @@ import { Asserter } from "./asserter.ts";
 import { TypeAssertionError } from "./type_assertion_error.ts";
 
 /** `ArrayAsserterOptions` are passed to the `ArrayAsserter` constructor. */
-export interface ArrayAsserterOptions {
+export interface ArrayAsserterOptions<Element> {
   readonly minLength?: number;
   readonly maxLength?: number;
   readonly mustBeASet?: boolean;
+  readonly rules?: ReadonlyArray<ArrayAsserterRule<Element>>;
+}
+
+/**
+ * `ArrayAsserterRule`s can be assigned to the `ArrayAsserterOptions` `rules`
+ * property.
+ */
+export interface ArrayAsserterRule<Element> {
+  readonly validate: (value: Element[]) => boolean;
+  readonly requirements: readonly string[];
 }
 
 /**
@@ -20,6 +30,11 @@ export interface ArrayAsserterOptions {
  *
  * If `mustBeASet` is set to `true`, each element must be unique (objects are
  * deeply compared).
+ *
+ * The `rules` option can be used to specify `validate` functions and their
+ * `requirements`. Each `validate` function should return `true` if `value` is
+ * valid according to the rule, and `false` otherwise. `requirements` must not
+ * be empty or contain any blank `string`s.
  *
  * The provided `memberAsserter` and `ArrayAsserterOptions` are made accessible
  * as properties of the created `ArrayAsserter`.
@@ -43,18 +58,20 @@ export interface ArrayAsserterOptions {
  * >;
  * ```
  */
-export class ArrayAsserter<Element>
-  implements Asserter<Element[]>, ArrayAsserterOptions {
+export class ArrayAsserter<Element> implements Asserter<Element[]> {
   readonly typeName: string;
 
   readonly minLength?: number;
   readonly maxLength?: number;
   readonly mustBeASet: boolean;
+  readonly rules: ReadonlyArray<ArrayAsserterRule<Element>>;
 
   constructor(
     typeName: string,
     readonly elementAsserter: Asserter<Element>,
-    { minLength, maxLength, mustBeASet = false }: ArrayAsserterOptions,
+    { minLength, maxLength, mustBeASet = false, rules }: ArrayAsserterOptions<
+      Element
+    >,
   ) {
     if (
       minLength !== undefined && (minLength < 1 || !Number.isInteger(minLength))
@@ -75,11 +92,25 @@ export class ArrayAsserter<Element>
       throw new Error("`minLength` must be <= `maxLength` if both are defined");
     }
 
+    if (rules) {
+      for (const { requirements } of rules) {
+        if (
+          (!requirements.length ||
+            requirements.some((requirement) => /^\s*$/.test(requirement)))
+        ) {
+          throw new Error(
+            "rule `requirements` must not be empty or contain any blank `string`s",
+          );
+        }
+      }
+    }
+
     this.typeName = typeName || "UnnamedArray";
 
     this.minLength = minLength;
     this.maxLength = maxLength;
     this.mustBeASet = mustBeASet;
+    this.rules = rules ?? [];
   }
 
   assert(value: unknown, valueName?: string): Element[] {
@@ -112,6 +143,12 @@ export class ArrayAsserter<Element>
         this.elementAsserter.assert(value[i], `${i}`);
       } catch (error) {
         issues.push(error);
+      }
+    }
+
+    for (const { validate, requirements } of this.rules) {
+      if (!validate(value)) {
+        issues.push(...requirements);
       }
     }
 

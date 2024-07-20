@@ -9,6 +9,7 @@ import {
   _string,
   ArrayAsserter,
   ArrayAsserterOptions,
+  Asserter,
   TypeAssertionError,
 } from "../mod.ts";
 import { array } from "./array.ts";
@@ -45,7 +46,10 @@ describe("array", () => {
 
   it("should return an `ArrayAsserter` with the correct `ArrayAsserterOptions` properties", () => {
     const testCases: Array<
-      { asserter: ArrayAsserter<unknown>; options: ArrayAsserterOptions }
+      {
+        asserter: ArrayAsserter<string> | ArrayAsserter<number>;
+        options: ArrayAsserterOptions<unknown>;
+      }
     > = [
       { asserter: _ArrayOfString, options: {} },
       { asserter: _ArrayOfNumber, options: {} },
@@ -95,7 +99,7 @@ describe("array", () => {
     );
 
     const testCases: Array<{
-      asserter: ArrayAsserter<unknown>;
+      asserter: Asserter<unknown>;
       values: Array<[value: unknown, issues?: string[]]>;
     }> = [
       {

@@ -1,16 +1,17 @@
-import { assertStrictEquals, assertThrows } from "@std/assert";
+import { assertEquals, assertStrictEquals, assertThrows } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import {
   _number,
   _string,
   array,
+  Asserter,
   ObjectAsserter,
   TypeAssertionError,
 } from "../mod.ts";
 import { ArrayAsserter, ArrayAsserterOptions } from "./array_asserter.ts";
 
 const arrayOfNumberTypeName = "ArrayOfNumber";
-const arrayOfNumberOptions: ArrayAsserterOptions = {};
+const arrayOfNumberOptions: ArrayAsserterOptions<number> = {};
 
 const _ArrayOfNumber = new ArrayAsserter(
   arrayOfNumberTypeName,
@@ -18,7 +19,9 @@ const _ArrayOfNumber = new ArrayAsserter(
   arrayOfNumberOptions,
 );
 
-const arraySetOfNumberOptions: ArrayAsserterOptions = { mustBeASet: true };
+const arraySetOfNumberOptions: ArrayAsserterOptions<number> = {
+  mustBeASet: true,
+};
 
 const _ArraySetOfNumber = new ArrayAsserter(
   "ArraySetOfNumber",
@@ -44,7 +47,7 @@ const _ArraySetOfObject = new ArrayAsserter("ArraySetOfObject", _ObjectType2, {
   mustBeASet: true,
 });
 
-const constrainedLengthArrayOfStringOptions: ArrayAsserterOptions = {
+const constrainedLengthArrayOfStringOptions: ArrayAsserterOptions<string> = {
   minLength: 1,
   maxLength: 8,
 };
@@ -53,6 +56,32 @@ const _ConstrainedLengthArrayOfString = new ArrayAsserter(
   "ConstrainedLengthArrayOfString",
   _string,
   constrainedLengthArrayOfStringOptions,
+);
+
+const ascendingArrayOfNumberIssue = "must be in ascending order";
+
+const ascendingArrayOfNumberOptions: ArrayAsserterOptions<number> = {
+  rules: [
+    {
+      validate(value) {
+        for (let i = 1; i < value.length; i++) {
+          if (value[i - 1] > value[i]) {
+            return false;
+          }
+        }
+
+        return true;
+      },
+
+      requirements: [ascendingArrayOfNumberIssue],
+    },
+  ],
+};
+
+const _AscendingArrayOfNumber = new ArrayAsserter(
+  "AscendingArrayOfNumber",
+  _number,
+  ascendingArrayOfNumberOptions,
 );
 
 describe("ArrayAsserter", () => {
@@ -95,12 +124,23 @@ describe("ArrayAsserter", () => {
         asserter: _ConstrainedLengthArrayOfString,
         options: constrainedLengthArrayOfStringOptions,
       },
+
+      {
+        asserter: _AscendingArrayOfNumber,
+        options: ascendingArrayOfNumberOptions,
+      },
     ];
 
     for (const { asserter, options } of testCases) {
       assertStrictEquals(asserter.minLength, options.minLength);
       assertStrictEquals(asserter.maxLength, options.maxLength);
       assertStrictEquals(asserter.mustBeASet, !!options.mustBeASet);
+
+      if (options.rules) {
+        assertStrictEquals(asserter.rules, options.rules);
+      } else {
+        assertEquals(asserter.rules, []);
+      }
     }
   });
 
@@ -140,6 +180,27 @@ describe("ArrayAsserter", () => {
         () => new ArrayAsserter("", _string, { minLength, maxLength }).assert,
         Error,
         "`minLength` must be <= `maxLength` if both are defined",
+      );
+    }
+  });
+
+  it("should throw an `Error` with correct `message` if `rules` is defined but there is a rule whose `requirements` is empty or contains any blank `string`s", () => {
+    const testCases = [
+      [],
+      [""],
+      [" "],
+      ["", "requirement"],
+      ["requirement", ""],
+    ];
+
+    for (const requirements of testCases) {
+      assertThrows(
+        () =>
+          new ArrayAsserter("", _string, {
+            rules: [{ validate: () => true, requirements }],
+          }),
+        Error,
+        "rule `requirements` must not be empty or contain any blank `string`s",
       );
     }
   });
@@ -219,6 +280,11 @@ describe("ArrayAsserter.assert", () => {
         asserter: _ConstrainedLengthArrayOfString,
         values: [[""], ["", "", "", "", "", "", "", ""]],
       },
+
+      {
+        asserter: _AscendingArrayOfNumber,
+        values: [[], [-1], [0], [1], [1, 1], [-2, -1, 0, 1, 1]],
+      },
     ];
 
     for (const { asserter, values } of testCases) {
@@ -278,7 +344,7 @@ describe("ArrayAsserter.assert", () => {
     const mustBeASetIssue = "must not have duplicates";
 
     const testCases: Array<{
-      asserter: ArrayAsserter<unknown>;
+      asserter: Asserter<unknown>;
       values: Array<[value: unknown, issues?: string[]]>;
     }> = [
       {
@@ -401,6 +467,16 @@ describe("ArrayAsserter.assert", () => {
         }),
 
         values: [[[], ["must have 1"]], [["", ""], ["must have 1"]]],
+      },
+
+      {
+        asserter: _AscendingArrayOfNumber,
+
+        values: [
+          [[1, 0], [ascendingArrayOfNumberIssue]],
+          [[0, -1], [ascendingArrayOfNumberIssue]],
+          [[-1, 0, 1, 0], [ascendingArrayOfNumberIssue]],
+        ],
       },
     ];
 
