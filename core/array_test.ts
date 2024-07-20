@@ -56,8 +56,8 @@ describe("array", () => {
     ];
 
     for (const { asserter, options } of testCases) {
-      assertStrictEquals(asserter.minLength, options.minLength);
-      assertStrictEquals(asserter.maxLength, options.maxLength);
+      assertStrictEquals(asserter.minLength, options.minLength ?? null);
+      assertStrictEquals(asserter.maxLength, options.maxLength ?? null);
     }
   });
 

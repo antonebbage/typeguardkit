@@ -61,8 +61,8 @@ export interface ArrayAsserterRule<Element> {
 export class ArrayAsserter<Element> implements Asserter<Element[]> {
   readonly typeName: string;
 
-  readonly minLength?: number;
-  readonly maxLength?: number;
+  readonly minLength: number | null;
+  readonly maxLength: number | null;
   readonly mustBeASet: boolean;
   readonly rules: ReadonlyArray<ArrayAsserterRule<Element>>;
 
@@ -107,8 +107,8 @@ export class ArrayAsserter<Element> implements Asserter<Element[]> {
 
     this.typeName = typeName || "UnnamedArray";
 
-    this.minLength = minLength;
-    this.maxLength = maxLength;
+    this.minLength = minLength ?? null;
+    this.maxLength = maxLength ?? null;
     this.mustBeASet = mustBeASet;
     this.rules = rules ?? [];
   }
@@ -124,13 +124,13 @@ export class ArrayAsserter<Element> implements Asserter<Element[]> {
     const maxLength = this.maxLength;
 
     if (
-      minLength !== undefined && minLength === maxLength &&
+      minLength !== null && minLength === maxLength &&
       value.length !== minLength
     ) {
       issues.push(`must have ${minLength}`);
-    } else if (minLength !== undefined && value.length < minLength) {
+    } else if (minLength !== null && value.length < minLength) {
       issues.push(`must have a minimum of ${minLength}`);
-    } else if (maxLength !== undefined && value.length > maxLength) {
+    } else if (maxLength !== null && value.length > maxLength) {
       issues.push(`must have a maximum of ${maxLength}`);
     }
 
