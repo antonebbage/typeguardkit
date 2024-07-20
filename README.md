@@ -357,7 +357,7 @@ properties of the created `ArrayAsserter`.
 Example:
 
 ```ts
-import { _string, ArrayAsserter } from "./mod.ts";
+import { _number, _string, ArrayAsserter } from "./mod.ts";
 
 export const _NonEmptyArrayOfString = new ArrayAsserter(
   "NonEmptyArrayOfString",
@@ -367,6 +367,40 @@ export const _NonEmptyArrayOfString = new ArrayAsserter(
 
 export type NonEmptyArrayOfString = ReturnType<
   typeof _NonEmptyArrayOfString.assert
+>;
+
+export const _ArraySetOfString = new ArrayAsserter(
+  "ArraySetOfString",
+  _string,
+  { mustBeASet: true },
+);
+
+export type ArraySetOfString = ReturnType<typeof _ArraySetOfString.assert>;
+
+export const _AscendingArrayOfNumber = new ArrayAsserter(
+  "AscendingArrayOfNumber",
+  _number,
+  {
+    rules: [
+      {
+        validate(value) {
+          for (let i = 1; i < value.length; i++) {
+            if (value[i - 1] > value[i]) {
+              return false;
+            }
+          }
+
+          return true;
+        },
+
+        requirements: ["must be in ascending order"],
+      },
+    ],
+  },
+);
+
+export type AscendingArrayOfNumber = ReturnType<
+  typeof _AscendingArrayOfNumber.assert
 >;
 ```
 
