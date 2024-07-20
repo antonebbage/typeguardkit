@@ -8,7 +8,7 @@ export interface StringAsserterOptions {
   readonly minLength?: number;
   readonly maxLength?: number;
   readonly regex?: StringAsserterRegex;
-  readonly rules?: StringAsserterRule[];
+  readonly rules?: readonly StringAsserterRule[];
 }
 
 /**
@@ -95,7 +95,7 @@ export class StringAsserter implements Asserter<string> {
   readonly minLength: number | null;
   readonly maxLength: number | null;
   readonly regex: StringAsserterRegex | null;
-  readonly rules: StringAsserterRule[];
+  readonly rules: readonly StringAsserterRule[];
 
   readonly #regExp?: RegExp;
 
