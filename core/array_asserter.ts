@@ -120,6 +120,18 @@ export class ArrayAsserter<Element> implements Asserter<Element[]> {
 
     const issues: Array<string | TypeAssertionError> = [];
 
+    for (let i = 0; i < value.length; i++) {
+      try {
+        this.elementAsserter.assert(value[i], `${i}`);
+      } catch (error) {
+        issues.push(error);
+      }
+    }
+
+    if (issues.length) {
+      throw new TypeAssertionError(this.typeName, value, { valueName, issues });
+    }
+
     const minLength = this.minLength;
     const maxLength = this.maxLength;
 
@@ -136,14 +148,6 @@ export class ArrayAsserter<Element> implements Asserter<Element[]> {
 
     if (this.mustBeASet && !ArrayAsserter.#checkArrayIsASet(value)) {
       issues.push("must not have duplicates");
-    }
-
-    for (let i = 0; i < value.length; i++) {
-      try {
-        this.elementAsserter.assert(value[i], `${i}`);
-      } catch (error) {
-        issues.push(error);
-      }
     }
 
     for (const { validate, requirements } of this.rules) {
