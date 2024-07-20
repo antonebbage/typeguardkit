@@ -9,7 +9,7 @@ export interface NumberAsserterOptions {
   readonly min?: NumberAsserterBound;
   readonly max?: NumberAsserterBound;
   readonly step?: number;
-  readonly rules?: NumberAsserterRule[];
+  readonly rules?: readonly NumberAsserterRule[];
 }
 
 /**
@@ -63,7 +63,7 @@ export class NumberAsserter implements Asserter<number> {
   readonly min: NumberAsserterBound | null;
   readonly max: NumberAsserterBound | null;
   readonly step: number | null;
-  readonly rules: NumberAsserterRule[];
+  readonly rules: readonly NumberAsserterRule[];
 
   constructor(
     typeName: string,
