@@ -1,3 +1,29 @@
+## [0.29.0](https://github.com/antonebbage/typeguardkit/compare/0.28.0...0.29.0) (2024-07-20)
+
+### ⚠ BREAKING CHANGES
+
+- change `undefined` `ArrayAsserter` properties to `null`
+- `ArrayAsserterOptions` is now generic and is no longer implemented by
+  `ArrayAsserter`.
+- make `StringAsserter` `rules` `readonly`
+- make `NumberAsserter` `rules` `readonly`
+
+### Features
+
+- add `ArrayAsserter` `rules` option
+  ([ee33d50](https://github.com/antonebbage/typeguardkit/commit/ee33d50a9fcde9a5fe5913248b51c7806f412546))
+- change `undefined` `ArrayAsserter` properties to `null`
+  ([f043984](https://github.com/antonebbage/typeguardkit/commit/f043984b8ada5d68660651334ac839dba5bcfccf))
+
+### Bug Fixes
+
+- check type of elements before further validation in `ArrayAsserter.assert`
+  ([0daf6c1](https://github.com/antonebbage/typeguardkit/commit/0daf6c196b7b7deab55081563755d317253bd886))
+- make `NumberAsserter` `rules` `readonly`
+  ([1794b02](https://github.com/antonebbage/typeguardkit/commit/1794b02d978b5f10db5c2db74f6858005b4b7030))
+- make `StringAsserter` `rules` `readonly`
+  ([9d164f9](https://github.com/antonebbage/typeguardkit/commit/9d164f9a106574755a57e19aeb43c626cc8b0734))
+
 ## [0.28.0](https://github.com/antonebbage/typeguardkit/compare/0.27.0...0.28.0) (2024-06-09)
 
 ### ⚠ BREAKING CHANGES
