@@ -17,9 +17,9 @@ import { Asserter } from "./asserter.ts";
  * export type ArrayOfString = ReturnType<typeof _ArrayOfString.assert>;
  * ```
  */
-export function array<Element>(
-  elementAsserter: Asserter<Element>,
-): ArrayAsserter<Element> {
+export function array<ElementAsserter extends Asserter<unknown>>(
+  elementAsserter: ElementAsserter,
+): ArrayAsserter<ElementAsserter> {
   return new ArrayAsserter(
     `Array<${elementAsserter.typeName}>`,
     elementAsserter,

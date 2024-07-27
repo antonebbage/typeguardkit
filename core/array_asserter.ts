@@ -92,19 +92,23 @@ export interface ArrayAsserterRule<Element> {
  * >;
  * ```
  */
-export class ArrayAsserter<Element> implements Asserter<Element[]> {
+export class ArrayAsserter<ElementAsserter extends Asserter<unknown>>
+  implements Asserter<Array<ReturnType<ElementAsserter["assert"]>>> {
   readonly typeName: string;
 
   readonly minLength: number | null;
   readonly maxLength: number | null;
   readonly mustBeASet: boolean;
-  readonly rules: ReadonlyArray<ArrayAsserterRule<Element>>;
+
+  readonly rules: ReadonlyArray<
+    ArrayAsserterRule<ReturnType<ElementAsserter["assert"]>>
+  >;
 
   constructor(
     typeName: string,
-    readonly elementAsserter: Asserter<Element>,
+    readonly elementAsserter: ElementAsserter,
     { minLength, maxLength, mustBeASet = false, rules }: ArrayAsserterOptions<
-      Element
+      ReturnType<ElementAsserter["assert"]>
     >,
   ) {
     if (
@@ -147,7 +151,10 @@ export class ArrayAsserter<Element> implements Asserter<Element[]> {
     this.rules = rules ?? [];
   }
 
-  assert(value: unknown, valueName?: string): Element[] {
+  assert(
+    value: unknown,
+    valueName?: string,
+  ): Array<ReturnType<ElementAsserter["assert"]>> {
     if (!Array.isArray(value)) {
       throw new TypeAssertionError(this.typeName, value, { valueName });
     }
