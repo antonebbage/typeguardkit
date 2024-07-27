@@ -45,7 +45,7 @@ export interface NumberAsserterRule {
  * Example:
  *
  * ```ts
- * import { NumberAsserter } from "../mod.ts";
+ * import { Asserted, NumberAsserter } from "../mod.ts";
  *
  * export const _EvenNumberInRange = new NumberAsserter("EvenNumberInRange", {
  *   min: { value: 0, inclusive: true },
@@ -53,7 +53,7 @@ export interface NumberAsserterRule {
  *   step: 2,
  * });
  *
- * export type EvenNumberInRange = ReturnType<typeof _EvenNumberInRange.assert>;
+ * export type EvenNumberInRange = Asserted<typeof _EvenNumberInRange>;
  * ```
  */
 export class NumberAsserter implements Asserter<number> {

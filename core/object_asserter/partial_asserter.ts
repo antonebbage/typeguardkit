@@ -12,7 +12,12 @@ import { ObjectAsserter } from "./object_asserter.ts";
  * Example:
  *
  * ```ts
- * import { _string, ObjectAsserter, PartialAsserter } from "../../mod.ts";
+ * import {
+ *   _string,
+ *   Asserted,
+ *   ObjectAsserter,
+ *   PartialAsserter,
+ * } from "../../mod.ts";
  *
  * export const _Options = new PartialAsserter(
  *   "Options",
@@ -23,7 +28,7 @@ import { ObjectAsserter } from "./object_asserter.ts";
  *   },
  * );
  *
- * export type Options = ReturnType<typeof _Options.assert>;
+ * export type Options = Asserted<typeof _Options>;
  * ```
  */
 export class PartialAsserter<
@@ -65,6 +70,6 @@ type PartialPropertyAsserters<
   PropertyAsserters extends Record<string, Asserter<unknown>>,
 > = {
   [Key in keyof PropertyAsserters]: PropertyAsserters[Key] extends
-    OptionAsserter<unknown> ? PropertyAsserters[Key]
-    : OptionAsserter<ReturnType<PropertyAsserters[Key]["assert"]>>;
+    OptionAsserter<Asserter<unknown>> ? PropertyAsserters[Key]
+    : OptionAsserter<PropertyAsserters[Key]>;
 };

@@ -11,7 +11,7 @@ import { PickAsserter } from "./pick_asserter.ts";
  * Example:
  *
  * ```ts
- * import { _string, ObjectAsserter, pick } from "../../mod.ts";
+ * import { _string, Asserted, ObjectAsserter, pick } from "../../mod.ts";
  *
  * // types/user.ts
  *
@@ -21,13 +21,13 @@ import { PickAsserter } from "./pick_asserter.ts";
  *   lastName: _string,
  * });
  *
- * export type User = ReturnType<typeof _User.assert>;
+ * export type User = Asserted<typeof _User>;
  *
  * // types/user_name.ts
  *
  * export const _UserName = pick(_User, ["firstName", "lastName"]);
  *
- * export type UserName = ReturnType<typeof _UserName.assert>;
+ * export type UserName = Asserted<typeof _UserName>;
  * ```
  */
 export function pick<

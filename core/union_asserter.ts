@@ -1,5 +1,6 @@
 // This module is browser-compatible.
 
+import { Asserted } from "./asserted.ts";
 import { Asserter } from "./asserter.ts";
 import { TypeAssertionError } from "./type_assertion_error.ts";
 
@@ -16,19 +17,19 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  * Example:
  *
  * ```ts
- * import { _null, _string, UnionAsserter } from "../mod.ts";
+ * import { _null, _string, Asserted, UnionAsserter } from "../mod.ts";
  *
  * export const _stringOrNull = new UnionAsserter(
  *   "stringOrNull",
  *   [_string, _null],
  * );
  *
- * export type stringOrNull = ReturnType<typeof _stringOrNull.assert>;
+ * export type stringOrNull = Asserted<typeof _stringOrNull>;
  * ```
  */
 export class UnionAsserter<
   Asserters extends ReadonlyArray<Asserter<unknown>>,
-> implements Asserter<ReturnType<Asserters[number]["assert"]>> {
+> implements Asserter<Asserted<Asserters[number]>> {
   readonly typeName: string;
 
   constructor(
@@ -41,7 +42,7 @@ export class UnionAsserter<
   assert(
     value: unknown,
     valueName?: string,
-  ): ReturnType<Asserters[number]["assert"]> {
+  ): Asserted<Asserters[number]> {
     for (const asserter of this.memberAsserters) {
       try {
         asserter.assert(value);
@@ -49,7 +50,7 @@ export class UnionAsserter<
         continue;
       }
 
-      return value as ReturnType<Asserters[number]["assert"]>;
+      return value as Asserted<Asserters[number]>;
     }
 
     throw new TypeAssertionError(this.typeName, value, { valueName });

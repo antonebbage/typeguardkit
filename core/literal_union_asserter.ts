@@ -15,14 +15,14 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  * Example:
  *
  * ```ts
- * import { LiteralUnionAsserter } from "../mod.ts";
+ * import { Asserted, LiteralUnionAsserter } from "../mod.ts";
  *
  * export const _Direction = new LiteralUnionAsserter(
  *   "Direction",
  *   ["up", "right", "down", "left"],
  * );
  *
- * export type Direction = ReturnType<typeof _Direction.assert>;
+ * export type Direction = Asserted<typeof _Direction>;
  * ```
  */
 export class LiteralUnionAsserter<

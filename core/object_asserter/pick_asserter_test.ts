@@ -4,6 +4,7 @@ import {
   _boolean,
   _number,
   _string,
+  Asserted,
   ObjectAsserter,
   TypeAssertionError,
 } from "../../mod.ts";
@@ -15,7 +16,7 @@ const _ObjectType = new ObjectAsserter("ObjectType", {
   c: _boolean,
 });
 
-const keys: Array<keyof ReturnType<typeof _ObjectType.assert>> = ["b", "c"];
+const keys: Array<keyof Asserted<typeof _ObjectType>> = ["b", "c"];
 
 const pickedObjectTypeName = "PickedObjectType";
 

@@ -1,5 +1,6 @@
 // This module is browser-compatible.
 
+import { Asserted } from "./asserted.ts";
 import { Asserter } from "./asserter.ts";
 import { TypeAssertionError } from "./type_assertion_error.ts";
 
@@ -17,7 +18,7 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  */
 export class OptionAsserter<
   DefinedTypeAsserter extends Asserter<unknown>,
-> implements Asserter<ReturnType<DefinedTypeAsserter["assert"]> | undefined> {
+> implements Asserter<Asserted<DefinedTypeAsserter> | undefined> {
   readonly typeName: string;
 
   constructor(
@@ -29,7 +30,7 @@ export class OptionAsserter<
   assert(
     value: unknown,
     valueName?: string,
-  ): ReturnType<DefinedTypeAsserter["assert"]> | undefined {
+  ): Asserted<DefinedTypeAsserter> | undefined {
     if (value === undefined) {
       return;
     }
@@ -40,6 +41,6 @@ export class OptionAsserter<
       throw new TypeAssertionError(this.typeName, value, { valueName });
     }
 
-    return value as ReturnType<DefinedTypeAsserter["assert"]>;
+    return value as Asserted<DefinedTypeAsserter>;
   }
 }

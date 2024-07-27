@@ -10,12 +10,12 @@ import { RecordAsserter } from "./record_asserter.ts";
  * Example:
  *
  * ```ts
- * import { _string, record } from "../mod.ts";
+ * import { _string, Asserted, record } from "../mod.ts";
  *
  * export const _RecordOfStringByString = record(_string, _string);
  *
- * export type RecordOfStringByString = ReturnType<
- *   typeof _RecordOfStringByString.assert
+ * export type RecordOfStringByString = Asserted<
+ *   typeof _RecordOfStringByString
  * >;
  * ```
  */

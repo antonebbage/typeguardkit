@@ -11,7 +11,7 @@ import { PartialAsserter } from "./partial_asserter.ts";
  * Example:
  *
  * ```ts
- * import { _string, ObjectAsserter, partial } from "../../mod.ts";
+ * import { _string, Asserted, ObjectAsserter, partial } from "../../mod.ts";
  *
  * // types/user_name.ts
  *
@@ -20,13 +20,13 @@ import { PartialAsserter } from "./partial_asserter.ts";
  *   lastName: _string,
  * });
  *
- * export type UserName = ReturnType<typeof _UserName.assert>;
+ * export type UserName = Asserted<typeof _UserName>;
  *
  * // types/user_name_update.ts
  *
  * export const _UserNameUpdate = partial(_UserName);
  *
- * export type UserNameUpdate = ReturnType<typeof _UserNameUpdate.assert>;
+ * export type UserNameUpdate = Asserted<typeof _UserNameUpdate>;
  * ```
  */
 export function partial<

@@ -1,5 +1,6 @@
 // This module is browser-compatible.
 
+import { Asserted } from "./asserted.ts";
 import { Asserter } from "./asserter.ts";
 import { LiteralUnionAsserter } from "./literal_union_asserter.ts";
 import { TypeAssertionError } from "./type_assertion_error.ts";
@@ -17,28 +18,22 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  * Example:
  *
  * ```ts
- * import { _string, RecordAsserter } from "../mod.ts";
+ * import { _string, Asserted, RecordAsserter } from "../mod.ts";
  *
  * export const _RecordOfStringByString = new RecordAsserter(
  *   "RecordOfStringByString",
  *   [_string, _string],
  * );
  *
- * export type RecordOfStringByString = ReturnType<
- *   typeof _RecordOfStringByString.assert
+ * export type RecordOfStringByString = Asserted<
+ *   typeof _RecordOfStringByString
  * >;
  * ```
  */
 export class RecordAsserter<
   KeyAsserter extends Asserter<string>,
   ValueAsserter extends Asserter<unknown>,
-> implements
-  Asserter<
-    Record<
-      ReturnType<KeyAsserter["assert"]>,
-      ReturnType<ValueAsserter["assert"]>
-    >
-  > {
+> implements Asserter<Record<Asserted<KeyAsserter>, Asserted<ValueAsserter>>> {
   readonly typeName: string;
 
   readonly keyAsserter: KeyAsserter;
@@ -57,10 +52,10 @@ export class RecordAsserter<
     this.valueAsserter = valueAsserter;
   }
 
-  assert(value: unknown, valueName?: string): Record<
-    ReturnType<KeyAsserter["assert"]>,
-    ReturnType<ValueAsserter["assert"]>
-  > {
+  assert(
+    value: unknown,
+    valueName?: string,
+  ): Record<Asserted<KeyAsserter>, Asserted<ValueAsserter>> {
     if (typeof value !== "object" || Array.isArray(value) || value === null) {
       throw new TypeAssertionError(this.typeName, value, { valueName });
     }
@@ -93,9 +88,6 @@ export class RecordAsserter<
       throw new TypeAssertionError(this.typeName, value, { valueName, issues });
     }
 
-    return value as Record<
-      ReturnType<KeyAsserter["assert"]>,
-      ReturnType<ValueAsserter["assert"]>
-    >;
+    return value as Record<Asserted<KeyAsserter>, Asserted<ValueAsserter>>;
   }
 }

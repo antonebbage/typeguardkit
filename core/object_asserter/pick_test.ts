@@ -8,6 +8,7 @@ import {
   _boolean,
   _number,
   _string,
+  Asserted,
   ObjectAsserter,
   PickAsserter,
   TypeAssertionError,
@@ -21,7 +22,7 @@ describe("pick", () => {
     c: _boolean,
   });
 
-  const keys: Array<keyof ReturnType<typeof _ObjectType.assert>> = ["b", "c"];
+  const keys: Array<keyof Asserted<typeof _ObjectType>> = ["b", "c"];
 
   const _PickedObjectType = pick(_ObjectType, keys);
 

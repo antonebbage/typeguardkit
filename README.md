@@ -48,6 +48,7 @@ import {
   _PositiveInteger,
   _string,
   array,
+  Asserted,
   ObjectAsserter,
   union,
 } from "./mod.ts";
@@ -63,7 +64,7 @@ export const _Book = new ObjectAsserter("Book", {
   recommended: _boolean,
 });
 
-export type Book = ReturnType<typeof _Book.assert>;
+export type Book = Asserted<typeof _Book>;
 
 // api/get_book.ts
 
@@ -208,7 +209,7 @@ created `NumberAsserter`.
 Example:
 
 ```ts
-import { NumberAsserter } from "./mod.ts";
+import { Asserted, NumberAsserter } from "./mod.ts";
 
 export const _EvenNumberInRange = new NumberAsserter("EvenNumberInRange", {
   min: { value: 0, inclusive: true },
@@ -216,7 +217,7 @@ export const _EvenNumberInRange = new NumberAsserter("EvenNumberInRange", {
   step: 2,
 });
 
-export type EvenNumberInRange = ReturnType<typeof _EvenNumberInRange.assert>;
+export type EvenNumberInRange = Asserted<typeof _EvenNumberInRange>;
 ```
 
 ### `StringAsserter`
@@ -230,19 +231,19 @@ created `StringAsserter`.
 Example:
 
 ```ts
-import { StringAsserter } from "./mod.ts";
+import { Asserted, StringAsserter } from "./mod.ts";
 
 export const _NonEmptyString = new StringAsserter("NonEmptyString", {
   minLength: 1,
 });
 
-export type NonEmptyString = ReturnType<typeof _NonEmptyString.assert>;
+export type NonEmptyString = Asserted<typeof _NonEmptyString>;
 
 export const _NumericString = new StringAsserter("NumericString", {
   regex: { pattern: "\\d+", requirements: ["must be numeric"] },
 });
 
-export type NumericString = ReturnType<typeof _NumericString.assert>;
+export type NumericString = Asserted<typeof _NumericString>;
 
 export const _Palindrome = new StringAsserter("Palindrome", {
   rules: [
@@ -263,7 +264,7 @@ export const _Palindrome = new StringAsserter("Palindrome", {
   ],
 });
 
-export type Palindrome = ReturnType<typeof _Palindrome.assert>;
+export type Palindrome = Asserted<typeof _Palindrome>;
 ```
 
 ### `LiteralUnionAsserter`
@@ -276,14 +277,14 @@ The provided `values` are made accessible as a property of the created
 Example:
 
 ```ts
-import { LiteralUnionAsserter } from "./mod.ts";
+import { Asserted, LiteralUnionAsserter } from "./mod.ts";
 
 export const _Direction = new LiteralUnionAsserter(
   "Direction",
   ["up", "right", "down", "left"],
 );
 
-export type Direction = ReturnType<typeof _Direction.assert>;
+export type Direction = Asserted<typeof _Direction>;
 ```
 
 ### `EnumAsserter`
@@ -320,14 +321,14 @@ The provided `memberAsserters` are made accessible as a property of the created
 Example:
 
 ```ts
-import { _null, _string, UnionAsserter } from "./mod.ts";
+import { _null, _string, Asserted, UnionAsserter } from "./mod.ts";
 
 export const _stringOrNull = new UnionAsserter(
   "stringOrNull",
   [_string, _null],
 );
 
-export type stringOrNull = ReturnType<typeof _stringOrNull.assert>;
+export type stringOrNull = Asserted<typeof _stringOrNull>;
 ```
 
 #### `union`
@@ -338,11 +339,11 @@ a `typeName`.
 Example:
 
 ```ts
-import { _null, _string, union } from "./mod.ts";
+import { _null, _string, Asserted, union } from "./mod.ts";
 
 export const _stringOrNull = union(_string, _null);
 
-export type stringOrNull = ReturnType<typeof _stringOrNull.assert>;
+export type stringOrNull = Asserted<typeof _stringOrNull>;
 ```
 
 ### `ArrayAsserter`
@@ -357,7 +358,7 @@ properties of the created `ArrayAsserter`.
 Example:
 
 ```ts
-import { _number, _string, ArrayAsserter } from "./mod.ts";
+import { _number, _string, ArrayAsserter, Asserted } from "./mod.ts";
 
 export const _NonEmptyArrayOfString = new ArrayAsserter(
   "NonEmptyArrayOfString",
@@ -365,9 +366,7 @@ export const _NonEmptyArrayOfString = new ArrayAsserter(
   { minLength: 1 },
 );
 
-export type NonEmptyArrayOfString = ReturnType<
-  typeof _NonEmptyArrayOfString.assert
->;
+export type NonEmptyArrayOfString = Asserted<typeof _NonEmptyArrayOfString>;
 
 export const _ArraySetOfString = new ArrayAsserter(
   "ArraySetOfString",
@@ -375,7 +374,7 @@ export const _ArraySetOfString = new ArrayAsserter(
   { mustBeASet: true },
 );
 
-export type ArraySetOfString = ReturnType<typeof _ArraySetOfString.assert>;
+export type ArraySetOfString = Asserted<typeof _ArraySetOfString>;
 
 export const _AscendingArrayOfNumber = new ArrayAsserter(
   "AscendingArrayOfNumber",
@@ -399,9 +398,7 @@ export const _AscendingArrayOfNumber = new ArrayAsserter(
   },
 );
 
-export type AscendingArrayOfNumber = ReturnType<
-  typeof _AscendingArrayOfNumber.assert
->;
+export type AscendingArrayOfNumber = Asserted<typeof _AscendingArrayOfNumber>;
 ```
 
 #### `array`
@@ -412,11 +409,11 @@ a `typeName` or `ArrayAsserterOptions`.
 Example:
 
 ```ts
-import { _string, array } from "./mod.ts";
+import { _string, array, Asserted } from "./mod.ts";
 
 export const _ArrayOfString = array(_string);
 
-export type ArrayOfString = ReturnType<typeof _ArrayOfString.assert>;
+export type ArrayOfString = Asserted<typeof _ArrayOfString>;
 ```
 
 ### `RecordAsserter`
@@ -430,16 +427,14 @@ of the created `RecordAsserter`.
 Example:
 
 ```ts
-import { _string, RecordAsserter } from "./mod.ts";
+import { _string, Asserted, RecordAsserter } from "./mod.ts";
 
 export const _RecordOfStringByString = new RecordAsserter(
   "RecordOfStringByString",
   [_string, _string],
 );
 
-export type RecordOfStringByString = ReturnType<
-  typeof _RecordOfStringByString.assert
->;
+export type RecordOfStringByString = Asserted<typeof _RecordOfStringByString>;
 ```
 
 #### `record`
@@ -450,13 +445,11 @@ specifying a `typeName`.
 Example:
 
 ```ts
-import { _string, record } from "./mod.ts";
+import { _string, Asserted, record } from "./mod.ts";
 
 export const _RecordOfStringByString = record(_string, _string);
 
-export type RecordOfStringByString = ReturnType<
-  typeof _RecordOfStringByString.assert
->;
+export type RecordOfStringByString = Asserted<typeof _RecordOfStringByString>;
 ```
 
 ### `ObjectAsserter`
@@ -470,14 +463,14 @@ created `ObjectAsserter`.
 Example:
 
 ```ts
-import { _string, ObjectAsserter, option } from "./mod.ts";
+import { _string, Asserted, ObjectAsserter, option } from "./mod.ts";
 
 export const _User = new ObjectAsserter("User", {
   name: _string,
   emailAddress: option(_string),
 });
 
-export type User = ReturnType<typeof _User.assert>;
+export type User = Asserted<typeof _User>;
 ```
 
 ### `ObjectIntersectionAsserter`
@@ -488,7 +481,12 @@ the asserted types of the provided `ObjectAsserter`s.
 Example:
 
 ```ts
-import { _string, ObjectAsserter, ObjectIntersectionAsserter } from "./mod.ts";
+import {
+  _string,
+  Asserted,
+  ObjectAsserter,
+  ObjectIntersectionAsserter,
+} from "./mod.ts";
 
 // types/entity.ts
 
@@ -496,7 +494,7 @@ export const _Entity = new ObjectAsserter("Entity", {
   id: _string,
 });
 
-export type Entity = ReturnType<typeof _Entity.assert>;
+export type Entity = Asserted<typeof _Entity>;
 
 // types/user.ts
 
@@ -511,7 +509,7 @@ export const _User = new ObjectIntersectionAsserter(
   ],
 );
 
-export type User = ReturnType<typeof _User.assert>;
+export type User = Asserted<typeof _User>;
 ```
 
 #### `objectIntersection`
@@ -522,7 +520,12 @@ The `objectIntersection` function can be used to create an
 Example:
 
 ```ts
-import { _string, ObjectAsserter, objectIntersection } from "./mod.ts";
+import {
+  _string,
+  Asserted,
+  ObjectAsserter,
+  objectIntersection,
+} from "./mod.ts";
 
 // types/a.ts
 
@@ -530,7 +533,7 @@ export const _A = new ObjectAsserter("A", {
   a: _string,
 });
 
-export type A = ReturnType<typeof _A.assert>;
+export type A = Asserted<typeof _A>;
 
 // types/b.ts
 
@@ -538,13 +541,13 @@ export const _B = new ObjectAsserter("B", {
   b: _string,
 });
 
-export type B = ReturnType<typeof _B.assert>;
+export type B = Asserted<typeof _B>;
 
 // types/c.ts
 
 export const _C = objectIntersection(_A, _B);
 
-export type C = ReturnType<typeof _C.assert>;
+export type C = Asserted<typeof _C>;
 ```
 
 ### `PartialAsserter`
@@ -555,7 +558,7 @@ A `PartialAsserter` is an `ObjectAsserter` for the asserted type of the provided
 Example:
 
 ```ts
-import { _string, ObjectAsserter, PartialAsserter } from "./mod.ts";
+import { _string, Asserted, ObjectAsserter, PartialAsserter } from "./mod.ts";
 
 export const _Options = new PartialAsserter(
   "Options",
@@ -566,7 +569,7 @@ export const _Options = new PartialAsserter(
   },
 );
 
-export type Options = ReturnType<typeof _Options.assert>;
+export type Options = Asserted<typeof _Options>;
 ```
 
 #### `partial`
@@ -577,7 +580,7 @@ specifying a `typeName`.
 Example:
 
 ```ts
-import { _string, ObjectAsserter, partial } from "./mod.ts";
+import { _string, Asserted, ObjectAsserter, partial } from "./mod.ts";
 
 // types/user_name.ts
 
@@ -586,13 +589,13 @@ export const _UserName = new ObjectAsserter("UserName", {
   lastName: _string,
 });
 
-export type UserName = ReturnType<typeof _UserName.assert>;
+export type UserName = Asserted<typeof _UserName>;
 
 // types/user_name_update.ts
 
 export const _UserNameUpdate = partial(_UserName);
 
-export type UserNameUpdate = ReturnType<typeof _UserNameUpdate.assert>;
+export type UserNameUpdate = Asserted<typeof _UserNameUpdate>;
 ```
 
 ### `PickAsserter`
@@ -604,7 +607,7 @@ set of properties `Keys` from the asserted type of the provided
 Example:
 
 ```ts
-import { _string, ObjectAsserter, PickAsserter } from "./mod.ts";
+import { _string, Asserted, ObjectAsserter, PickAsserter } from "./mod.ts";
 
 // types/user.ts
 
@@ -614,7 +617,7 @@ export const _User = new ObjectAsserter("User", {
   lastName: _string,
 });
 
-export type User = ReturnType<typeof _User.assert>;
+export type User = Asserted<typeof _User>;
 
 // types/user_name.ts
 
@@ -624,7 +627,7 @@ export const _UserName = new PickAsserter(
   ["firstName", "lastName"],
 );
 
-export type UserName = ReturnType<typeof _UserName.assert>;
+export type UserName = Asserted<typeof _UserName>;
 ```
 
 #### `pick`
@@ -635,7 +638,7 @@ The `pick` function can be used to create a `PickAsserter` without specifying a
 Example:
 
 ```ts
-import { _string, ObjectAsserter, pick } from "./mod.ts";
+import { _string, Asserted, ObjectAsserter, pick } from "./mod.ts";
 
 // types/user.ts
 
@@ -645,13 +648,13 @@ export const _User = new ObjectAsserter("User", {
   lastName: _string,
 });
 
-export type User = ReturnType<typeof _User.assert>;
+export type User = Asserted<typeof _User>;
 
 // types/user_name.ts
 
 export const _UserName = pick(_User, ["firstName", "lastName"]);
 
-export type UserName = ReturnType<typeof _UserName.assert>;
+export type UserName = Asserted<typeof _UserName>;
 ```
 
 ### The `TypeAssertionError` issue tree
@@ -674,6 +677,7 @@ for example:
 import {
   _NonNegativeInteger,
   _string,
+  Asserted,
   assertIs,
   is,
   ObjectAsserter,
@@ -686,7 +690,7 @@ export const _Item = new ObjectAsserter("Item", {
   quantity: _NonNegativeInteger,
 });
 
-export type Item = ReturnType<typeof _Item.assert>;
+export type Item = Asserted<typeof _Item>;
 
 // types/form.ts
 
@@ -694,7 +698,7 @@ export const _Form = new ObjectAsserter("Form", {
   item: _Item,
 });
 
-export type Form = ReturnType<typeof _Form.assert>;
+export type Form = Asserted<typeof _Form>;
 
 // elsewhere.ts
 

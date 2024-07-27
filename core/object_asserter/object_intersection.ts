@@ -11,7 +11,12 @@ import { ObjectIntersectionAsserter } from "./object_intersection_asserter.ts";
  * Example:
  *
  * ```ts
- * import { _string, ObjectAsserter, objectIntersection } from "../../mod.ts";
+ * import {
+ *   _string,
+ *   Asserted,
+ *   ObjectAsserter,
+ *   objectIntersection,
+ * } from "../../mod.ts";
  *
  * // types/a.ts
  *
@@ -19,7 +24,7 @@ import { ObjectIntersectionAsserter } from "./object_intersection_asserter.ts";
  *   a: _string,
  * });
  *
- * export type A = ReturnType<typeof _A.assert>;
+ * export type A = Asserted<typeof _A>;
  *
  * // types/b.ts
  *
@@ -27,13 +32,13 @@ import { ObjectIntersectionAsserter } from "./object_intersection_asserter.ts";
  *   b: _string,
  * });
  *
- * export type B = ReturnType<typeof _B.assert>;
+ * export type B = Asserted<typeof _B>;
  *
  * // types/c.ts
  *
  * export const _C = objectIntersection(_A, _B);
  *
- * export type C = ReturnType<typeof _C.assert>;
+ * export type C = Asserted<typeof _C>;
  * ```
  */
 export function objectIntersection<

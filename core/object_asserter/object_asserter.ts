@@ -1,5 +1,6 @@
 // This module is browser-compatible.
 
+import { Asserted } from "../asserted.ts";
 import { Asserter } from "../asserter.ts";
 import { OptionAsserter } from "../option_asserter.ts";
 import { TypeAssertionError } from "../type_assertion_error.ts";
@@ -15,14 +16,14 @@ import { SimplifiedTooltipRepresentation } from "./_simplified_tooltip_represent
  * Example:
  *
  * ```ts
- * import { _string, ObjectAsserter, option } from "../../mod.ts";
+ * import { _string, Asserted, ObjectAsserter, option } from "../../mod.ts";
  *
  * export const _User = new ObjectAsserter("User", {
  *   name: _string,
  *   emailAddress: option(_string),
  * });
  *
- * export type User = ReturnType<typeof _User.assert>;
+ * export type User = Asserted<typeof _User>;
  * ```
  */
 export class ObjectAsserter<
@@ -70,15 +71,13 @@ type AssertedObject<
   & {
     [
       Key in keyof PropertyAsserters as PropertyAsserters[Key] extends
-        OptionAsserter<unknown> ? never
-        : Key
-    ]: ReturnType<PropertyAsserters[Key]["assert"]>;
+        OptionAsserter<Asserter<unknown>> ? never : Key
+    ]: Asserted<PropertyAsserters[Key]>;
   }
   & {
     [
       Key in keyof PropertyAsserters as PropertyAsserters[Key] extends
-        OptionAsserter<unknown> ? Key
-        : never
-    ]?: ReturnType<PropertyAsserters[Key]["assert"]>;
+        OptionAsserter<Asserter<unknown>> ? Key : never
+    ]?: Asserted<PropertyAsserters[Key]>;
   }
 >;

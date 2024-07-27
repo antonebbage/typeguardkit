@@ -12,7 +12,12 @@ import { ObjectAsserter } from "./object_asserter.ts";
  * Example:
  *
  * ```ts
- * import { _string, ObjectAsserter, PickAsserter } from "../../mod.ts";
+ * import {
+ *   _string,
+ *   Asserted,
+ *   ObjectAsserter,
+ *   PickAsserter,
+ * } from "../../mod.ts";
  *
  * // types/user.ts
  *
@@ -22,7 +27,7 @@ import { ObjectAsserter } from "./object_asserter.ts";
  *   lastName: _string,
  * });
  *
- * export type User = ReturnType<typeof _User.assert>;
+ * export type User = Asserted<typeof _User>;
  *
  * // types/user_name.ts
  *
@@ -32,7 +37,7 @@ import { ObjectAsserter } from "./object_asserter.ts";
  *   ["firstName", "lastName"],
  * );
  *
- * export type UserName = ReturnType<typeof _UserName.assert>;
+ * export type UserName = Asserted<typeof _UserName>;
  * ```
  */
 export class PickAsserter<

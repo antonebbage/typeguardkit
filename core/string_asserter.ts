@@ -53,19 +53,19 @@ export interface StringAsserterRule {
  * Example:
  *
  * ```ts
- * import { StringAsserter } from "./mod.ts";
+ * import { Asserted, StringAsserter } from "./mod.ts";
  *
  * export const _NonEmptyString = new StringAsserter("NonEmptyString", {
  *   minLength: 1,
  * });
  *
- * export type NonEmptyString = ReturnType<typeof _NonEmptyString.assert>;
+ * export type NonEmptyString = Asserted<typeof _NonEmptyString>;
  *
  * export const _NumericString = new StringAsserter("NumericString", {
  *   regex: { pattern: "\\d+", requirements: ["must be numeric"] },
  * });
  *
- * export type NumericString = ReturnType<typeof _NumericString.assert>;
+ * export type NumericString = Asserted<typeof _NumericString>;
  *
  * export const _Palindrome = new StringAsserter("Palindrome", {
  *   rules: [
@@ -86,7 +86,7 @@ export interface StringAsserterRule {
  *   ],
  * });
  *
- * export type Palindrome = ReturnType<typeof _Palindrome.assert>;
+ * export type Palindrome = Asserted<typeof _Palindrome>;
  * ```
  */
 export class StringAsserter implements Asserter<string> {

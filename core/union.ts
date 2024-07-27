@@ -10,11 +10,11 @@ import { UnionAsserter } from "./union_asserter.ts";
  * Example:
  *
  * ```ts
- * import { _null, _string, union } from "../mod.ts";
+ * import { _null, _string, Asserted, union } from "../mod.ts";
  *
  * export const _stringOrNull = union(_string, _null);
  *
- * export type stringOrNull = ReturnType<typeof _stringOrNull.assert>;
+ * export type stringOrNull = Asserted<typeof _stringOrNull>;
  * ```
  */
 export function union<Asserters extends ReadonlyArray<Asserter<unknown>>>(

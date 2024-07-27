@@ -10,11 +10,11 @@ import { Asserter } from "./asserter.ts";
  * Example:
  *
  * ```ts
- * import { _string, array } from "../mod.ts";
+ * import { _string, array, Asserted } from "../mod.ts";
  *
  * export const _ArrayOfString = array(_string);
  *
- * export type ArrayOfString = ReturnType<typeof _ArrayOfString.assert>;
+ * export type ArrayOfString = Asserted<typeof _ArrayOfString>;
  * ```
  */
 export function array<ElementAsserter extends Asserter<unknown>>(

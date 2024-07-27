@@ -1,5 +1,6 @@
 // This module is browser-compatible.
 
+import { Asserted } from "./asserted.ts";
 import { Asserter } from "./asserter.ts";
 import { TypeAssertionError } from "./type_assertion_error.ts";
 
@@ -45,7 +46,7 @@ export interface ArrayAsserterRule<Element> {
  * Example:
  *
  * ```ts
- * import { _number, _string, ArrayAsserter } from "../mod.ts";
+ * import { _number, _string, ArrayAsserter, Asserted } from "../mod.ts";
  *
  * export const _NonEmptyArrayOfString = new ArrayAsserter(
  *   "NonEmptyArrayOfString",
@@ -53,9 +54,7 @@ export interface ArrayAsserterRule<Element> {
  *   { minLength: 1 },
  * );
  *
- * export type NonEmptyArrayOfString = ReturnType<
- *   typeof _NonEmptyArrayOfString.assert
- * >;
+ * export type NonEmptyArrayOfString = Asserted<typeof _NonEmptyArrayOfString>;
  *
  * export const _ArraySetOfString = new ArrayAsserter(
  *   "ArraySetOfString",
@@ -63,7 +62,7 @@ export interface ArrayAsserterRule<Element> {
  *   { mustBeASet: true },
  * );
  *
- * export type ArraySetOfString = ReturnType<typeof _ArraySetOfString.assert>;
+ * export type ArraySetOfString = Asserted<typeof _ArraySetOfString>;
  *
  * export const _AscendingArrayOfNumber = new ArrayAsserter(
  *   "AscendingArrayOfNumber",
@@ -87,28 +86,25 @@ export interface ArrayAsserterRule<Element> {
  *   },
  * );
  *
- * export type AscendingArrayOfNumber = ReturnType<
- *   typeof _AscendingArrayOfNumber.assert
+ * export type AscendingArrayOfNumber = Asserted<
+ *   typeof _AscendingArrayOfNumber
  * >;
  * ```
  */
 export class ArrayAsserter<ElementAsserter extends Asserter<unknown>>
-  implements Asserter<Array<ReturnType<ElementAsserter["assert"]>>> {
+  implements Asserter<Array<Asserted<ElementAsserter>>> {
   readonly typeName: string;
 
   readonly minLength: number | null;
   readonly maxLength: number | null;
   readonly mustBeASet: boolean;
-
-  readonly rules: ReadonlyArray<
-    ArrayAsserterRule<ReturnType<ElementAsserter["assert"]>>
-  >;
+  readonly rules: ReadonlyArray<ArrayAsserterRule<Asserted<ElementAsserter>>>;
 
   constructor(
     typeName: string,
     readonly elementAsserter: ElementAsserter,
     { minLength, maxLength, mustBeASet = false, rules }: ArrayAsserterOptions<
-      ReturnType<ElementAsserter["assert"]>
+      Asserted<ElementAsserter>
     >,
   ) {
     if (
@@ -154,7 +150,7 @@ export class ArrayAsserter<ElementAsserter extends Asserter<unknown>>
   assert(
     value: unknown,
     valueName?: string,
-  ): Array<ReturnType<ElementAsserter["assert"]>> {
+  ): Array<Asserted<ElementAsserter>> {
     if (!Array.isArray(value)) {
       throw new TypeAssertionError(this.typeName, value, { valueName });
     }

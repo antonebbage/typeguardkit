@@ -3,6 +3,7 @@
 export * from "./array.ts";
 export * from "./array_asserter.ts";
 export * from "./assert_is.ts";
+export * from "./asserted.ts";
 export * from "./asserter.ts";
 export * from "./enum_asserter.ts";
 export * from "./is.ts";

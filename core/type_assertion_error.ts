@@ -115,6 +115,7 @@ export class TypeAssertionError extends TypeError {
    * import {
    *   _NonNegativeInteger,
    *   _string,
+   *   Asserted,
    *   assertIs,
    *   is,
    *   ObjectAsserter,
@@ -127,7 +128,7 @@ export class TypeAssertionError extends TypeError {
    *   quantity: _NonNegativeInteger,
    * });
    *
-   * export type Item = ReturnType<typeof _Item.assert>;
+   * export type Item = Asserted<typeof _Item>;
    *
    * // types/form.ts
    *
@@ -135,7 +136,7 @@ export class TypeAssertionError extends TypeError {
    *   item: _Item,
    * });
    *
-   * export type Form = ReturnType<typeof _Form.assert>;
+   * export type Form = Asserted<typeof _Form>;
    *
    * // elsewhere.ts
    *

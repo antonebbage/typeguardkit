@@ -16,6 +16,7 @@ import { ObjectAsserter } from "./object_asserter.ts";
  * ```ts
  * import {
  *   _string,
+ *   Asserted,
  *   ObjectAsserter,
  *   ObjectIntersectionAsserter,
  * } from "../../mod.ts";
@@ -26,7 +27,7 @@ import { ObjectAsserter } from "./object_asserter.ts";
  *   id: _string,
  * });
  *
- * export type Entity = ReturnType<typeof _Entity.assert>;
+ * export type Entity = Asserted<typeof _Entity>;
  *
  * // types/user.ts
  *
@@ -41,7 +42,7 @@ import { ObjectAsserter } from "./object_asserter.ts";
  *   ],
  * );
  *
- * export type User = ReturnType<typeof _User.assert>;
+ * export type User = Asserted<typeof _User>;
  * ```
  */
 export class ObjectIntersectionAsserter<
