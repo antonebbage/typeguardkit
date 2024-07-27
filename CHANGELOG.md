@@ -1,3 +1,22 @@
+## [0.30.0](https://github.com/antonebbage/typeguardkit/compare/0.29.0...0.30.0) (2024-07-27)
+
+### ⚠ BREAKING CHANGES
+
+- the `OptionAsserter` generic type parameter has changed.
+- the `RecordAsserter` generic type parameters have changed.
+- the `ArrayAsserter` generic type parameter has changed.
+
+### Features
+
+- add `Asserted` utility type
+  ([4f4b7e1](https://github.com/antonebbage/typeguardkit/commit/4f4b7e1ca18601ec1625e762f10cb78f4cb17659))
+- allow `ArrayAsserter.elementAsserter` type to be more specific
+  ([065bdbb](https://github.com/antonebbage/typeguardkit/commit/065bdbbe6858840735ddb645ebbb53df81ea6276))
+- allow `OptionAsserter.definedTypeAsserter` type to be more specific
+  ([458b186](https://github.com/antonebbage/typeguardkit/commit/458b1866bd0d2927826156f19dc0395b0854a14d))
+- allow `RecordAsserter` asserter property types to be more specific
+  ([474c820](https://github.com/antonebbage/typeguardkit/commit/474c820b1f6fc1b755ee7c9780cf993d082b08ca))
+
 ## [0.29.0](https://github.com/antonebbage/typeguardkit/compare/0.28.0...0.29.0) (2024-07-20)
 
 ### ⚠ BREAKING CHANGES
