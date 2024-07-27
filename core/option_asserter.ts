@@ -4,8 +4,8 @@ import { Asserter } from "./asserter.ts";
 import { TypeAssertionError } from "./type_assertion_error.ts";
 
 /**
- * An `OptionAsserter` is an `Asserter` for the union of the `DefinedType` of
- * its `definedTypeAsserter` with `undefined`.
+ * An `OptionAsserter` is an `Asserter` for the union of the `Type` of its
+ * `definedTypeAsserter` with `undefined`.
  *
  * Example:
  *
@@ -16,17 +16,20 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  * ```
  */
 export class OptionAsserter<
-  DefinedType,
-> implements Asserter<DefinedType | undefined> {
+  DefinedTypeAsserter extends Asserter<unknown>,
+> implements Asserter<ReturnType<DefinedTypeAsserter["assert"]> | undefined> {
   readonly typeName: string;
 
   constructor(
-    readonly definedTypeAsserter: Asserter<DefinedType>,
+    readonly definedTypeAsserter: DefinedTypeAsserter,
   ) {
     this.typeName = `${definedTypeAsserter.typeName} | undefined`;
   }
 
-  assert(value: unknown, valueName?: string): DefinedType | undefined {
+  assert(
+    value: unknown,
+    valueName?: string,
+  ): ReturnType<DefinedTypeAsserter["assert"]> | undefined {
     if (value === undefined) {
       return;
     }
@@ -37,6 +40,6 @@ export class OptionAsserter<
       throw new TypeAssertionError(this.typeName, value, { valueName });
     }
 
-    return value as DefinedType;
+    return value as ReturnType<DefinedTypeAsserter["assert"]>;
   }
 }
