@@ -2,7 +2,6 @@
 
 import { Asserter } from "./asserter.ts";
 import { LiteralUnionAsserter } from "./literal_union_asserter.ts";
-import { TypeAsserter } from "./type_asserter.ts";
 import { TypeAssertionError } from "./type_assertion_error.ts";
 
 /**
@@ -30,24 +29,26 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  * >;
  * ```
  */
-export class RecordAsserter<Key extends string, Value>
-  implements Asserter<Record<Key, Value>> {
+export class RecordAsserter<
+  KeyAsserter extends Asserter<string>,
+  ValueAsserter extends Asserter<unknown>,
+> implements
+  Asserter<
+    Record<
+      ReturnType<KeyAsserter["assert"]>,
+      ReturnType<ValueAsserter["assert"]>
+    >
+  > {
   readonly typeName: string;
 
-  readonly keyAsserter:
-    | TypeAsserter<Key>
-    | LiteralUnionAsserter<readonly Key[]>;
-
-  readonly valueAsserter: Asserter<Value>;
+  readonly keyAsserter: KeyAsserter;
+  readonly valueAsserter: ValueAsserter;
 
   constructor(
     typeName: string,
     [keyAsserter, valueAsserter]: [
-      keyAsserter:
-        | TypeAsserter<Key>
-        | LiteralUnionAsserter<readonly Key[]>,
-
-      valueAsserter: Asserter<Value>,
+      keyAsserter: KeyAsserter,
+      valueAsserter: ValueAsserter,
     ],
   ) {
     this.typeName = typeName || "UnnamedRecord";
@@ -56,7 +57,10 @@ export class RecordAsserter<Key extends string, Value>
     this.valueAsserter = valueAsserter;
   }
 
-  assert(value: unknown, valueName?: string): Record<Key, Value> {
+  assert(value: unknown, valueName?: string): Record<
+    ReturnType<KeyAsserter["assert"]>,
+    ReturnType<ValueAsserter["assert"]>
+  > {
     if (typeof value !== "object" || Array.isArray(value) || value === null) {
       throw new TypeAssertionError(this.typeName, value, { valueName });
     }
@@ -89,6 +93,9 @@ export class RecordAsserter<Key extends string, Value>
       throw new TypeAssertionError(this.typeName, value, { valueName, issues });
     }
 
-    return value as Record<Key, Value>;
+    return value as Record<
+      ReturnType<KeyAsserter["assert"]>,
+      ReturnType<ValueAsserter["assert"]>
+    >;
   }
 }

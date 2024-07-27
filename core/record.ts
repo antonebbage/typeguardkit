@@ -1,9 +1,7 @@
 // This module is browser-compatible.
 
 import { Asserter } from "./asserter.ts";
-import { LiteralUnionAsserter } from "./literal_union_asserter.ts";
 import { RecordAsserter } from "./record_asserter.ts";
-import { TypeAsserter } from "./type_asserter.ts";
 
 /**
  * `record` can be used to create a `RecordAsserter` without specifying a
@@ -21,10 +19,13 @@ import { TypeAsserter } from "./type_asserter.ts";
  * >;
  * ```
  */
-export function record<Key extends string, Value>(
-  keyAsserter: TypeAsserter<Key> | LiteralUnionAsserter<readonly Key[]>,
-  valueAsserter: Asserter<Value>,
-): RecordAsserter<Key, Value> {
+export function record<
+  KeyAsserter extends Asserter<string>,
+  ValueAsserter extends Asserter<unknown>,
+>(
+  keyAsserter: KeyAsserter,
+  valueAsserter: ValueAsserter,
+): RecordAsserter<KeyAsserter, ValueAsserter> {
   return new RecordAsserter(
     `Record<${keyAsserter.typeName}, ${valueAsserter.typeName}>`,
     [keyAsserter, valueAsserter],
