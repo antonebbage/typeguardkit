@@ -37,25 +37,25 @@ describe("ObjectAsserter.assert", () => {
   });
 
   it("should throw a `TypeAssertionError` with correct `message` when `value` is not an object, or any of the `propertyAsserters` throw an error for the corresponding property of `value`", () => {
-    const object = { stringValue: 0, numberValue: "" };
+    const object1 = { stringValue: 0, numberValue: "" };
 
     assertThrows(
-      () => _ObjectType.assert(object, "name"),
+      () => _ObjectType.assert(object1, "name"),
       TypeAssertionError,
-      new TypeAssertionError(_ObjectType.typeName, object, {
+      new TypeAssertionError(_ObjectType.typeName, object1, {
         valueName: "name",
 
         issues: [
           new TypeAssertionError(
             _ObjectType.propertyAsserters.stringValue.typeName,
-            object.stringValue,
-            { valueName: "stringValue" },
+            object1.stringValue,
+            { valueName: ".stringValue" },
           ),
 
           new TypeAssertionError(
             _ObjectType.propertyAsserters.numberValue.typeName,
-            object.numberValue,
-            { valueName: "numberValue" },
+            object1.numberValue,
+            { valueName: ".numberValue" },
           ),
         ],
       })
@@ -63,25 +63,38 @@ describe("ObjectAsserter.assert", () => {
     );
 
     const unnamedAsserter = new ObjectAsserter("", {
-      stringValue: _string,
-      numberValue: _number,
+      "string-value-1": _string,
+      "string value 2": _string,
+      "3rdStringValue": _string,
     });
 
+    const object2 = {
+      "string-value-1": 0,
+      "string value 2": 0,
+      "3rdStringValue": 0,
+    };
+
     assertThrows(
-      () => unnamedAsserter.assert(object),
+      () => unnamedAsserter.assert(object2),
       TypeAssertionError,
-      new TypeAssertionError(unnamedAsserter.typeName, object, {
+      new TypeAssertionError(unnamedAsserter.typeName, object2, {
         issues: [
           new TypeAssertionError(
-            unnamedAsserter.propertyAsserters.stringValue.typeName,
-            object.stringValue,
-            { valueName: "stringValue" },
+            unnamedAsserter.propertyAsserters["string-value-1"].typeName,
+            object1.stringValue,
+            { valueName: `["string-value-1"]` },
           ),
 
           new TypeAssertionError(
-            unnamedAsserter.propertyAsserters.numberValue.typeName,
-            object.numberValue,
-            { valueName: "numberValue" },
+            unnamedAsserter.propertyAsserters["string value 2"].typeName,
+            object1.stringValue,
+            { valueName: `["string value 2"]` },
+          ),
+
+          new TypeAssertionError(
+            unnamedAsserter.propertyAsserters["3rdStringValue"].typeName,
+            object1.stringValue,
+            { valueName: `["3rdStringValue"]` },
           ),
         ],
       })

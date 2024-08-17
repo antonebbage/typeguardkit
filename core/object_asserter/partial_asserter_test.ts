@@ -94,13 +94,13 @@ describe("PartialAsserter.assert", () => {
           new TypeAssertionError(
             _PartialObjectType1.propertyAsserters.a.typeName,
             object.a,
-            { valueName: "a" },
+            { valueName: ".a" },
           ),
 
           new TypeAssertionError(
             _PartialObjectType1.propertyAsserters.b.typeName,
             object.b,
-            { valueName: "b" },
+            { valueName: ".b" },
           ),
         ],
       })
@@ -117,13 +117,13 @@ describe("PartialAsserter.assert", () => {
           new TypeAssertionError(
             _PartialObjectType1.propertyAsserters.a.typeName,
             object.a,
-            { valueName: "a" },
+            { valueName: ".a" },
           ),
 
           new TypeAssertionError(
             _PartialObjectType1.propertyAsserters.b.typeName,
             object.b,
-            { valueName: "b" },
+            { valueName: ".b" },
           ),
         ],
       })

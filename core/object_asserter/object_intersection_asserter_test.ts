@@ -85,13 +85,13 @@ describe("ObjectIntersectionAsserter.assert", () => {
           new TypeAssertionError(
             _Intersection1.propertyAsserters.a.typeName,
             object.a,
-            { valueName: "a" },
+            { valueName: ".a" },
           ),
 
           new TypeAssertionError(
             _Intersection1.propertyAsserters.b.typeName,
             object.b,
-            { valueName: "b" },
+            { valueName: ".b" },
           ),
         ],
       })
@@ -111,13 +111,13 @@ describe("ObjectIntersectionAsserter.assert", () => {
           new TypeAssertionError(
             _Intersection1.propertyAsserters.a.typeName,
             object.a,
-            { valueName: "a" },
+            { valueName: ".a" },
           ),
 
           new TypeAssertionError(
             _Intersection1.propertyAsserters.b.typeName,
             object.b,
-            { valueName: "b" },
+            { valueName: ".b" },
           ),
         ],
       })

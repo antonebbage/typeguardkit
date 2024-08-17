@@ -99,7 +99,7 @@ export class NumberAsserter implements Asserter<number> {
     if (typeof value !== "number") {
       throw new TypeAssertionError(this.typeName, value, {
         valueName,
-        issues: "must be of type `number`",
+        issues: ["must be of type `number`"],
       });
     }
 

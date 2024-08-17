@@ -161,7 +161,7 @@ export class StringAsserter implements Asserter<string> {
     if (typeof value !== "string") {
       throw new TypeAssertionError(this.typeName, value, {
         valueName,
-        issues: "must be of type `string`",
+        issues: ["must be of type `string`"],
       });
     }
 

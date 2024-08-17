@@ -155,19 +155,24 @@ export class ArrayAsserter<ElementAsserter extends Asserter<unknown>>
       throw new TypeAssertionError(this.typeName, value, { valueName });
     }
 
-    const issues: Array<string | TypeAssertionError> = [];
+    const elementIssues: TypeAssertionError[] = [];
 
     for (let i = 0; i < value.length; i++) {
       try {
-        this.elementAsserter.assert(value[i], `${i}`);
+        this.elementAsserter.assert(value[i], `[${i}]`);
       } catch (error) {
-        issues.push(error);
+        elementIssues.push(error);
       }
     }
 
-    if (issues.length) {
-      throw new TypeAssertionError(this.typeName, value, { valueName, issues });
+    if (elementIssues.length) {
+      throw new TypeAssertionError(this.typeName, value, {
+        valueName,
+        issues: elementIssues,
+      });
     }
+
+    const arrayIssues: string[] = [];
 
     const minLength = this.minLength;
     const maxLength = this.maxLength;
@@ -176,25 +181,28 @@ export class ArrayAsserter<ElementAsserter extends Asserter<unknown>>
       minLength !== null && minLength === maxLength &&
       value.length !== minLength
     ) {
-      issues.push(`must have ${minLength}`);
+      arrayIssues.push(`must have ${minLength}`);
     } else if (minLength !== null && value.length < minLength) {
-      issues.push(`must have a minimum of ${minLength}`);
+      arrayIssues.push(`must have a minimum of ${minLength}`);
     } else if (maxLength !== null && value.length > maxLength) {
-      issues.push(`must have a maximum of ${maxLength}`);
+      arrayIssues.push(`must have a maximum of ${maxLength}`);
     }
 
     if (this.mustBeASet && !ArrayAsserter.#checkArrayIsASet(value)) {
-      issues.push("must not have duplicates");
+      arrayIssues.push("must not have duplicates");
     }
 
     for (const { validate, requirements } of this.rules) {
       if (!validate(value)) {
-        issues.push(...requirements);
+        arrayIssues.push(...requirements);
       }
     }
 
-    if (issues.length) {
-      throw new TypeAssertionError(this.typeName, value, { valueName, issues });
+    if (arrayIssues.length) {
+      throw new TypeAssertionError(this.typeName, value, {
+        valueName,
+        issues: arrayIssues,
+      });
     }
 
     return value;

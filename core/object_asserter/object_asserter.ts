@@ -51,7 +51,9 @@ export class ObjectAsserter<
     for (const key in this.propertyAsserters) {
       try {
         const propertyValue = (value as Record<string, unknown>)[key];
-        this.propertyAsserters[key].assert(propertyValue, key);
+        const propertyValueName = /\W|^\d/.test(key) ? `["${key}"]` : `.${key}`;
+
+        this.propertyAsserters[key].assert(propertyValue, propertyValueName);
       } catch (error) {
         issues.push(error);
       }

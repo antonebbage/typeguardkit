@@ -306,11 +306,11 @@ describe("ArrayAsserter.assert", () => {
 
           issues: [
             new TypeAssertionError(_number.typeName, undefined, {
-              valueName: "0",
+              valueName: "[0]",
             }),
 
             new TypeAssertionError(_number.typeName, undefined, {
-              valueName: "1",
+              valueName: "[1]",
             }),
           ],
         },
@@ -329,11 +329,11 @@ describe("ArrayAsserter.assert", () => {
         {
           issues: [
             new TypeAssertionError(_string.typeName, undefined, {
-              valueName: "0",
+              valueName: "[0]",
             }),
 
             new TypeAssertionError(_string.typeName, undefined, {
-              valueName: "1",
+              valueName: "[1]",
             }),
           ],
         },

@@ -72,13 +72,13 @@ describe("partial", () => {
           new TypeAssertionError(
             _PartialObjectType.propertyAsserters.a.typeName,
             object.a,
-            { valueName: "a" },
+            { valueName: ".a" },
           ),
 
           new TypeAssertionError(
             _PartialObjectType.propertyAsserters.b.typeName,
             object.b,
-            { valueName: "b" },
+            { valueName: ".b" },
           ),
         ],
       })

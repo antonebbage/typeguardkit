@@ -71,13 +71,13 @@ describe("PickAsserter.assert", () => {
           new TypeAssertionError(
             _PickedObjectType.propertyAsserters.b.typeName,
             object.b,
-            { valueName: "b" },
+            { valueName: ".b" },
           ),
 
           new TypeAssertionError(
             _PickedObjectType.propertyAsserters.c.typeName,
             object.c,
-            { valueName: "c" },
+            { valueName: ".c" },
           ),
         ],
       })
@@ -94,13 +94,13 @@ describe("PickAsserter.assert", () => {
           new TypeAssertionError(
             _PickedObjectType.propertyAsserters.b.typeName,
             object.b,
-            { valueName: "b" },
+            { valueName: ".b" },
           ),
 
           new TypeAssertionError(
             _PickedObjectType.propertyAsserters.c.typeName,
             object.c,
-            { valueName: "c" },
+            { valueName: ".c" },
           ),
         ],
       })
