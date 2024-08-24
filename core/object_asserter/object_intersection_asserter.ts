@@ -82,9 +82,8 @@ export class ObjectIntersectionAsserter<
 
         newPropertyAsserters[key] = new TypeAsserter(
           newPropertyTypeName,
-          (value): value is unknown => {
-            return is(propertyAsserterA, value) && is(propertyAsserterB, value);
-          },
+          (value): value is unknown =>
+            is(propertyAsserterA, value) && is(propertyAsserterB, value),
         );
       } else {
         newPropertyAsserters[key] = propertyAsserterA;
