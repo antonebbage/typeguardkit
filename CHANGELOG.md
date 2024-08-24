@@ -1,3 +1,17 @@
+## [0.31.0](https://github.com/antonebbage/typeguardkit/compare/0.30.0...0.31.0) (2024-08-24)
+
+### ⚠ BREAKING CHANGES
+
+- remove `TypeAssertionError` issue tree
+
+### Features
+
+- make `NumberAsserter`, `StringAsserter`, + `ArrayAsserter` implement
+  `Validator`
+  ([c65fd34](https://github.com/antonebbage/typeguardkit/commit/c65fd348d76f0d76c33594e4e4d188eda202bac9))
+- remove `TypeAssertionError` issue tree
+  ([0204f24](https://github.com/antonebbage/typeguardkit/commit/0204f24aa4ea002217f95a4c5e54b4218b223fb6))
+
 ## [0.30.0](https://github.com/antonebbage/typeguardkit/compare/0.29.0...0.30.0) (2024-07-27)
 
 ### ⚠ BREAKING CHANGES
