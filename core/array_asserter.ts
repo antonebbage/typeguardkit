@@ -3,6 +3,7 @@
 import { Asserted } from "./asserted.ts";
 import { Asserter } from "./asserter.ts";
 import { TypeAssertionError } from "./type_assertion_error.ts";
+import { Validator } from "./validator.ts";
 
 /** `ArrayAsserterOptions` are passed to the `ArrayAsserter` constructor. */
 export interface ArrayAsserterOptions<Element> {
@@ -23,7 +24,7 @@ export interface ArrayAsserterRule<Element> {
 
 /**
  *  An `ArrayAsserter` is an `Asserter` for the `Array` type defined by its
- * `elementAsserter`, with any additional validation defined by its
+ * `elementAsserter`, with any additional constraints defined by its
  * `ArrayAsserterOptions` properties.
  *
  * The `minLength` and `maxLength` `ArrayAsserterOptions` can be used to set the
@@ -39,6 +40,12 @@ export interface ArrayAsserterRule<Element> {
  *
  * The provided `memberAsserter` and `ArrayAsserterOptions` are made accessible
  * as properties of the created `ArrayAsserter`.
+ *
+ * An `ArrayAsserter` is also a `Validator` with a `validate` method, which
+ * checks only that the provided `value` meets any constraints defined in the
+ * `ArrayAsserterOptions`, and returns any issues. This can be used to validate
+ * user input client side, where it should already be known that `value` meets
+ * the compile-time constraints of the array type.
  *
  * The `array` function can be used to create an `ArrayAsserter` without
  * specifying a `typeName` or `ArrayAsserterOptions`.
@@ -92,7 +99,9 @@ export interface ArrayAsserterRule<Element> {
  * ```
  */
 export class ArrayAsserter<ElementAsserter extends Asserter<unknown>>
-  implements Asserter<Array<Asserted<ElementAsserter>>> {
+  implements
+    Asserter<Array<Asserted<ElementAsserter>>>,
+    Validator<Array<Asserted<ElementAsserter>>> {
   readonly typeName: string;
 
   readonly minLength: number | null;
@@ -172,31 +181,7 @@ export class ArrayAsserter<ElementAsserter extends Asserter<unknown>>
       });
     }
 
-    const arrayIssues: string[] = [];
-
-    const minLength = this.minLength;
-    const maxLength = this.maxLength;
-
-    if (
-      minLength !== null && minLength === maxLength &&
-      value.length !== minLength
-    ) {
-      arrayIssues.push(`must have ${minLength}`);
-    } else if (minLength !== null && value.length < minLength) {
-      arrayIssues.push(`must have a minimum of ${minLength}`);
-    } else if (maxLength !== null && value.length > maxLength) {
-      arrayIssues.push(`must have a maximum of ${maxLength}`);
-    }
-
-    if (this.mustBeASet && !ArrayAsserter.#checkArrayIsASet(value)) {
-      arrayIssues.push("must not have duplicates");
-    }
-
-    for (const { validate, requirements } of this.rules) {
-      if (!validate(value)) {
-        arrayIssues.push(...requirements);
-      }
-    }
+    const arrayIssues = this.validate(value);
 
     if (arrayIssues.length) {
       throw new TypeAssertionError(this.typeName, value, {
@@ -206,6 +191,36 @@ export class ArrayAsserter<ElementAsserter extends Asserter<unknown>>
     }
 
     return value;
+  }
+
+  validate(value: Array<Asserted<ElementAsserter>>): string[] {
+    const issues: string[] = [];
+
+    const minLength = this.minLength;
+    const maxLength = this.maxLength;
+
+    if (
+      minLength !== null && minLength === maxLength &&
+      value.length !== minLength
+    ) {
+      issues.push(`must have ${minLength}`);
+    } else if (minLength !== null && value.length < minLength) {
+      issues.push(`must have a minimum of ${minLength}`);
+    } else if (maxLength !== null && value.length > maxLength) {
+      issues.push(`must have a maximum of ${maxLength}`);
+    }
+
+    if (this.mustBeASet && !ArrayAsserter.#checkArrayIsASet(value)) {
+      issues.push("must not have duplicates");
+    }
+
+    for (const { validate, requirements } of this.rules) {
+      if (!validate(value)) {
+        issues.push(...requirements);
+      }
+    }
+
+    return issues;
   }
 
   static #checkArrayIsASet(value: unknown[]): boolean {

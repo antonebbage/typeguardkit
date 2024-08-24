@@ -83,8 +83,8 @@ export async function getBook(isbn: string): Promise<Book> {
 
 ### `Asserter`
 
-An `Asserter<Type>` has a type assertion method, `assert`, that asserts whether
-the provided `value` is of `Type`.
+An `Asserter<Type>` has a type assertion method, `assert`, which should assert
+whether the provided `value` is of `Type`.
 
 ```ts
 interface Asserter<Type> {
@@ -103,7 +103,7 @@ The module includes the `_boolean`, `_number`, `_string`, `_null`, and
 
 It also includes the `_NonNegativeNumber`, `_PositiveNumber`, `_Integer`,
 `_NonNegativeInteger`, and `_PositiveInteger` `Asserter`s, which are `number`
-`Asserter`s that perform additional validation.
+`Asserter`s that have additional, runtime-only constraints.
 
 The `_null` and `_undefined` `Asserter`s can be used to create union type
 `Asserter`s with the [`union`](#union) function.
@@ -200,11 +200,17 @@ function handleString(x: string) {}
 
 ### `NumberAsserter`
 
-A `NumberAsserter` is an `Asserter<number>`, with any additional validation
+A `NumberAsserter` is an `Asserter<number>`, with any additional constraints
 defined by its `NumberAsserterOptions` properties.
 
 The provided `NumberAsserterOptions` are made accessible as properties of the
 created `NumberAsserter`.
+
+A `NumberAsserter` is also a `Validator<number>` with a `validate` method, which
+checks only that the provided `value` meets any constraints defined in the
+`NumberAsserterOptions`, and returns any issues. This can be used to validate
+user input client side, where it should already be known that `value` is a
+`number`.
 
 Example:
 
@@ -222,11 +228,17 @@ export type EvenNumberInRange = Asserted<typeof _EvenNumberInRange>;
 
 ### `StringAsserter`
 
-A `StringAsserter` is an `Asserter<string>`, with any additional validation
+A `StringAsserter` is an `Asserter<string>`, with any additional constraints
 defined by its `StringAsserterOptions` properties.
 
 The provided `StringAsserterOptions` are made accessible as properties of the
 created `StringAsserter`.
+
+A `StringAsserter` is also a `Validator<string>` with a `validate` method, which
+checks only that the provided `value` meets any constraints defined in the
+`StringAsserterOptions`, and returns any issues. This can be used to validate
+user input client side, where it should already be known that `value` is a
+`string`.
 
 Example:
 
@@ -349,11 +361,17 @@ export type stringOrNull = Asserted<typeof _stringOrNull>;
 ### `ArrayAsserter`
 
 An `ArrayAsserter` is an `Asserter` for the `Array` type defined by its
-`elementAsserter`, with any additional validation defined by its
+`elementAsserter`, with any additional constraints defined by its
 `ArrayAsserterOptions` properties.
 
 The provided `memberAsserter` and `ArrayAsserterOptions` are made accessible as
 properties of the created `ArrayAsserter`.
+
+An `ArrayAsserter` is also a `Validator` with a `validate` method, which checks
+only that the provided `value` meets any constraints defined in the
+`ArrayAsserterOptions`, and returns any issues. This can be used to validate
+user input client side, where it should already be known that `value` meets the
+compile-time constraints of the array type.
 
 Example:
 
@@ -656,3 +674,21 @@ export const _UserName = pick(_User, ["firstName", "lastName"]);
 
 export type UserName = Asserted<typeof _UserName>;
 ```
+
+### `Validator`
+
+A `Validator<Type>` has a `validate` method, which should check `value` meets
+any runtime-only constraints of `Type`, and return any issues. This should not
+include constraints of any `Validator`s for properties or elements of `Type`.
+
+```ts
+interface Validator<Type> {
+  validate(value: Type): string[];
+}
+```
+
+Any `Asserter<Type>` class that allows runtime-only constraints should also
+implement `Validator<Type>`.
+
+`validate` can then be used to validate user input client side, where it should
+already be known that `value` meets the compile-time constraints of `Type`.

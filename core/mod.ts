@@ -19,3 +19,4 @@ export * from "./type_asserter.ts";
 export * from "./type_assertion_error.ts";
 export * from "./union.ts";
 export * from "./union_asserter.ts";
+export * from "./validator.ts";

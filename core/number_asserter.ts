@@ -2,6 +2,7 @@
 
 import { Asserter } from "./asserter.ts";
 import { TypeAssertionError } from "./type_assertion_error.ts";
+import { Validator } from "./validator.ts";
 
 /** `NumberAsserterOptions` are passed to the `NumberAsserter` constructor. */
 export interface NumberAsserterOptions {
@@ -31,7 +32,7 @@ export interface NumberAsserterRule {
 }
 
 /**
- * A `NumberAsserter` is an `Asserter<number>`, with any additional validation
+ * A `NumberAsserter` is an `Asserter<number>`, with any additional constraints
  * defined by its `NumberAsserterOptions` properties.
  *
  * The `rules` option can be used to specify `validate` functions and their
@@ -41,6 +42,12 @@ export interface NumberAsserterRule {
  *
  * The provided `NumberAsserterOptions` are made accessible as properties of the
  * created `NumberAsserter`.
+ *
+ * A `NumberAsserter` is also a `Validator<number>` with a `validate` method,
+ * which checks only that the provided `value` meets any constraints defined in
+ * the `NumberAsserterOptions`, and returns any issues. This can be used to
+ * validate user input client side, where it should already be known that
+ * `value` is a `number`.
  *
  * Example:
  *
@@ -56,7 +63,7 @@ export interface NumberAsserterRule {
  * export type EvenNumberInRange = Asserted<typeof _EvenNumberInRange>;
  * ```
  */
-export class NumberAsserter implements Asserter<number> {
+export class NumberAsserter implements Asserter<number>, Validator<number> {
   readonly typeName: string;
 
   readonly disallowNaN: boolean;
@@ -97,12 +104,19 @@ export class NumberAsserter implements Asserter<number> {
 
   assert(value: unknown, valueName?: string): number {
     if (typeof value !== "number") {
-      throw new TypeAssertionError(this.typeName, value, {
-        valueName,
-        issues: ["must be of type `number`"],
-      });
+      throw new TypeAssertionError(this.typeName, value, { valueName });
     }
 
+    const issues = this.validate(value);
+
+    if (issues.length) {
+      throw new TypeAssertionError(this.typeName, value, { valueName, issues });
+    }
+
+    return value;
+  }
+
+  validate(value: number): string[] {
     const issues: string[] = [];
 
     if (this.disallowNaN) {
@@ -110,7 +124,7 @@ export class NumberAsserter implements Asserter<number> {
         issues.push("must be a valid number");
       }
     } else if (isNaN(value)) {
-      return value;
+      return issues;
     }
 
     const min = this.min;
@@ -193,10 +207,6 @@ export class NumberAsserter implements Asserter<number> {
       }
     }
 
-    if (issues.length) {
-      throw new TypeAssertionError(this.typeName, value, { valueName, issues });
-    }
-
-    return value;
+    return issues;
   }
 }

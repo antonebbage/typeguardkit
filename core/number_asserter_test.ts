@@ -198,14 +198,11 @@ describe("NumberAsserter.assert", () => {
   });
 
   it("should throw a `TypeAssertionError` with correct `message` when `value` is not of type `number` or is invalid according to the provided `NumberAsserterOptions`", () => {
-    const typeIssue = "must be of type `number`";
-
     assertThrows(
       () => _AnyNumber.assert(undefined, "name"),
       TypeAssertionError,
       new TypeAssertionError(_AnyNumber.typeName, undefined, {
         valueName: "name",
-        issues: [typeIssue],
       })
         .message,
     );
@@ -213,10 +210,7 @@ describe("NumberAsserter.assert", () => {
     assertThrows(
       () => unnamedAsserter.assert(undefined),
       TypeAssertionError,
-      new TypeAssertionError(unnamedAsserter.typeName, undefined, {
-        issues: [typeIssue],
-      })
-        .message,
+      new TypeAssertionError(unnamedAsserter.typeName, undefined).message,
     );
 
     const validIssue = "must be a valid number";
@@ -232,18 +226,18 @@ describe("NumberAsserter.assert", () => {
 
     const testCases: Array<{
       asserter: NumberAsserter;
-      values: Array<[value: unknown, issues: string[]]>;
+      values: Array<[value: unknown, issues?: string[]]>;
     }> = [
       {
         asserter: _AnyNumber,
 
         values: [
-          [undefined, [typeIssue]],
-          [null, [typeIssue]],
-          [false, [typeIssue]],
-          ["", [typeIssue]],
-          [[], [typeIssue]],
-          [{}, [typeIssue]],
+          [undefined],
+          [null],
+          [false],
+          [""],
+          [[]],
+          [{}],
         ],
       },
 
@@ -251,12 +245,12 @@ describe("NumberAsserter.assert", () => {
         asserter: _ValidNumber,
 
         values: [
-          [undefined, [typeIssue]],
-          [null, [typeIssue]],
-          [false, [typeIssue]],
-          ["", [typeIssue]],
-          [[], [typeIssue]],
-          [{}, [typeIssue]],
+          [undefined],
+          [null],
+          [false],
+          [""],
+          [[]],
+          [{}],
 
           [NaN, [validIssue]],
         ],

@@ -2,6 +2,7 @@
 
 import { Asserter } from "./asserter.ts";
 import { TypeAssertionError } from "./type_assertion_error.ts";
+import { Validator } from "./validator.ts";
 
 /** `StringAsserterOptions` are passed to the `StringAsserter` constructor. */
 export interface StringAsserterOptions {
@@ -30,7 +31,7 @@ export interface StringAsserterRule {
 }
 
 /**
- * A `StringAsserter` is an `Asserter<string>`, with any additional validation
+ * A `StringAsserter` is an `Asserter<string>`, with any additional constraints
  * defined by its `StringAsserterOptions` properties.
  *
  * The `minLength` and `maxLength` options can be used to set the minimum and
@@ -49,6 +50,12 @@ export interface StringAsserterRule {
  *
  * The provided `StringAsserterOptions` are made accessible as properties of the
  * created `StringAsserter`.
+ *
+ * A `StringAsserter` is also a `Validator<string>` with a `validate` method,
+ * which checks only that the provided `value` meets any constraints defined in
+ * the `StringAsserterOptions`, and returns any issues. This can be used to
+ * validate user input client side, where it should already be known that
+ * `value` is a `string`.
  *
  * Example:
  *
@@ -89,7 +96,7 @@ export interface StringAsserterRule {
  * export type Palindrome = Asserted<typeof _Palindrome>;
  * ```
  */
-export class StringAsserter implements Asserter<string> {
+export class StringAsserter implements Asserter<string>, Validator<string> {
   readonly typeName: string;
 
   readonly minLength: number | null;
@@ -159,12 +166,19 @@ export class StringAsserter implements Asserter<string> {
 
   assert(value: unknown, valueName?: string): string {
     if (typeof value !== "string") {
-      throw new TypeAssertionError(this.typeName, value, {
-        valueName,
-        issues: ["must be of type `string`"],
-      });
+      throw new TypeAssertionError(this.typeName, value, { valueName });
     }
 
+    const issues = this.validate(value);
+
+    if (issues.length) {
+      throw new TypeAssertionError(this.typeName, value, { valueName, issues });
+    }
+
+    return value;
+  }
+
+  validate(value: string): string[] {
     const issues: string[] = [];
 
     const minLength = this.minLength;
@@ -201,10 +215,6 @@ export class StringAsserter implements Asserter<string> {
       }
     }
 
-    if (issues.length) {
-      throw new TypeAssertionError(this.typeName, value, { valueName, issues });
-    }
-
-    return value;
+    return issues;
   }
 }

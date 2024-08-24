@@ -199,14 +199,11 @@ describe("StringAsserter.assert", () => {
   });
 
   it("should throw a `TypeAssertionError` with correct `message` when `value` is not of type `string` or is invalid according to the provided `StringAsserterOptions`", () => {
-    const typeIssue = "must be of type `string`";
-
     assertThrows(
       () => _AnyString.assert(undefined, "name"),
       TypeAssertionError,
       new TypeAssertionError(_AnyString.typeName, undefined, {
         valueName: "name",
-        issues: [typeIssue],
       })
         .message,
     );
@@ -214,26 +211,23 @@ describe("StringAsserter.assert", () => {
     assertThrows(
       () => unnamedAsserter.assert(undefined),
       TypeAssertionError,
-      new TypeAssertionError(unnamedAsserter.typeName, undefined, {
-        issues: [typeIssue],
-      })
-        .message,
+      new TypeAssertionError(unnamedAsserter.typeName, undefined).message,
     );
 
     const testCases: Array<{
       asserter: StringAsserter;
-      values: Array<[value: unknown, issues: string[]]>;
+      values: Array<[value: unknown, issues?: string[]]>;
     }> = [
       {
         asserter: _AnyString,
 
         values: [
-          [undefined, [typeIssue]],
-          [null, [typeIssue]],
-          [false, [typeIssue]],
-          [0, [typeIssue]],
-          [[], [typeIssue]],
-          [{}, [typeIssue]],
+          [undefined],
+          [null],
+          [false],
+          [0],
+          [[]],
+          [{}],
         ],
       },
 
@@ -241,12 +235,12 @@ describe("StringAsserter.assert", () => {
         asserter: _ConstrainedLengthString,
 
         values: [
-          [undefined, [typeIssue]],
-          [null, [typeIssue]],
-          [false, [typeIssue]],
-          [0, [typeIssue]],
-          [[], [typeIssue]],
-          [{}, [typeIssue]],
+          [undefined],
+          [null],
+          [false],
+          [0],
+          [[]],
+          [{}],
 
           ["", [
             `must have a minimum of ${_ConstrainedLengthString.minLength} character`,
@@ -290,12 +284,12 @@ describe("StringAsserter.assert", () => {
         asserter: _LetterString,
 
         values: [
-          [undefined, [typeIssue]],
-          [null, [typeIssue]],
-          [false, [typeIssue]],
-          [0, [typeIssue]],
-          [[], [typeIssue]],
-          [{}, [typeIssue]],
+          [undefined],
+          [null],
+          [false],
+          [0],
+          [[]],
+          [{}],
 
           ["", [lettersIssue]],
           [" ", [lettersIssue]],
@@ -309,12 +303,12 @@ describe("StringAsserter.assert", () => {
         asserter: _Palindrome,
 
         values: [
-          [undefined, [typeIssue]],
-          [null, [typeIssue]],
-          [false, [typeIssue]],
-          [0, [typeIssue]],
-          [[], [typeIssue]],
-          [{}, [typeIssue]],
+          [undefined],
+          [null],
+          [false],
+          [0],
+          [[]],
+          [{}],
 
           ["ab", [palindromeIssue]],
           ["abc", [palindromeIssue]],
