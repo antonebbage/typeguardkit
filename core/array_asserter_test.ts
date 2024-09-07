@@ -91,7 +91,7 @@ describe("ArrayAsserter", () => {
 
       {
         asserter: new ArrayAsserter("", _string, {}),
-        typeName: `UnnamedArray`,
+        typeName: "UnnamedArray",
       },
     ];
 
