@@ -7,7 +7,7 @@ const anyNumberTypeName = "AnyNumber";
 const anyNumberOptions: NumberAsserterOptions = {};
 const _AnyNumber = new NumberAsserter(anyNumberTypeName, anyNumberOptions);
 
-const validNumberOptions: NumberAsserterOptions = { disallowNaN: true };
+const validNumberOptions: NumberAsserterOptions = { canBeNaN: false };
 const _ValidNumber = new NumberAsserter("ValidNumber", validNumberOptions);
 
 const integerOptions: NumberAsserterOptions = { step: 1 };
@@ -110,7 +110,7 @@ describe("NumberAsserter", () => {
     ];
 
     for (const { asserter, options } of testCases) {
-      assertStrictEquals(asserter.disallowNaN, !!options.disallowNaN);
+      assertStrictEquals(asserter.canBeNaN, options.canBeNaN ?? true);
       assertStrictEquals(asserter.min, options.min ?? null);
       assertStrictEquals(asserter.max, options.max ?? null);
       assertStrictEquals(asserter.step, options.step ?? null);

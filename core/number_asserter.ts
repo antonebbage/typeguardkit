@@ -6,7 +6,7 @@ import { Validator } from "./validator.ts";
 
 /** `NumberAsserterOptions` are passed to the `NumberAsserter` constructor. */
 export interface NumberAsserterOptions {
-  readonly disallowNaN?: boolean;
+  readonly canBeNaN?: boolean;
   readonly min?: NumberAsserterBound;
   readonly max?: NumberAsserterBound;
   readonly step?: number;
@@ -66,7 +66,7 @@ export interface NumberAsserterRule {
 export class NumberAsserter implements Asserter<number>, Validator<number> {
   readonly typeName: string;
 
-  readonly disallowNaN: boolean;
+  readonly canBeNaN: boolean;
   readonly min: NumberAsserterBound | null;
   readonly max: NumberAsserterBound | null;
   readonly step: number | null;
@@ -74,7 +74,7 @@ export class NumberAsserter implements Asserter<number>, Validator<number> {
 
   constructor(
     typeName: string,
-    { disallowNaN = false, min, max, step, rules }: NumberAsserterOptions,
+    { canBeNaN = true, min, max, step, rules }: NumberAsserterOptions,
   ) {
     if (step !== undefined && (step <= 0 || !isFinite(step))) {
       throw new Error("`step` must be positive and finite if defined");
@@ -95,7 +95,7 @@ export class NumberAsserter implements Asserter<number>, Validator<number> {
 
     this.typeName = typeName || "UnnamedNumber";
 
-    this.disallowNaN = disallowNaN;
+    this.canBeNaN = canBeNaN;
     this.min = min ?? null;
     this.max = max ?? null;
     this.step = step ?? null;
@@ -119,12 +119,12 @@ export class NumberAsserter implements Asserter<number>, Validator<number> {
   validate(value: number): string[] {
     const issues: string[] = [];
 
-    if (this.disallowNaN) {
+    if (this.canBeNaN) {
       if (isNaN(value)) {
-        issues.push("must be a valid number");
+        return issues;
       }
     } else if (isNaN(value)) {
-      return issues;
+      issues.push("must be a valid number");
     }
 
     const min = this.min;
