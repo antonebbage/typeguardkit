@@ -3,6 +3,10 @@ import { build, emptyDir } from "@deno/dnt";
 await emptyDir("./npm");
 
 await build({
+  compilerOptions: {
+    lib: ["ESNext"],
+  },
+
   entryPoints: ["./mod.ts"],
   importMap: "./deno.json",
   outDir: "./npm",
