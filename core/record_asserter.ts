@@ -18,7 +18,7 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  * Example:
  *
  * ```ts
- * import { _string, Asserted, RecordAsserter } from "../mod.ts";
+ * import { _string, Asserted, RecordAsserter } from "typeguardkit";
  *
  * export const _RecordOfStringByString = new RecordAsserter(
  *   "RecordOfStringByString",

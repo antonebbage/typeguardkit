@@ -10,7 +10,7 @@ import { Asserter } from "./asserter.ts";
  * Example:
  *
  * ```ts
- * import { _string, is } from "../mod.ts";
+ * import { _string, is } from "typeguardkit";
  *
  * function handleUnknown(x: unknown) {
  *   if (is(_string, x)) {

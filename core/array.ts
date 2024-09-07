@@ -10,7 +10,7 @@ import { Asserter } from "./asserter.ts";
  * Example:
  *
  * ```ts
- * import { _string, array, Asserted } from "../mod.ts";
+ * import { _string, array, Asserted } from "typeguardkit";
  *
  * export const _ArrayOfString = array(_string);
  *

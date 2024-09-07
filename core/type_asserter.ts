@@ -10,7 +10,7 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  * Example:
  *
  * ```ts
- * import { TypeAsserter } from "../mod.ts";
+ * import { TypeAsserter } from "typeguardkit";
  *
  * export const _string = new TypeAsserter(
  *   "string",

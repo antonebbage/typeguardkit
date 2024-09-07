@@ -32,12 +32,6 @@ npm install typeguardkit
 
 ## Usage
 
-### Example `import`s
-
-Where you see relative `import` paths in documentation examples, instead
-`import` `from "https://deno.land/x/typeguardkit/mod.ts"` if using Deno, or
-`from "typeguardkit"` if using npm.
-
 ### Example
 
 ```ts
@@ -51,7 +45,7 @@ import {
   Asserted,
   ObjectAsserter,
   union,
-} from "./mod.ts";
+} from "typeguardkit";
 
 // types/book.ts
 
@@ -113,7 +107,7 @@ As well as wrapping `Asserter`s in the
 [`is`](#predicate-signature-wrapper) functions, you can use them like this:
 
 ```ts
-import { _string } from "./mod.ts";
+import { _string } from "typeguardkit";
 
 function handleUnknown(x: unknown) {
   let y;
@@ -137,7 +131,7 @@ You can create your own `Asserter`s using the `TypeAsserter` class. For example,
 the `_string` `Asserter` was created like this:
 
 ```ts
-import { TypeAsserter } from "./mod.ts";
+import { TypeAsserter } from "typeguardkit";
 
 export const _string = new TypeAsserter(
   "string",
@@ -159,7 +153,7 @@ after calling it, the value passed in will be narrowed to `Type`.
 Example:
 
 ```ts
-import { _string, assertIs } from "./mod.ts";
+import { _string, assertIs } from "typeguardkit";
 
 function handleUnknown(x: unknown) {
   assertIs(_string, x, "x");
@@ -184,7 +178,7 @@ creating a type guard, so the value passed in can be narrowed to `Type`. If the
 Example:
 
 ```ts
-import { _string, is } from "./mod.ts";
+import { _string, is } from "typeguardkit";
 
 function handleUnknown(x: unknown) {
   if (is(_string, x)) {
@@ -215,7 +209,7 @@ user input client side, where it should already be known that `value` is a
 Example:
 
 ```ts
-import { Asserted, NumberAsserter } from "./mod.ts";
+import { Asserted, NumberAsserter } from "typeguardkit";
 
 export const _EvenNumberInRange = new NumberAsserter("EvenNumberInRange", {
   min: { value: 0, inclusive: true },
@@ -243,7 +237,7 @@ user input client side, where it should already be known that `value` is a
 Example:
 
 ```ts
-import { Asserted, StringAsserter } from "./mod.ts";
+import { Asserted, StringAsserter } from "typeguardkit";
 
 export const _NonEmptyString = new StringAsserter("NonEmptyString", {
   minLength: 1,
@@ -289,7 +283,7 @@ The provided `values` are made accessible as a property of the created
 Example:
 
 ```ts
-import { Asserted, LiteralUnionAsserter } from "./mod.ts";
+import { Asserted, LiteralUnionAsserter } from "typeguardkit";
 
 export const _Direction = new LiteralUnionAsserter(
   "Direction",
@@ -310,7 +304,7 @@ The provided `enumObject` is made accessible as a property of the created
 Example:
 
 ```ts
-import { EnumAsserter } from "./mod.ts";
+import { EnumAsserter } from "typeguardkit";
 
 export enum Direction {
   Up,
@@ -333,7 +327,7 @@ The provided `memberAsserters` are made accessible as a property of the created
 Example:
 
 ```ts
-import { _null, _string, Asserted, UnionAsserter } from "./mod.ts";
+import { _null, _string, Asserted, UnionAsserter } from "typeguardkit";
 
 export const _stringOrNull = new UnionAsserter(
   "stringOrNull",
@@ -351,7 +345,7 @@ a `typeName`.
 Example:
 
 ```ts
-import { _null, _string, Asserted, union } from "./mod.ts";
+import { _null, _string, Asserted, union } from "typeguardkit";
 
 export const _stringOrNull = union(_string, _null);
 
@@ -376,7 +370,7 @@ compile-time constraints of the array type.
 Example:
 
 ```ts
-import { _number, _string, ArrayAsserter, Asserted } from "./mod.ts";
+import { _number, _string, ArrayAsserter, Asserted } from "typeguardkit";
 
 export const _NonEmptyArrayOfString = new ArrayAsserter(
   "NonEmptyArrayOfString",
@@ -427,7 +421,7 @@ a `typeName` or `ArrayAsserterOptions`.
 Example:
 
 ```ts
-import { _string, array, Asserted } from "./mod.ts";
+import { _string, array, Asserted } from "typeguardkit";
 
 export const _ArrayOfString = array(_string);
 
@@ -445,7 +439,7 @@ of the created `RecordAsserter`.
 Example:
 
 ```ts
-import { _string, Asserted, RecordAsserter } from "./mod.ts";
+import { _string, Asserted, RecordAsserter } from "typeguardkit";
 
 export const _RecordOfStringByString = new RecordAsserter(
   "RecordOfStringByString",
@@ -463,7 +457,7 @@ specifying a `typeName`.
 Example:
 
 ```ts
-import { _string, Asserted, record } from "./mod.ts";
+import { _string, Asserted, record } from "typeguardkit";
 
 export const _RecordOfStringByString = record(_string, _string);
 
@@ -481,7 +475,7 @@ created `ObjectAsserter`.
 Example:
 
 ```ts
-import { _string, Asserted, ObjectAsserter, option } from "./mod.ts";
+import { _string, Asserted, ObjectAsserter, option } from "typeguardkit";
 
 export const _User = new ObjectAsserter("User", {
   name: _string,
@@ -504,7 +498,7 @@ import {
   Asserted,
   ObjectAsserter,
   ObjectIntersectionAsserter,
-} from "./mod.ts";
+} from "typeguardkit";
 
 // types/entity.ts
 
@@ -543,7 +537,7 @@ import {
   Asserted,
   ObjectAsserter,
   objectIntersection,
-} from "./mod.ts";
+} from "typeguardkit";
 
 // types/a.ts
 
@@ -576,7 +570,12 @@ A `PartialAsserter` is an `ObjectAsserter` for the asserted type of the provided
 Example:
 
 ```ts
-import { _string, Asserted, ObjectAsserter, PartialAsserter } from "./mod.ts";
+import {
+  _string,
+  Asserted,
+  ObjectAsserter,
+  PartialAsserter,
+} from "typeguardkit";
 
 export const _Options = new PartialAsserter(
   "Options",
@@ -598,7 +597,7 @@ specifying a `typeName`.
 Example:
 
 ```ts
-import { _string, Asserted, ObjectAsserter, partial } from "./mod.ts";
+import { _string, Asserted, ObjectAsserter, partial } from "typeguardkit";
 
 // types/user_name.ts
 
@@ -625,7 +624,7 @@ set of properties `Keys` from the asserted type of the provided
 Example:
 
 ```ts
-import { _string, Asserted, ObjectAsserter, PickAsserter } from "./mod.ts";
+import { _string, Asserted, ObjectAsserter, PickAsserter } from "typeguardkit";
 
 // types/user.ts
 
@@ -656,7 +655,7 @@ The `pick` function can be used to create a `PickAsserter` without specifying a
 Example:
 
 ```ts
-import { _string, Asserted, ObjectAsserter, pick } from "./mod.ts";
+import { _string, Asserted, ObjectAsserter, pick } from "typeguardkit";
 
 // types/user.ts
 

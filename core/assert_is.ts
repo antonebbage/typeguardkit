@@ -11,7 +11,7 @@ import { Asserter } from "./asserter.ts";
  * Example:
  *
  * ```ts
- * import { _string, assertIs } from "../mod.ts";
+ * import { _string, assertIs } from "typeguardkit";
  *
  * function handleUnknown(x: unknown) {
  *   assertIs(_string, x, "x");

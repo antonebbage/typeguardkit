@@ -16,7 +16,7 @@ import { ObjectIntersectionAsserter } from "./object_intersection_asserter.ts";
  *   Asserted,
  *   ObjectAsserter,
  *   objectIntersection,
- * } from "../../mod.ts";
+ * } from "typeguardkit";
  *
  * // types/a.ts
  *

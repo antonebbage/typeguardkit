@@ -17,7 +17,7 @@ import { ObjectAsserter } from "./object_asserter.ts";
  *   Asserted,
  *   ObjectAsserter,
  *   PickAsserter,
- * } from "../../mod.ts";
+ * } from "typeguardkit";
  *
  * // types/user.ts
  *

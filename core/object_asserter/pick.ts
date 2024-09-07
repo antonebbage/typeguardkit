@@ -11,7 +11,7 @@ import { PickAsserter } from "./pick_asserter.ts";
  * Example:
  *
  * ```ts
- * import { _string, Asserted, ObjectAsserter, pick } from "../../mod.ts";
+ * import { _string, Asserted, ObjectAsserter, pick } from "typeguardkit";
  *
  * // types/user.ts
  *

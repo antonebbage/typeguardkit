@@ -10,7 +10,7 @@ import { RecordAsserter } from "./record_asserter.ts";
  * Example:
  *
  * ```ts
- * import { _string, Asserted, record } from "../mod.ts";
+ * import { _string, Asserted, record } from "typeguardkit";
  *
  * export const _RecordOfStringByString = record(_string, _string);
  *

@@ -15,7 +15,7 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  * Example:
  *
  * ```ts
- * import { Asserted, LiteralUnionAsserter } from "../mod.ts";
+ * import { Asserted, LiteralUnionAsserter } from "typeguardkit";
  *
  * export const _Direction = new LiteralUnionAsserter(
  *   "Direction",

@@ -10,7 +10,7 @@ import { OptionAsserter } from "./option_asserter.ts";
  * Example:
  *
  * ```ts
- * import { _string, option } from "../mod.ts";
+ * import { _string, option } from "typeguardkit";
  *
  * export const _OptionalString = option(_string);
  * ```

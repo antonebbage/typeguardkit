@@ -19,7 +19,7 @@ import { ObjectAsserter } from "./object_asserter.ts";
  *   Asserted,
  *   ObjectAsserter,
  *   ObjectIntersectionAsserter,
- * } from "../../mod.ts";
+ * } from "typeguardkit";
  *
  * // types/entity.ts
  *

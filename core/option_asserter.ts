@@ -11,7 +11,7 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  * Example:
  *
  * ```ts
- * import { _string, OptionAsserter } from "../mod.ts";
+ * import { _string, OptionAsserter } from "typeguardkit";
  *
  * export const _OptionalString = new OptionAsserter(_string);
  * ```

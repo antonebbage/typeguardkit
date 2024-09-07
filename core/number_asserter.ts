@@ -52,7 +52,7 @@ export interface NumberAsserterRule {
  * Example:
  *
  * ```ts
- * import { Asserted, NumberAsserter } from "../mod.ts";
+ * import { Asserted, NumberAsserter } from "typeguardkit";
  *
  * export const _EvenNumberInRange = new NumberAsserter("EvenNumberInRange", {
  *   min: { value: 0, inclusive: true },

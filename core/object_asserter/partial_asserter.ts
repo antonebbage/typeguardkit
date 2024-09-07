@@ -17,7 +17,7 @@ import { ObjectAsserter } from "./object_asserter.ts";
  *   Asserted,
  *   ObjectAsserter,
  *   PartialAsserter,
- * } from "../../mod.ts";
+ * } from "typeguardkit";
  *
  * export const _Options = new PartialAsserter(
  *   "Options",

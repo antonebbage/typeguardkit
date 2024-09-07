@@ -13,7 +13,7 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  * Example:
  *
  * ```ts
- * import { EnumAsserter } from "../mod.ts";
+ * import { EnumAsserter } from "typeguardkit";
  *
  * export enum Direction {
  *   Up,

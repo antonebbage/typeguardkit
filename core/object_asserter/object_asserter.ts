@@ -16,7 +16,7 @@ import { SimplifiedTooltipRepresentation } from "./_simplified_tooltip_represent
  * Example:
  *
  * ```ts
- * import { _string, Asserted, ObjectAsserter, option } from "../../mod.ts";
+ * import { _string, Asserted, ObjectAsserter, option } from "typeguardkit";
  *
  * export const _User = new ObjectAsserter("User", {
  *   name: _string,

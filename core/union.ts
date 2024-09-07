@@ -10,7 +10,7 @@ import { UnionAsserter } from "./union_asserter.ts";
  * Example:
  *
  * ```ts
- * import { _null, _string, Asserted, union } from "../mod.ts";
+ * import { _null, _string, Asserted, union } from "typeguardkit";
  *
  * export const _stringOrNull = union(_string, _null);
  *

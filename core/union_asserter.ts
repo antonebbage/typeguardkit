@@ -17,7 +17,7 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  * Example:
  *
  * ```ts
- * import { _null, _string, Asserted, UnionAsserter } from "../mod.ts";
+ * import { _null, _string, Asserted, UnionAsserter } from "typeguardkit";
  *
  * export const _stringOrNull = new UnionAsserter(
  *   "stringOrNull",

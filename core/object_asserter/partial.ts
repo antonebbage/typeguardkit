@@ -11,7 +11,7 @@ import { PartialAsserter } from "./partial_asserter.ts";
  * Example:
  *
  * ```ts
- * import { _string, Asserted, ObjectAsserter, partial } from "../../mod.ts";
+ * import { _string, Asserted, ObjectAsserter, partial } from "typeguardkit";
  *
  * // types/user_name.ts
  *

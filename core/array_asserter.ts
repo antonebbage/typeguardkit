@@ -53,7 +53,7 @@ export interface ArrayAsserterRule<Element> {
  * Example:
  *
  * ```ts
- * import { _number, _string, ArrayAsserter, Asserted } from "../mod.ts";
+ * import { _number, _string, ArrayAsserter, Asserted } from "typeguardkit";
  *
  * export const _NonEmptyArrayOfString = new ArrayAsserter(
  *   "NonEmptyArrayOfString",

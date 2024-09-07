@@ -60,7 +60,7 @@ export interface StringAsserterRule {
  * Example:
  *
  * ```ts
- * import { Asserted, StringAsserter } from "./mod.ts";
+ * import { Asserted, StringAsserter } from "typeguardkit";
  *
  * export const _NonEmptyString = new StringAsserter("NonEmptyString", {
  *   minLength: 1,
