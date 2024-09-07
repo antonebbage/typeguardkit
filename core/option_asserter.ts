@@ -13,7 +13,7 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
  * ```ts
  * import { _string, OptionAsserter } from "typeguardkit";
  *
- * export const _OptionalString = new OptionAsserter(_string);
+ * export const _OptionalString = new OptionAsserter("OptionalString", _string);
  * ```
  */
 export class OptionAsserter<
@@ -22,9 +22,10 @@ export class OptionAsserter<
   readonly typeName: string;
 
   constructor(
+    typeName: string,
     readonly definedTypeAsserter: DefinedTypeAsserter,
   ) {
-    this.typeName = `${definedTypeAsserter.typeName} | undefined`;
+    this.typeName = typeName || "UnnamedOption";
   }
 
   assert(

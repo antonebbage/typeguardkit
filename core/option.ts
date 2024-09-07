@@ -18,5 +18,8 @@ import { OptionAsserter } from "./option_asserter.ts";
 export function option<DefinedTypeAsserter extends Asserter<unknown>>(
   definedTypeAsserter: DefinedTypeAsserter,
 ): OptionAsserter<DefinedTypeAsserter> {
-  return new OptionAsserter(definedTypeAsserter);
+  return new OptionAsserter(
+    `${definedTypeAsserter.typeName} | undefined`,
+    definedTypeAsserter,
+  );
 }

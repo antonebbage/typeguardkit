@@ -3,14 +3,19 @@ import { describe, it } from "@std/testing/bdd";
 import { _string, TypeAssertionError } from "../mod.ts";
 import { OptionAsserter } from "./option_asserter.ts";
 
-const _OptionalString = new OptionAsserter(_string);
+const optionalStringTypeName = "OptionalString";
+const _OptionalString = new OptionAsserter(optionalStringTypeName, _string);
 
 describe("OptionAsserter", () => {
-  it("should have the correct `typeName`", () => {
-    assertStrictEquals(
-      _OptionalString.typeName,
-      `${_string.typeName} | undefined`,
-    );
+  it("should have the provided `typeName` or the correct default if empty", () => {
+    const testCases = [
+      { asserter: _OptionalString, typeName: optionalStringTypeName },
+      { asserter: new OptionAsserter("", _string), typeName: "UnnamedOption" },
+    ];
+
+    for (const { asserter, typeName } of testCases) {
+      assertStrictEquals(asserter.typeName, typeName);
+    }
   });
 
   it("should have the provided `definedTypeAsserter` set to its `definedTypeAsserter` property", () => {
@@ -35,6 +40,14 @@ describe("OptionAsserter.assert", () => {
         valueName: "name",
       })
         .message,
+    );
+
+    const unnamedAsserter = new OptionAsserter("", _string);
+
+    assertThrows(
+      () => unnamedAsserter.assert(null),
+      TypeAssertionError,
+      new TypeAssertionError(unnamedAsserter.typeName, null).message,
     );
 
     const testCases = [null, false, 0, [], {}];

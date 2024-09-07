@@ -1,6 +1,7 @@
 // This module is browser-compatible.
 
 import { Asserter } from "../asserter.ts";
+import { option } from "../option.ts";
 import { OptionAsserter } from "../option_asserter.ts";
 import { SimplifiedTooltipRepresentation } from "./_simplified_tooltip_representation.ts";
 import { ObjectAsserter } from "./object_asserter.ts";
@@ -54,7 +55,7 @@ export class PartialAsserter<
 
       newPropertyAsserters[key] = oldPropertyAsserter instanceof OptionAsserter
         ? oldPropertyAsserter
-        : new OptionAsserter(oldPropertyAsserter);
+        : option(oldPropertyAsserter);
     }
 
     super(
