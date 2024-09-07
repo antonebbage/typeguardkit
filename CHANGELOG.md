@@ -1,3 +1,17 @@
+## [0.32.0](https://github.com/antonebbage/typeguardkit/compare/0.31.0...0.32.0) (2024-09-07)
+
+### ⚠ BREAKING CHANGES
+
+- require `typeName` argument in `OptionAsserter` constructor call
+- change `NumberAsserterOptions.disallowNaN` to `canBeNaN`
+
+### Features
+
+- change `NumberAsserterOptions.disallowNaN` to `canBeNaN`
+  ([96f2079](https://github.com/antonebbage/typeguardkit/commit/96f2079359aed9795795dc964d519fc478e92140))
+- require `typeName` argument in `OptionAsserter` constructor call
+  ([0fbeff3](https://github.com/antonebbage/typeguardkit/commit/0fbeff34e96f4a77f8ccd1f4679589c1adf24e49))
+
 ## [0.31.0](https://github.com/antonebbage/typeguardkit/compare/0.30.0...0.31.0) (2024-08-24)
 
 ### ⚠ BREAKING CHANGES
