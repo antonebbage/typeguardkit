@@ -1,6 +1,6 @@
 // This module is browser-compatible.
 
-/*
+/**
  * A `Validator<Type>` has a `validate` method, which should check `value` meets
  * any runtime-only constraints of `Type`, and return any issues. This should
  * not include constraints of any `Validator`s for properties or elements of
