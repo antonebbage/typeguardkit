@@ -4,8 +4,8 @@ import { Asserter } from "./asserter.ts";
 import { OptionAsserter } from "./option_asserter.ts";
 
 /**
- * `option` returns an `OptionAsserter` for the union of the `Type` of the
- * provided `definedTypeAsserter` with `undefined`.
+ * `option` can be used to create an `OptionAsserter` without specifying a
+ * `typeName`.
  *
  * Example:
  *
