@@ -1,3 +1,10 @@
+## [0.32.1](https://github.com/antonebbage/typeguardkit/compare/0.32.0...0.32.1) (2024-09-21)
+
+### Bug Fixes
+
+- make `ObjectAsserter`s only allow missing property if has `OptionAsserter`
+  ([1972782](https://github.com/antonebbage/typeguardkit/commit/1972782833e6a0fd9aaec38086a430dda7b84bea))
+
 ## [0.32.0](https://github.com/antonebbage/typeguardkit/compare/0.31.0...0.32.0) (2024-09-07)
 
 ### ⚠ BREAKING CHANGES
