@@ -25,8 +25,9 @@ export class TypeAssertionError extends TypeError {
 
     const valueName = options.valueName || "value";
 
-    let message =
-      `\`${valueName}\` is of type \`${actualTypeName}\`; expected type of \`${expectedTypeName}\``;
+    let message = `\`${valueName}\` is ${
+      value === missingProperty ? "missing" : `of type \`${actualTypeName}\``
+    }; expected type of \`${expectedTypeName}\``;
 
     if (options.issues) {
       message += ":";
@@ -62,3 +63,10 @@ export class TypeAssertionError extends TypeError {
     this.name = "TypeAssertionError";
   }
 }
+
+/**
+ * `missingProperty` can be passed to the `TypeAssertionError` constructor as
+ * `value` to denote a missing object property, as distinct from one set to
+ * `undefined`.
+ */
+export const missingProperty = Symbol("missingProperty");

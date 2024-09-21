@@ -1,13 +1,22 @@
 import { assertStrictEquals, assertThrows } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
-import { _number, _string, TypeAssertionError } from "../../mod.ts";
+import {
+  _number,
+  _string,
+  _undefined,
+  option,
+  TypeAssertionError,
+  union,
+} from "../../mod.ts";
 import { ObjectAsserter } from "./object_asserter.ts";
 
 const objectTypeName = "ObjectType";
 
 const _ObjectType = new ObjectAsserter(objectTypeName, {
-  stringValue: _string,
   numberValue: _number,
+  stringValue: _string,
+  numberOrUndefinedValue: union(_number, _undefined),
+  optionalNumberValue: option(_number),
 });
 
 describe("ObjectAsserter", () => {
@@ -26,9 +35,29 @@ describe("ObjectAsserter", () => {
 describe("ObjectAsserter.assert", () => {
   it("should return `value` when it is an object and none of the `propertyAsserters` throw an error for the corresponding properties of `value`", () => {
     const testCases = [
-      { stringValue: "", numberValue: 0 },
-      { stringValue: "a", numberValue: 1 },
-      { stringValue: "", numberValue: 0, booleanValue: false },
+      { numberValue: 0, stringValue: "", numberOrUndefinedValue: undefined },
+      { numberValue: 1, stringValue: "a", numberOrUndefinedValue: 0 },
+
+      {
+        numberValue: 0,
+        stringValue: "",
+        numberOrUndefinedValue: 0,
+        optionalNumberValue: undefined,
+      },
+
+      {
+        numberValue: 0,
+        stringValue: "",
+        numberOrUndefinedValue: 0,
+        optionalNumberValue: 0,
+      },
+
+      {
+        numberValue: 0,
+        stringValue: "",
+        numberOrUndefinedValue: 0,
+        booleanValue: false,
+      },
     ];
 
     for (const value of testCases) {
@@ -37,7 +66,7 @@ describe("ObjectAsserter.assert", () => {
   });
 
   it("should throw a `TypeAssertionError` with correct `message` when `value` is not an object, or any of the `propertyAsserters` throw an error for the corresponding property of `value`", () => {
-    const object1 = { stringValue: 0, numberValue: "" };
+    const object1 = { numberValue: "", stringValue: 0 };
 
     assertThrows(
       () => _ObjectType.assert(object1, "name"),
@@ -47,15 +76,15 @@ describe("ObjectAsserter.assert", () => {
 
         issues: [
           new TypeAssertionError(
-            _ObjectType.propertyAsserters.stringValue.typeName,
-            object1.stringValue,
-            { valueName: ".stringValue" },
-          ),
-
-          new TypeAssertionError(
             _ObjectType.propertyAsserters.numberValue.typeName,
             object1.numberValue,
             { valueName: ".numberValue" },
+          ),
+
+          new TypeAssertionError(
+            _ObjectType.propertyAsserters.stringValue.typeName,
+            object1.stringValue,
+            { valueName: ".stringValue" },
           ),
         ],
       })
@@ -102,7 +131,8 @@ describe("ObjectAsserter.assert", () => {
     );
 
     const testCases = [
-      { s: "", number: 0 },
+      { numberValue: 0, stringValue: "" },
+      { number: 0, stringValue: "", numberOrUndefinedValue: 0 },
 
       undefined,
       null,

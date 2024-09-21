@@ -1,6 +1,6 @@
 import { assert, assertStrictEquals, assertStringIncludes } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
-import { TypeAssertionError } from "./type_assertion_error.ts";
+import { missingProperty, TypeAssertionError } from "./type_assertion_error.ts";
 
 describe("TypeAssertionError", () => {
   it("should extend `TypeError`", () => {
@@ -22,6 +22,13 @@ describe("TypeAssertionError", () => {
     assertStrictEquals(
       error.message,
       "`value` is of type `string`; expected type of `ExpectedType`",
+    );
+
+    error = new TypeAssertionError("ExpectedType", missingProperty);
+
+    assertStrictEquals(
+      error.message,
+      "`value` is missing; expected type of `ExpectedType`",
     );
 
     error = new TypeAssertionError("ExpectedOuterType", {}, {

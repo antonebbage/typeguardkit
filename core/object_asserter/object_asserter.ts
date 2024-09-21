@@ -3,7 +3,10 @@
 import { Asserted } from "../asserted.ts";
 import { Asserter } from "../asserter.ts";
 import { OptionAsserter } from "../option_asserter.ts";
-import { TypeAssertionError } from "../type_assertion_error.ts";
+import {
+  missingProperty,
+  TypeAssertionError,
+} from "../type_assertion_error.ts";
 import { SimplifiedTooltipRepresentation } from "./_simplified_tooltip_representation.ts";
 
 /**
@@ -50,10 +53,20 @@ export class ObjectAsserter<
 
     for (const key in this.propertyAsserters) {
       try {
-        const propertyValue = (value as Record<string, unknown>)[key];
+        const propertyAsserter = this.propertyAsserters[key];
         const propertyValueName = /\W|^\d/.test(key) ? `["${key}"]` : `.${key}`;
 
-        this.propertyAsserters[key].assert(propertyValue, propertyValueName);
+        if (!(propertyAsserter instanceof OptionAsserter || key in value)) {
+          throw new TypeAssertionError(
+            propertyAsserter.typeName,
+            missingProperty,
+            { valueName: propertyValueName },
+          );
+        }
+
+        const propertyValue = (value as Record<string, unknown>)[key];
+
+        propertyAsserter.assert(propertyValue, propertyValueName);
       } catch (error) {
         issues.push(error);
       }
