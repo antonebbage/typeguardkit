@@ -6,7 +6,8 @@ import { TypeAssertionError } from "./type_assertion_error.ts";
 
 /**
  * An `OptionAsserter` is an `Asserter` for the union of the `Type` of its
- * `definedTypeAsserter` with `undefined`.
+ * `definedTypeAsserter` with `undefined`, intended to be used with
+ * `ObjectAsserter` to assert optional properties.
  *
  * The provided `definedTypeAsserter` is made accessible as a property of the
  * created `OptionAsserter`.
